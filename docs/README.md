@@ -1,6 +1,6 @@
-# RetailOps Data & AI Platform
+# RetailOps-Data-AI-Platform
 
-A modular self-hosted data and AI platform for retail operations.
+A modular self-hosted retail data and AI platform for data ingestion, analytics, forecasting, monitoring, and operational decision support.
 
 ## Repository Structure
 
@@ -20,7 +20,3 @@ A modular self-hosted data and AI platform for retail operations.
 - MyPy
 - pre-commit
 - Docker
-
-## Initial Goal
-
-Build a modular monorepo where Core can run independently and optional modules can be added later.
