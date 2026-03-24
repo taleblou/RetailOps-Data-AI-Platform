@@ -2,6 +2,16 @@ version = 1
 revision = 3
 requires-python = ">=3.12"
 
+[manifest]
+members = [
+    "retailops-analytics",
+    "retailops-core",
+    "retailops-data-ai-platform",
+    "retailops-forecasting",
+    "retailops-ingestion",
+    "retailops-monitoring",
+]
+
 [[package]]
 name = "annotated-doc"
 version = "0.0.4"
@@ -505,9 +515,19 @@ wheels = [
 ]
 
 [[package]]
+name = "retailops-analytics"
+version = "0.1.0"
+source = { editable = "packages/retailops_analytics" }
+
+[[package]]
+name = "retailops-core"
+version = "0.1.0"
+source = { editable = "packages/retailops_core" }
+
+[[package]]
 name = "retailops-data-ai-platform"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "uvicorn", extra = ["standard"] },
@@ -534,6 +554,21 @@ dev = [
     { name = "pytest", specifier = ">=8.3,<9" },
     { name = "ruff", specifier = ">=0.11,<0.12" },
 ]
+
+[[package]]
+name = "retailops-forecasting"
+version = "0.1.0"
+source = { editable = "packages/retailops_forecasting" }
+
+[[package]]
+name = "retailops-ingestion"
+version = "0.1.0"
+source = { editable = "packages/retailops_ingestion" }
+
+[[package]]
+name = "retailops-monitoring"
+version = "0.1.0"
+source = { editable = "packages/retailops_monitoring" }
 
 [[package]]
 name = "ruff"
