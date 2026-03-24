@@ -1,0 +1,20 @@
+services:
+  forecasting:
+    build:
+      context: ..
+      dockerfile: modules/forecasting/Dockerfile
+    container_name: retailops-forecasting
+    env_file:
+      - ../.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mlflow:
+        condition: service_started
+    networks:
+      - retailops_net
+
+networks:
+  retailops_net:
+    external: true
+    name: retailops_retailops_net
