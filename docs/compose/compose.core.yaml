@@ -1,0 +1,79 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: retailops-postgres
+    env_file:
+      - ../.env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - retailops_net
+
+  api:
+    build:
+      context: ..
+      dockerfile: core/api/Dockerfile
+    container_name: retailops-api
+    env_file:
+      - ../.env
+    ports:
+      - "${API_PORT}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - retailops_net
+
+  worker:
+    build:
+      context: ..
+      dockerfile: core/worker/Dockerfile
+    container_name: retailops-worker
+    env_file:
+      - ../.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - retailops_net
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.22.1
+    container_name: retailops-mlflow
+    env_file:
+      - ../.env
+    ports:
+      - "${MLFLOW_PORT}:5000"
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+    networks:
+      - retailops_net
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: retailops-metabase
+    env_file:
+      - ../.env
+    ports:
+      - "${METABASE_PORT}:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - retailops_net
+
+volumes:
+  postgres_data:
+
+networks:
+  retailops_net:
+    driver: bridge
