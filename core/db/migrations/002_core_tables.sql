@@ -10,40 +10,45 @@ CREATE TABLE IF NOT EXISTS mart.stores (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS mart.stores (
-    store_id BIGSERIAL PRIMARY KEY,
-    store_code TEXT UNIQUE NOT NULL,
-    store_name TEXT NOT NULL,
+CREATE TABLE IF NOT EXISTS mart.products (
+    product_id BIGSERIAL PRIMARY KEY,
+    store_id BIGINT REFERENCES mart.stores(store_id),
+    sku TEXT NOT NULL,
+    product_name TEXT NOT NULL,
+    category TEXT,
+    brand TEXT,
+    unit_cost NUMERIC(12, 2),
+    unit_price NUMERIC(12, 2),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (store_id, sku)
+);
+
+CREATE TABLE IF NOT EXISTS mart.customers (
+    customer_id BIGSERIAL PRIMARY KEY,
+    store_id BIGINT REFERENCES mart.stores(store_id),
+    customer_code TEXT,
+    email TEXT,
+    first_name TEXT,
+    last_name TEXT,
     country TEXT,
     city TEXT,
-    timezone TEXT,
-    currency_code TEXT,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS mart.stores (
-    store_id BIGSERIAL PRIMARY KEY,
-    store_code TEXT UNIQUE NOT NULL,
-    store_name TEXT NOT NULL,
-    country TEXT,
-    city TEXT,
-    timezone TEXT,
+CREATE TABLE IF NOT EXISTS mart.orders (
+    order_id BIGSERIAL PRIMARY KEY,
+    store_id BIGINT NOT NULL REFERENCES mart.stores(store_id),
+    customer_id BIGINT REFERENCES mart.customers(customer_id),
+    order_number TEXT UNIQUE NOT NULL,
+    order_status TEXT,
     currency_code TEXT,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS mart.stores (
-    store_id BIGSERIAL PRIMARY KEY,
-    store_code TEXT UNIQUE NOT NULL,
-    store_name TEXT NOT NULL,
-    country TEXT,
-    city TEXT,
-    timezone TEXT,
-    currency_code TEXT,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    ordered_at TIMESTAMPTZ NOT NULL,
+    subtotal_amount NUMERIC(12, 2),
+    discount_amount NUMERIC(12, 2),
+    tax_amount NUMERIC(12, 2),
+    shipping_amount NUMERIC(12, 2),
+    total_amount NUMERIC(12, 2)
 );
 
 CREATE TABLE IF NOT EXISTS mart.order_items (
@@ -51,10 +56,10 @@ CREATE TABLE IF NOT EXISTS mart.order_items (
     order_id BIGINT NOT NULL REFERENCES mart.orders(order_id) ON DELETE CASCADE,
     product_id BIGINT REFERENCES mart.products(product_id),
     sku TEXT,
-    quantity NUMERIC(12,2) NOT NULL,
-    unit_price NUMERIC(12,2),
-    discount_amount NUMERIC(12,2),
-    line_total NUMERIC(12,2)
+    quantity NUMERIC(12, 2) NOT NULL,
+    unit_price NUMERIC(12, 2),
+    discount_amount NUMERIC(12, 2),
+    line_total NUMERIC(12, 2)
 );
 
 CREATE TABLE IF NOT EXISTS mart.payments (
@@ -62,7 +67,7 @@ CREATE TABLE IF NOT EXISTS mart.payments (
     order_id BIGINT NOT NULL REFERENCES mart.orders(order_id) ON DELETE CASCADE,
     payment_method TEXT,
     payment_status TEXT,
-    paid_amount NUMERIC(12,2),
+    paid_amount NUMERIC(12, 2),
     paid_at TIMESTAMPTZ
 );
 
@@ -77,16 +82,15 @@ CREATE TABLE IF NOT EXISTS mart.shipments (
     promised_delivery_at TIMESTAMPTZ
 );
 
-
 CREATE TABLE IF NOT EXISTS mart.inventory_snapshots (
     inventory_snapshot_id BIGSERIAL PRIMARY KEY,
     store_id BIGINT NOT NULL REFERENCES mart.stores(store_id),
     product_id BIGINT NOT NULL REFERENCES mart.products(product_id),
     snapshot_date DATE NOT NULL,
-    on_hand_qty NUMERIC(12,2) NOT NULL,
-    reserved_qty NUMERIC(12,2) NOT NULL DEFAULT 0,
-    available_qty NUMERIC(12,2) NOT NULL DEFAULT 0,
-    in_transit_qty NUMERIC(12,2) NOT NULL DEFAULT 0,
+    on_hand_qty NUMERIC(12, 2) NOT NULL,
+    reserved_qty NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    available_qty NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    in_transit_qty NUMERIC(12, 2) NOT NULL DEFAULT 0,
     UNIQUE (store_id, product_id, snapshot_date)
 );
 
@@ -97,12 +101,13 @@ CREATE TABLE IF NOT EXISTS mart.promotions (
     promotion_type TEXT,
     start_at TIMESTAMPTZ,
     end_at TIMESTAMPTZ,
-    discount_value NUMERIC(12,2),
+    discount_value NUMERIC(12, 2),
     is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS ops.import_jobs (
     import_job_id BIGSERIAL PRIMARY KEY,
+    source_id BIGINT,
     source_type TEXT NOT NULL,
     source_name TEXT NOT NULL,
     status TEXT NOT NULL,
@@ -177,11 +182,4 @@ CREATE TABLE IF NOT EXISTS ops.override_logs (
     reason TEXT,
     changed_by TEXT,
     changed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS raw.orders_csv_import (
-    raw_id BIGSERIAL PRIMARY KEY,
-    import_job_id BIGINT,
-    payload JSONB NOT NULL,
-    loaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
