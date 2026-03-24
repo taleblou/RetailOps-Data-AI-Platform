@@ -1,0 +1,20 @@
+services:
+  monitoring:
+    build:
+      context: ..
+      dockerfile: core/monitoring/Dockerfile
+    container_name: retailops-monitoring
+    env_file:
+      - ../.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_started
+    networks:
+      - retailops_net
+
+networks:
+  retailops_net:
+    external: true
+    name: retailops_retailops_net
