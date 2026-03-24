@@ -1,0 +1,20 @@
+services:
+  analytics:
+    build:
+      context: ..
+      dockerfile: modules/analytics_kpi/Dockerfile
+    container_name: retailops-analytics
+    env_file:
+      - ../.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_started
+    networks:
+      - retailops_net
+
+networks:
+  retailops_net:
+    external: true
+    name: retailops_retailops_net
