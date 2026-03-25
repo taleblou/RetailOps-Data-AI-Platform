@@ -1,37 +1,36 @@
 # Product Definition
 
-## Project Name
+## Name
 RetailOps Data & AI Platform
 
-## One-Sentence Definition
-A self-hosted modular platform for retail stores to ingest data, build dashboards, generate forecasts and operational recommendations, and optionally enable advanced data platform modules.
+## What the product is
+A modular self-hosted package for retail teams that want to ingest store data, standardize it, build dashboards, and run starter AI workflows without depending on a managed cloud platform.
 
-## Target Users
-- Small store with CSV files
-- Medium store with operational database
-- Technical team needing CDC and streaming
+## Primary outcomes
+- ingest retail data from CSV, databases, and later APIs or CDC
+- convert source data into a shared canonical retail model
+- publish KPI-oriented retail outputs
+- create trusted transformed tables for downstream analytics and AI
+- run starter forecasting and future operational AI modules
+- monitor data and model quality over time
 
-## Main Problems Solved
-- Data scattered across files and systems
-- No reliable KPI layer
-- No operational AI outputs for inventory and shipments
-- No modular path from simple setup to advanced platform
+## Core principles
+- core plus optional modules
+- self-hosted by default
+- raw first, then transform
+- API-first and wizard-friendly
+- phased growth from Lite to Pro
 
-## Core Outcomes
-- Sales, inventory, orders, shipment dashboards
-- Demand forecasting
-- Stockout probability
-- Shipment delay risk
-- Reorder recommendations
-- Data and model quality monitoring
+## Main users
+- small store using CSV files
+- medium store with database access
+- technical team that will later adopt CDC, metadata, lakehouse, and advanced serving
 
-## Core Principles
-- Self-hosted
-- Modular
-- Core must run without Pro modules
-- Business value must exist even before advanced AI/platform modules
-
-## Non-Goals for Phase 1
-- No database schema details yet
-- No API endpoint implementation yet
-- No Docker compose implementation yet
+## Minimum useful system by phase 6
+- source registration and ingestion framework
+- canonical retail schemas and core tables
+- CSV onboarding wizard
+- validation and raw import
+- first transform run
+- first dashboard view
+- first forecast output

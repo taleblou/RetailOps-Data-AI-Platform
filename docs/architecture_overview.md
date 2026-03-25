@@ -1,39 +1,53 @@
 # Architecture Overview
 
 ## High-Level Architecture
-The platform is designed as a self-hosted modular system for retail data and AI operations.
+RetailOps is a self-hosted modular retail data and AI platform.
 
-## Main Flow
-1. Data enters from CSV files, databases, APIs, or optional CDC streams.
-2. Ingestion loads data into raw tables.
-3. Transformations standardize data into staging and mart layers.
-4. Feature tables are built for AI use cases.
-5. Models generate forecasts and risk predictions.
-6. Results are served through APIs, dashboards, and operational workflows.
-7. Monitoring tracks data quality, model quality, drift, and usage.
+The design follows one rule from the start: the core platform must run on its own, and every advanced module must remain optional.
 
-## Core Design Rule
-The core platform must run without Pro modules.
+## Main End-to-End Flow
+1. A store sends data from CSV, database connectors, or later API/CDC sources.
+2. Ingestion validates and lands source data in `raw`.
+3. Transform logic standardizes `raw` into trusted `staging` and `mart` layers.
+4. Analytics and ML modules consume transformed data, not raw connector internals.
+5. Results are exposed through dashboards, forecasts, and operational workflows.
+6. Monitoring observes platform health, data quality, and model quality.
 
 ## Core Layers
-- Sources
-- Ingestion
-- Data model
-- Feature layer
-- Model layer
-- Serving
-- Monitoring
+- sources
+- ingestion
+- data model
+- feature layer
+- model layer
+- serving
+- monitoring
 
-## Optional Pro Extensions
-- CDC
-- Streaming
-- Lakehouse
-- Metadata
-- Feature store
-- Advanced model serving
+## Core Runtime Services
+- PostgreSQL for storage
+- FastAPI for APIs and the Easy CSV wizard
+- worker for background-ready execution
+- MLflow starter for experiment and model tracking
+- Metabase starter for dashboards
+
+## Optional Module Families
+- connector modules for new source types
+- analytics and forecasting modules for business outputs
+- shipment, stockout, reorder, and returns intelligence modules for operational AI
+- CDC, lakehouse, metadata, feature store, streaming, and advanced serving for platform-grade expansion
+
+## Easy CSV Phase-6 Flow
+The repository now includes a starter non-technical path:
+1. upload CSV
+2. preview rows and columns
+3. map source columns to canonical fields
+4. run validation
+5. import to raw
+6. run the first transform
+7. publish a starter dashboard view
+8. generate a starter forecast
 
 ## Why This Architecture
-- Supports small users and advanced teams
-- Keeps the initial setup simple
-- Allows gradual expansion
-- Prevents the core from being blocked by advanced dependencies
+- it supports small CSV-first users and technical teams in one repo
+- it keeps the first install small and understandable
+- it allows phased growth without forcing advanced dependencies into the core
+- it makes connector, analytics, and ML modules swappable over time
