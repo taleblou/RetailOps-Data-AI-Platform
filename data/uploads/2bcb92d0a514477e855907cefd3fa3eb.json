@@ -1,0 +1,17 @@
+{
+  "upload_id": "2bcb92d0a514477e855907cefd3fa3eb",
+  "filename": "sample_inventory_snapshots_360.csv",
+  "stored_path": "data/uploads/2bcb92d0a514477e855907cefd3fa3eb_sample_inventory_snapshots_360.csv",
+  "delimiter": ",",
+  "encoding": "utf-8",
+  "columns": [
+    "Snapshot Date",
+    "Store Code",
+    "Product ID",
+    "SKU",
+    "On Hand Qty",
+    "Reserved Qty",
+    "Available Qty"
+  ],
+  "mapping": {}
+}

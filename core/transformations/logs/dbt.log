@@ -2087,3 +2087,303 @@ LINE 16: from "retailops"."raw"."orders"
 [0m13:41:44.589028 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76be8548e060>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76be84ca1d90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76be855ee540>]}
 [0m13:41:44.589829 [debug] [MainThread]: Flushing usage events
 [0m13:41:45.317942 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:42:49.045247 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3e62a5d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3d0639b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3d042c90>]}
+
+
+============================== 13:42:49.049322 | ace9c092-dcc8-4279-a23d-06cfe52c8834 ==============================
+[0m13:42:49.049322 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:42:49.050121 [debug] [MainThread]: running dbt with arguments {'quiet': 'False', 'partial_parse': 'True', 'fail_fast': 'False', 'log_path': 'core/transformations/logs', 'no_print': 'None', 'static_parser': 'True', 'target_path': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'cache_selected_only': 'False', 'warn_error': 'None', 'profiles_dir': 'core/transformations/profiles', 'log_format': 'default', 'use_colors': 'True', 'write_json': 'True', 'invocation_command': 'dbt source freshness --project-dir core/transformations --profiles-dir core/transformations/profiles', 'send_anonymous_usage_stats': 'True', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'empty': 'None', 'use_experimental_parser': 'False', 'printer_width': '80', 'introspect': 'True', 'debug': 'False'}
+[0m13:42:49.264218 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'ace9c092-dcc8-4279-a23d-06cfe52c8834', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3c304b00>]}
+[0m13:42:49.345981 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'ace9c092-dcc8-4279-a23d-06cfe52c8834', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3d042c90>]}
+[0m13:42:49.346961 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:42:49.471632 [debug] [MainThread]: checksum: b80718358155fc17c3559352095564dd56ada1cc1a1c0ef2e62c857e71583775, vars: {}, profile: , target: , version: 1.11.7
+[0m13:42:49.618906 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m13:42:49.619402 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m13:42:49.619798 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m13:42:49.628197 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.retail_ops_transformations.shipment_risk
+- models.retail_ops_transformations.forecasting
+- models.retail_ops_transformations.analytics_kpi
+[0m13:42:49.678972 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'ace9c092-dcc8-4279-a23d-06cfe52c8834', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3b720f50>]}
+[0m13:42:49.793598 [debug] [MainThread]: Wrote artifact WritableManifest to core/transformations/target/manifest.json
+[0m13:42:49.795795 [debug] [MainThread]: Wrote artifact SemanticManifest to core/transformations/target/semantic_manifest.json
+[0m13:42:49.815056 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'ace9c092-dcc8-4279-a23d-06cfe52c8834', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3a72bbf0>]}
+[0m13:42:49.815690 [info ] [MainThread]: Found 19 models, 29 data tests, 4 sources, 465 macros
+[0m13:42:49.816179 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'ace9c092-dcc8-4279-a23d-06cfe52c8834', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3abdf6e0>]}
+[0m13:42:49.820269 [info ] [MainThread]: 
+[0m13:42:49.820961 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m13:42:49.821500 [info ] [MainThread]: 
+[0m13:42:49.822285 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m13:42:49.828471 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops_analytics_staging'
+[0m13:42:49.836705 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops_analytics_mart'
+[0m13:42:49.877126 [debug] [ThreadPool]: Using postgres connection "list_retailops_analytics_staging"
+[0m13:42:49.877726 [debug] [ThreadPool]: Using postgres connection "list_retailops_analytics_mart"
+[0m13:42:49.878249 [debug] [ThreadPool]: On list_retailops_analytics_staging: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_analytics_staging"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'analytics_staging'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'analytics_staging'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'analytics_staging'
+  
+[0m13:42:49.878860 [debug] [ThreadPool]: On list_retailops_analytics_mart: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_analytics_mart"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'analytics_mart'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'analytics_mart'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'analytics_mart'
+  
+[0m13:42:49.879496 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:42:49.880070 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:42:49.900006 [debug] [ThreadPool]: SQL status: SELECT 0 in 0.020 seconds
+[0m13:42:49.900613 [debug] [ThreadPool]: SQL status: SELECT 0 in 0.021 seconds
+[0m13:42:49.902296 [debug] [ThreadPool]: On list_retailops_analytics_staging: ROLLBACK
+[0m13:42:49.903938 [debug] [ThreadPool]: On list_retailops_analytics_mart: ROLLBACK
+[0m13:42:49.904805 [debug] [ThreadPool]: On list_retailops_analytics_mart: Close
+[0m13:42:49.905266 [debug] [ThreadPool]: On list_retailops_analytics_staging: Close
+[0m13:42:49.912994 [debug] [MainThread]: Using postgres connection "master"
+[0m13:42:49.913602 [debug] [MainThread]: On master: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "master"} */
+select distinct
+        dependent_namespace.nspname as dependent_schema,
+        dependent_class.relname as dependent_name,
+        referenced_namespace.nspname as referenced_schema,
+        referenced_class.relname as referenced_name
+
+    -- Query for views: views are entries in pg_class with an entry in pg_rewrite, but we avoid
+    -- a seq scan on pg_rewrite by leveraging the fact there is an "internal" row in pg_depend for
+    -- the view...
+    from pg_class as dependent_class
+    join pg_namespace as dependent_namespace on dependent_namespace.oid = dependent_class.relnamespace
+    join pg_depend as dependent_depend on dependent_depend.refobjid = dependent_class.oid
+        and dependent_depend.classid = 'pg_rewrite'::regclass
+        and dependent_depend.refclassid = 'pg_class'::regclass
+        and dependent_depend.deptype = 'i'
+
+    -- ... and via pg_depend (that has a row per column, hence the need for "distinct" above, and
+    -- making sure to exclude the internal row to avoid a view appearing to depend on itself)...
+    join pg_depend as joining_depend on joining_depend.objid = dependent_depend.objid
+        and joining_depend.classid = 'pg_rewrite'::regclass
+        and joining_depend.refclassid = 'pg_class'::regclass
+        and joining_depend.refobjid != dependent_depend.refobjid
+
+    -- ... we can find the tables they query from in pg_class, but excluding system tables. Note we
+    -- don't need need to exclude _dependent_ system tables, because they only query from other
+    -- system tables, and so are automatically excluded by excluding _referenced_ system tables
+    join pg_class as referenced_class on referenced_class.oid = joining_depend.refobjid
+    join pg_namespace as referenced_namespace on referenced_namespace.oid = referenced_class.relnamespace
+        and referenced_namespace.nspname != 'information_schema'
+        and referenced_namespace.nspname not like 'pg\_%'
+
+    order by
+        dependent_schema, dependent_name, referenced_schema, referenced_name;
+[0m13:42:49.914106 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m13:42:49.929546 [debug] [MainThread]: SQL status: SELECT 0 in 0.015 seconds
+[0m13:42:49.931176 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'ace9c092-dcc8-4279-a23d-06cfe52c8834', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3abddaf0>]}
+[0m13:42:49.931844 [debug] [MainThread]: On master: ROLLBACK
+[0m13:42:49.932615 [debug] [MainThread]: On master: COMMIT
+[0m13:42:49.933081 [debug] [MainThread]: Using postgres connection "master"
+[0m13:42:49.933547 [debug] [MainThread]: On master: COMMIT
+[0m13:42:49.934309 [debug] [MainThread]: SQL status: COMMIT in 0.000 seconds
+[0m13:42:49.934805 [debug] [MainThread]: On master: Close
+[0m13:42:49.937770 [debug] [Thread-1 (]: Began running node source.retail_ops_transformations.raw.inventory_snapshots
+[0m13:42:49.938362 [debug] [Thread-2 (]: Began running node source.retail_ops_transformations.raw.orders
+[0m13:42:49.938916 [debug] [Thread-3 (]: Began running node source.retail_ops_transformations.raw.products
+[0m13:42:49.942376 [info ] [Thread-3 (]: 3 of 4 START freshness of raw.products ......................................... [RUN]
+[0m13:42:49.939969 [debug] [Thread-4 (]: Began running node source.retail_ops_transformations.raw.shipments
+[0m13:42:49.941195 [info ] [Thread-2 (]: 2 of 4 START freshness of raw.orders ........................................... [RUN]
+[0m13:42:49.939492 [info ] [Thread-1 (]: 1 of 4 START freshness of raw.inventory_snapshots .............................. [RUN]
+[0m13:42:49.943820 [debug] [Thread-3 (]: Acquiring new postgres connection 'source.retail_ops_transformations.raw.products'
+[0m13:42:49.944952 [info ] [Thread-4 (]: 4 of 4 START freshness of raw.shipments ........................................ [RUN]
+[0m13:42:49.945963 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly list_retailops_analytics_mart, now source.retail_ops_transformations.raw.orders)
+[0m13:42:49.947006 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_retailops_analytics_staging, now source.retail_ops_transformations.raw.inventory_snapshots)
+[0m13:42:49.948460 [debug] [Thread-3 (]: Began compiling node source.retail_ops_transformations.raw.products
+[0m13:42:49.949755 [debug] [Thread-4 (]: Acquiring new postgres connection 'source.retail_ops_transformations.raw.shipments'
+[0m13:42:49.950746 [debug] [Thread-2 (]: Began compiling node source.retail_ops_transformations.raw.orders
+[0m13:42:49.951454 [debug] [Thread-1 (]: Began compiling node source.retail_ops_transformations.raw.inventory_snapshots
+[0m13:42:49.952194 [debug] [Thread-3 (]: Began executing node source.retail_ops_transformations.raw.products
+[0m13:42:49.952882 [debug] [Thread-4 (]: Began compiling node source.retail_ops_transformations.raw.shipments
+[0m13:42:49.953455 [debug] [Thread-2 (]: Began executing node source.retail_ops_transformations.raw.orders
+[0m13:42:49.954061 [debug] [Thread-1 (]: Began executing node source.retail_ops_transformations.raw.inventory_snapshots
+[0m13:42:49.955122 [debug] [Thread-3 (]: On source.retail_ops_transformations.raw.products: COMMIT
+[0m13:42:49.955713 [debug] [Thread-4 (]: Began executing node source.retail_ops_transformations.raw.shipments
+[0m13:42:49.956457 [debug] [Thread-2 (]: On source.retail_ops_transformations.raw.orders: COMMIT
+[0m13:42:49.957168 [debug] [Thread-1 (]: On source.retail_ops_transformations.raw.inventory_snapshots: COMMIT
+[0m13:42:49.957734 [debug] [Thread-3 (]: Using postgres connection "source.retail_ops_transformations.raw.products"
+[0m13:42:49.958449 [debug] [Thread-4 (]: On source.retail_ops_transformations.raw.shipments: COMMIT
+[0m13:42:49.958967 [debug] [Thread-2 (]: Using postgres connection "source.retail_ops_transformations.raw.orders"
+[0m13:42:49.959491 [debug] [Thread-1 (]: Using postgres connection "source.retail_ops_transformations.raw.inventory_snapshots"
+[0m13:42:49.959993 [debug] [Thread-3 (]: On source.retail_ops_transformations.raw.products: COMMIT
+[0m13:42:49.960504 [debug] [Thread-4 (]: Using postgres connection "source.retail_ops_transformations.raw.shipments"
+[0m13:42:49.960994 [debug] [Thread-2 (]: On source.retail_ops_transformations.raw.orders: COMMIT
+[0m13:42:49.961494 [debug] [Thread-1 (]: On source.retail_ops_transformations.raw.inventory_snapshots: COMMIT
+[0m13:42:49.963614 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m13:42:49.961977 [debug] [Thread-3 (]: Opening a new connection, currently in state init
+[0m13:42:49.962475 [debug] [Thread-4 (]: On source.retail_ops_transformations.raw.shipments: COMMIT
+[0m13:42:49.962962 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m13:42:49.964994 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m13:42:49.982685 [debug] [Thread-3 (]: SQL status: COMMIT in 0.021 seconds
+[0m13:42:49.994096 [debug] [Thread-3 (]: Using postgres connection "source.retail_ops_transformations.raw.products"
+[0m13:42:49.994852 [debug] [Thread-1 (]: SQL status: COMMIT in 0.031 seconds
+[0m13:42:49.995529 [debug] [Thread-3 (]: On source.retail_ops_transformations.raw.products: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "node_id": "source.retail_ops_transformations.raw.products"} */
+select
+      max(ingested_at) as max_loaded_at,
+      now() as snapshotted_at
+    from "retailops"."raw"."products"
+    
+  
+[0m13:42:49.996124 [debug] [Thread-2 (]: SQL status: COMMIT in 0.033 seconds
+[0m13:42:50.001126 [debug] [Thread-1 (]: Using postgres connection "source.retail_ops_transformations.raw.inventory_snapshots"
+[0m13:42:50.001804 [debug] [Thread-4 (]: SQL status: COMMIT in 0.037 seconds
+[0m13:42:50.004683 [debug] [Thread-2 (]: Using postgres connection "source.retail_ops_transformations.raw.orders"
+[0m13:42:50.005336 [debug] [Thread-3 (]: Postgres adapter: Postgres error: relation "raw.products" does not exist
+LINE 5:     from "retailops"."raw"."products"
+                 ^
+
+[0m13:42:50.005926 [debug] [Thread-1 (]: On source.retail_ops_transformations.raw.inventory_snapshots: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "node_id": "source.retail_ops_transformations.raw.inventory_snapshots"} */
+select
+      max(ingested_at) as max_loaded_at,
+      now() as snapshotted_at
+    from "retailops"."raw"."inventory_snapshots"
+    
+  
+[0m13:42:50.009605 [debug] [Thread-4 (]: Using postgres connection "source.retail_ops_transformations.raw.shipments"
+[0m13:42:50.010247 [debug] [Thread-2 (]: On source.retail_ops_transformations.raw.orders: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "node_id": "source.retail_ops_transformations.raw.orders"} */
+select
+      max(ingested_at) as max_loaded_at,
+      now() as snapshotted_at
+    from "retailops"."raw"."orders"
+    
+  
+[0m13:42:50.011128 [debug] [Thread-3 (]: Postgres adapter: Error running SQL: macro collect_freshness
+[0m13:42:50.011986 [debug] [Thread-4 (]: On source.retail_ops_transformations.raw.shipments: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "node_id": "source.retail_ops_transformations.raw.shipments"} */
+select
+      max(ingested_at) as max_loaded_at,
+      now() as snapshotted_at
+    from "retailops"."raw"."shipments"
+    
+  
+[0m13:42:50.012812 [debug] [Thread-1 (]: Postgres adapter: Postgres error: relation "raw.inventory_snapshots" does not exist
+LINE 5:     from "retailops"."raw"."inventory_snapshots"
+                 ^
+
+[0m13:42:50.013447 [debug] [Thread-2 (]: Postgres adapter: Postgres error: relation "raw.orders" does not exist
+LINE 5:     from "retailops"."raw"."orders"
+                 ^
+
+[0m13:42:50.014011 [debug] [Thread-3 (]: Postgres adapter: Rolling back transaction.
+[0m13:42:50.014945 [debug] [Thread-1 (]: Postgres adapter: Error running SQL: macro collect_freshness
+[0m13:42:50.015592 [debug] [Thread-4 (]: Postgres adapter: Postgres error: relation "raw.shipments" does not exist
+LINE 5:     from "retailops"."raw"."shipments"
+                 ^
+
+[0m13:42:50.016320 [debug] [Thread-2 (]: Postgres adapter: Error running SQL: macro collect_freshness
+[0m13:42:50.016933 [debug] [Thread-3 (]: On source.retail_ops_transformations.raw.products: Close
+[0m13:42:50.017563 [debug] [Thread-1 (]: Postgres adapter: Rolling back transaction.
+[0m13:42:50.019907 [debug] [Thread-1 (]: On source.retail_ops_transformations.raw.inventory_snapshots: Close
+[0m13:42:50.019072 [debug] [Thread-2 (]: Postgres adapter: Rolling back transaction.
+[0m13:42:50.018328 [debug] [Thread-4 (]: Postgres adapter: Error running SQL: macro collect_freshness
+[0m13:42:50.024429 [debug] [Thread-2 (]: On source.retail_ops_transformations.raw.orders: Close
+[0m13:42:50.025432 [debug] [Thread-4 (]: Postgres adapter: Rolling back transaction.
+[0m13:42:50.028906 [debug] [Thread-4 (]: On source.retail_ops_transformations.raw.shipments: Close
+[0m13:42:50.038195 [debug] [Thread-1 (]: Database Error in source inventory_snapshots (models/base/_base__sources.yml)
+  relation "raw.inventory_snapshots" does not exist
+  LINE 5:     from "retailops"."raw"."inventory_snapshots"
+                   ^
+[0m13:42:50.039019 [error] [Thread-1 (]: 1 of 4 ERROR freshness of raw.inventory_snapshots .............................. [[31mERROR[0m in 0.09s]
+[0m13:42:50.040493 [debug] [Thread-1 (]: Finished running node source.retail_ops_transformations.raw.inventory_snapshots
+[0m13:42:50.043986 [debug] [Thread-3 (]: Database Error in source products (models/base/_base__sources.yml)
+  relation "raw.products" does not exist
+  LINE 5:     from "retailops"."raw"."products"
+                   ^
+[0m13:42:50.046442 [debug] [Thread-2 (]: Database Error in source orders (models/base/_base__sources.yml)
+  relation "raw.orders" does not exist
+  LINE 5:     from "retailops"."raw"."orders"
+                   ^
+[0m13:42:50.047540 [error] [Thread-3 (]: 3 of 4 ERROR freshness of raw.products ......................................... [[31mERROR[0m in 0.10s]
+[0m13:42:50.048386 [error] [Thread-2 (]: 2 of 4 ERROR freshness of raw.orders ........................................... [[31mERROR[0m in 0.10s]
+[0m13:42:50.050641 [debug] [Thread-4 (]: Database Error in source shipments (models/base/_base__sources.yml)
+  relation "raw.shipments" does not exist
+  LINE 5:     from "retailops"."raw"."shipments"
+                   ^
+[0m13:42:50.051488 [debug] [Thread-3 (]: Finished running node source.retail_ops_transformations.raw.products
+[0m13:42:50.052377 [debug] [Thread-2 (]: Finished running node source.retail_ops_transformations.raw.orders
+[0m13:42:50.053111 [error] [Thread-4 (]: 4 of 4 ERROR freshness of raw.shipments ........................................ [[31mERROR[0m in 0.10s]
+[0m13:42:50.054492 [debug] [Thread-4 (]: Finished running node source.retail_ops_transformations.raw.shipments
+[0m13:42:50.056205 [debug] [MainThread]: On master: COMMIT
+[0m13:42:50.056766 [debug] [MainThread]: Using postgres connection "master"
+[0m13:42:50.057203 [debug] [MainThread]: On master: COMMIT
+[0m13:42:50.057668 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m13:42:50.070245 [debug] [MainThread]: SQL status: COMMIT in 0.013 seconds
+[0m13:42:50.070840 [debug] [MainThread]: On master: Close
+[0m13:42:50.071549 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m13:42:50.072057 [debug] [MainThread]: Connection 'source.retail_ops_transformations.raw.inventory_snapshots' was properly closed.
+[0m13:42:50.072538 [debug] [MainThread]: Connection 'source.retail_ops_transformations.raw.orders' was properly closed.
+[0m13:42:50.073002 [debug] [MainThread]: Connection 'source.retail_ops_transformations.raw.products' was properly closed.
+[0m13:42:50.073462 [debug] [MainThread]: Connection 'source.retail_ops_transformations.raw.shipments' was properly closed.
+[0m13:42:50.074033 [info ] [MainThread]: 
+[0m13:42:50.074601 [info ] [MainThread]: Finished running 4 sources in 0 hours 0 minutes and 0.25 seconds (0.25s).
+[0m13:42:50.169722 [debug] [MainThread]: Wrote artifact WritableManifest to core/transformations/target/manifest.json
+[0m13:42:50.171851 [debug] [MainThread]: Wrote artifact SemanticManifest to core/transformations/target/semantic_manifest.json
+[0m13:42:50.175518 [debug] [MainThread]: Wrote artifact FreshnessResult to core/transformations/target/sources.json
+[0m13:42:50.175988 [info ] [MainThread]: 
+[0m13:42:50.176552 [error] [MainThread]:   Database Error in source inventory_snapshots (models/base/_base__sources.yml)
+  relation "raw.inventory_snapshots" does not exist
+  LINE 5:     from "retailops"."raw"."inventory_snapshots"
+                   ^
+[0m13:42:50.177103 [info ] [MainThread]: 
+[0m13:42:50.177816 [error] [MainThread]:   Database Error in source products (models/base/_base__sources.yml)
+  relation "raw.products" does not exist
+  LINE 5:     from "retailops"."raw"."products"
+                   ^
+[0m13:42:50.178641 [info ] [MainThread]: 
+[0m13:42:50.179445 [error] [MainThread]:   Database Error in source orders (models/base/_base__sources.yml)
+  relation "raw.orders" does not exist
+  LINE 5:     from "retailops"."raw"."orders"
+                   ^
+[0m13:42:50.179956 [info ] [MainThread]: 
+[0m13:42:50.180492 [error] [MainThread]:   Database Error in source shipments (models/base/_base__sources.yml)
+  relation "raw.shipments" does not exist
+  LINE 5:     from "retailops"."raw"."shipments"
+                   ^
+[0m13:42:50.180948 [info ] [MainThread]: Done.
+[0m13:42:50.181824 [debug] [MainThread]: Resource report: {"command_name": "freshness", "command_success": false, "command_wall_clock_time": 1.2102942, "process_in_blocks": "0", "process_kernel_time": 0.240507, "process_mem_max_rss": "126416", "process_out_blocks": "2504", "process_user_time": 2.79128}
+[0m13:42:50.182492 [debug] [MainThread]: Command `dbt source freshness` failed at 13:42:50.182339 after 1.21 seconds
+[0m13:42:50.182999 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3c6bb4d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3b3fe1b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x794e3afed640>]}
+[0m13:42:50.183512 [debug] [MainThread]: Flushing usage events
+[0m13:42:51.060338 [debug] [MainThread]: An error was encountered while trying to flush usage events

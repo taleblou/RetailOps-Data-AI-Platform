@@ -1,0 +1,39 @@
+{
+  "upload_id": "387ae982afa54eb1a1afaa3d0e5860c0",
+  "filename": "sample_orders_easy_csv_150.csv",
+  "stored_path": "data/uploads/387ae982afa54eb1a1afaa3d0e5860c0_sample_orders_easy_csv_150.csv",
+  "delimiter": ",",
+  "encoding": "utf-8",
+  "columns": [
+    "Order ID",
+    "Order Date",
+    "Customer ID",
+    "SKU",
+    "Quantity",
+    "Unit Price",
+    "Store Code"
+  ],
+  "mapping": {
+    "order_id": "Order ID",
+    "order_date": "Order Date",
+    "customer_id": "Customer ID",
+    "sku": "SKU",
+    "quantity": "Quantity",
+    "unit_price": "Unit Price",
+    "store_code": "Store Code"
+  },
+  "mapping_summary": {
+    "mapped_columns": {
+      "order_id": "Order ID",
+      "order_date": "Order Date",
+      "customer_id": "Customer ID",
+      "sku": "SKU",
+      "quantity": "Quantity",
+      "unit_price": "Unit Price",
+      "store_code": "Store Code"
+    },
+    "unmapped_columns": [],
+    "required_missing": [],
+    "aliases_applied": {}
+  }
+}

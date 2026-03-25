@@ -1,0 +1,17 @@
+{
+  "upload_id": "2c1f30962e604cbfa4376812b5e619ba",
+  "filename": "sample_orders_easy_csv_150.csv",
+  "stored_path": "data/uploads/2c1f30962e604cbfa4376812b5e619ba_sample_orders_easy_csv_150.csv",
+  "delimiter": ",",
+  "encoding": "utf-8",
+  "columns": [
+    "Order ID",
+    "Order Date",
+    "Customer ID",
+    "SKU",
+    "Quantity",
+    "Unit Price",
+    "Store Code"
+  ],
+  "mapping": {}
+}

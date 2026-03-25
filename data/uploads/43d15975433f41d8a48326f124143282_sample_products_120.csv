@@ -1,0 +1,121 @@
+Product ID,SKU,Product Name,Category,Unit Price,Is Active
+P0001,SKU-0001,Beverage Item 001,Beverages,52.35,false
+P0002,SKU-0002,Snack Item 002,Snacks,24.51,true
+P0003,SKU-0003,Household Item 003,Household,59.77,true
+P0004,SKU-0004,Personal Care Item 004,Personal Care,71.66,true
+P0005,SKU-0005,Produce Item 005,Produce,35.73,false
+P0006,SKU-0006,Dairy Item 006,Dairy,20.2,true
+P0007,SKU-0007,Bakery Item 007,Bakery,5.53,true
+P0008,SKU-0008,Frozen Item 008,Frozen,53.15,true
+P0009,SKU-0009,Beverage Item 009,Beverages,20.34,true
+P0010,SKU-0010,Snack Item 010,Snacks,65.34,false
+P0011,SKU-0011,Household Item 011,Household,65.06,true
+P0012,SKU-0012,Personal Care Item 012,Personal Care,29.5,true
+P0013,SKU-0013,Produce Item 013,Produce,76.63,true
+P0014,SKU-0014,Dairy Item 014,Dairy,10.59,true
+P0015,SKU-0015,Bakery Item 015,Bakery,68.25,true
+P0016,SKU-0016,Frozen Item 016,Frozen,65.16,true
+P0017,SKU-0017,Beverage Item 017,Beverages,44.47,true
+P0018,SKU-0018,Snack Item 018,Snacks,32.42,true
+P0019,SKU-0019,Household Item 019,Household,66.87,true
+P0020,SKU-0020,Personal Care Item 020,Personal Care,69.33,true
+P0021,SKU-0021,Produce Item 021,Produce,57.33,false
+P0022,SKU-0022,Dairy Item 022,Dairy,20.91,true
+P0023,SKU-0023,Bakery Item 023,Bakery,9.6,true
+P0024,SKU-0024,Frozen Item 024,Frozen,11.22,true
+P0025,SKU-0025,Beverage Item 025,Beverages,52.07,true
+P0026,SKU-0026,Snack Item 026,Snacks,31.78,true
+P0027,SKU-0027,Household Item 027,Household,23.9,true
+P0028,SKU-0028,Personal Care Item 028,Personal Care,53.01,true
+P0029,SKU-0029,Produce Item 029,Produce,16.57,true
+P0030,SKU-0030,Dairy Item 030,Dairy,15.98,true
+P0031,SKU-0031,Bakery Item 031,Bakery,79.1,true
+P0032,SKU-0032,Frozen Item 032,Frozen,46.05,true
+P0033,SKU-0033,Beverage Item 033,Beverages,67.89,true
+P0034,SKU-0034,Snack Item 034,Snacks,21.0,false
+P0035,SKU-0035,Household Item 035,Household,27.6,true
+P0036,SKU-0036,Personal Care Item 036,Personal Care,19.62,true
+P0037,SKU-0037,Produce Item 037,Produce,70.45,true
+P0038,SKU-0038,Dairy Item 038,Dairy,53.58,true
+P0039,SKU-0039,Bakery Item 039,Bakery,73.37,true
+P0040,SKU-0040,Frozen Item 040,Frozen,23.74,true
+P0041,SKU-0041,Beverage Item 041,Beverages,46.39,true
+P0042,SKU-0042,Snack Item 042,Snacks,48.16,true
+P0043,SKU-0043,Household Item 043,Household,34.01,true
+P0044,SKU-0044,Personal Care Item 044,Personal Care,79.71,true
+P0045,SKU-0045,Produce Item 045,Produce,10.45,false
+P0046,SKU-0046,Dairy Item 046,Dairy,11.88,true
+P0047,SKU-0047,Bakery Item 047,Bakery,64.01,true
+P0048,SKU-0048,Frozen Item 048,Frozen,8.35,true
+P0049,SKU-0049,Beverage Item 049,Beverages,79.6,true
+P0050,SKU-0050,Snack Item 050,Snacks,77.69,true
+P0051,SKU-0051,Household Item 051,Household,4.38,true
+P0052,SKU-0052,Personal Care Item 052,Personal Care,55.58,true
+P0053,SKU-0053,Produce Item 053,Produce,23.89,true
+P0054,SKU-0054,Dairy Item 054,Dairy,12.02,true
+P0055,SKU-0055,Bakery Item 055,Bakery,38.16,true
+P0056,SKU-0056,Frozen Item 056,Frozen,70.42,true
+P0057,SKU-0057,Beverage Item 057,Beverages,41.74,true
+P0058,SKU-0058,Snack Item 058,Snacks,73.22,true
+P0059,SKU-0059,Household Item 059,Household,26.3,true
+P0060,SKU-0060,Personal Care Item 060,Personal Care,50.03,true
+P0061,SKU-0061,Produce Item 061,Produce,61.76,true
+P0062,SKU-0062,Dairy Item 062,Dairy,62.99,true
+P0063,SKU-0063,Bakery Item 063,Bakery,3.54,true
+P0064,SKU-0064,Frozen Item 064,Frozen,4.99,true
+P0065,SKU-0065,Beverage Item 065,Beverages,70.63,true
+P0066,SKU-0066,Snack Item 066,Snacks,26.99,true
+P0067,SKU-0067,Household Item 067,Household,70.58,true
+P0068,SKU-0068,Personal Care Item 068,Personal Care,10.04,true
+P0069,SKU-0069,Produce Item 069,Produce,8.79,true
+P0070,SKU-0070,Dairy Item 070,Dairy,62.01,true
+P0071,SKU-0071,Bakery Item 071,Bakery,39.81,true
+P0072,SKU-0072,Frozen Item 072,Frozen,23.75,true
+P0073,SKU-0073,Beverage Item 073,Beverages,35.83,true
+P0074,SKU-0074,Snack Item 074,Snacks,44.7,true
+P0075,SKU-0075,Household Item 075,Household,18.87,true
+P0076,SKU-0076,Personal Care Item 076,Personal Care,79.53,true
+P0077,SKU-0077,Produce Item 077,Produce,36.97,true
+P0078,SKU-0078,Dairy Item 078,Dairy,12.74,true
+P0079,SKU-0079,Bakery Item 079,Bakery,29.33,true
+P0080,SKU-0080,Frozen Item 080,Frozen,21.08,true
+P0081,SKU-0081,Beverage Item 081,Beverages,8.92,true
+P0082,SKU-0082,Snack Item 082,Snacks,20.99,true
+P0083,SKU-0083,Household Item 083,Household,69.18,true
+P0084,SKU-0084,Personal Care Item 084,Personal Care,21.68,true
+P0085,SKU-0085,Produce Item 085,Produce,19.87,true
+P0086,SKU-0086,Dairy Item 086,Dairy,74.97,true
+P0087,SKU-0087,Bakery Item 087,Bakery,39.61,true
+P0088,SKU-0088,Frozen Item 088,Frozen,65.19,true
+P0089,SKU-0089,Beverage Item 089,Beverages,10.91,true
+P0090,SKU-0090,Snack Item 090,Snacks,35.86,true
+P0091,SKU-0091,Household Item 091,Household,59.2,true
+P0092,SKU-0092,Personal Care Item 092,Personal Care,78.69,true
+P0093,SKU-0093,Produce Item 093,Produce,34.26,true
+P0094,SKU-0094,Dairy Item 094,Dairy,69.33,true
+P0095,SKU-0095,Bakery Item 095,Bakery,18.03,true
+P0096,SKU-0096,Frozen Item 096,Frozen,35.73,true
+P0097,SKU-0097,Beverage Item 097,Beverages,22.59,true
+P0098,SKU-0098,Snack Item 098,Snacks,37.36,true
+P0099,SKU-0099,Household Item 099,Household,45.54,true
+P0100,SKU-0100,Personal Care Item 100,Personal Care,79.85,true
+P0101,SKU-0101,Produce Item 101,Produce,77.53,true
+P0102,SKU-0102,Dairy Item 102,Dairy,68.34,true
+P0103,SKU-0103,Bakery Item 103,Bakery,40.6,true
+P0104,SKU-0104,Frozen Item 104,Frozen,34.14,true
+P0105,SKU-0105,Beverage Item 105,Beverages,32.45,true
+P0106,SKU-0106,Snack Item 106,Snacks,23.76,true
+P0107,SKU-0107,Household Item 107,Household,38.26,true
+P0108,SKU-0108,Personal Care Item 108,Personal Care,76.64,true
+P0109,SKU-0109,Produce Item 109,Produce,45.96,true
+P0110,SKU-0110,Dairy Item 110,Dairy,15.33,true
+P0111,SKU-0111,Bakery Item 111,Bakery,77.51,true
+P0112,SKU-0112,Frozen Item 112,Frozen,44.92,true
+P0113,SKU-0113,Beverage Item 113,Beverages,7.87,true
+P0114,SKU-0114,Snack Item 114,Snacks,41.92,true
+P0115,SKU-0115,Household Item 115,Household,15.53,true
+P0116,SKU-0116,Personal Care Item 116,Personal Care,9.62,true
+P0117,SKU-0117,Produce Item 117,Produce,48.96,true
+P0118,SKU-0118,Dairy Item 118,Dairy,21.47,true
+P0119,SKU-0119,Bakery Item 119,Bakery,71.52,true
+P0120,SKU-0120,Frozen Item 120,Frozen,48.92,true
