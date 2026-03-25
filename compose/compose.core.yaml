@@ -4,12 +4,16 @@ services:
     container_name: retailops-postgres
     env_file:
       - ../.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-retailops}
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -24,14 +28,14 @@ services:
     env_file:
       - ../.env
     ports:
-      - "${API_PORT}:8000"
+      - "${API_PORT:-8000}:8000"
     volumes:
       - ../data:/app/data
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'python -c "import urllib.request; urllib.request.urlopen("http://localhost:8000/health")"']
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health\")'"]
       interval: 15s
       timeout: 5s
       retries: 10
@@ -51,7 +55,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'python -c "print("worker-ok")"']
+      test: ["CMD-SHELL", "python -c 'print(\"worker-ok\")'"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -64,7 +68,7 @@ services:
     env_file:
       - ../.env
     ports:
-      - "${MLFLOW_PORT}:5000"
+      - "${MLFLOW_PORT:-5000}:5000"
     command: >
       mlflow server
       --host 0.0.0.0
@@ -72,7 +76,7 @@ services:
     volumes:
       - mlflow_data:/mlflow
     healthcheck:
-      test: ['CMD-SHELL', 'python -c "import urllib.request; urllib.request.urlopen("http://localhost:5000")"']
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:5000\")'"]
       interval: 20s
       timeout: 10s
       retries: 10
@@ -85,14 +89,14 @@ services:
     env_file:
       - ../.env
     ports:
-      - "${METABASE_PORT}:3000"
+      - "${METABASE_PORT:-3000}:3000"
     volumes:
       - metabase_data:/metabase-data
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'wget -q -O /dev/null http://localhost:3000/api/health || exit 1']
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 15
