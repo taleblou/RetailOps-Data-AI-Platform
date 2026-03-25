@@ -14,7 +14,7 @@ services:
       api:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'python -c "print("lakehouse-ok")"']
+      test: ["CMD-SHELL", "python -c 'print(\"lakehouse-ok\")'"]
       interval: 30s
       timeout: 5s
       retries: 3

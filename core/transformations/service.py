@@ -13,15 +13,16 @@ from typing import Any
 class TransformDailyMetricArtifact:
     sales_date: str
     order_count: int
-    unit_count: float
-    revenue: float
+    total_quantity: float
+    total_revenue: float
 
 
 @dataclass(slots=True)
 class TransformArtifact:
     transform_run_id: str
     upload_id: str
-    row_count: int
+    input_row_count: int
+    output_row_count: int
     total_orders: int
     total_quantity: float
     total_revenue: float
@@ -32,6 +33,21 @@ class TransformArtifact:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+CANONICAL_ROW_ARGUMENT_NAMES = [
+    "mapped_rows",
+    "rows",
+    "canonical_rows",
+    "validated_rows",
+    "import_rows",
+]
+METADATA_ARGUMENT_NAMES = [
+    "metadata",
+    "upload_metadata",
+    "import_summary",
+    "transform_input",
+]
 
 
 def _to_float(value: object, *, default: float = 0.0) -> float:
@@ -75,6 +91,9 @@ def _read_csv_rows_from_metadata(metadata: dict[str, Any]) -> list[dict[str, Any
         return []
 
     stored_path = Path(str(stored_path_value))
+    if not stored_path.exists():
+        return []
+
     delimiter = str(metadata.get("delimiter", ","))
     encoding = str(metadata.get("encoding", "utf-8"))
 
@@ -89,36 +108,41 @@ def _read_csv_rows_from_metadata(metadata: dict[str, Any]) -> list[dict[str, Any
     return rows
 
 
-def _extract_rows(kwargs: dict[str, Any]) -> list[dict[str, Any]]:
-    candidate_names = [
-        "mapped_rows",
-        "rows",
-        "canonical_rows",
-        "validated_rows",
-        "import_rows",
-    ]
-    for name in candidate_names:
-        value = kwargs.get(name)
-        if isinstance(value, list):
-            normalized_rows: list[dict[str, Any]] = []
-            for item in value:
-                if isinstance(item, dict):
-                    normalized_rows.append(_normalize_canonical_row(item))
-            if normalized_rows:
-                return normalized_rows
+def _normalize_row_list(value: object) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
 
-    metadata_names = [
-        "metadata",
-        "upload_metadata",
-        "import_summary",
-        "transform_input",
-    ]
-    for name in metadata_names:
+    normalized_rows: list[dict[str, Any]] = []
+    for item in value:
+        if isinstance(item, dict):
+            normalized_rows.append(_normalize_canonical_row(item))
+    return normalized_rows
+
+
+def _extract_rows(args: tuple[Any, ...], kwargs: dict[str, Any]) -> list[dict[str, Any]]:
+    for name in CANONICAL_ROW_ARGUMENT_NAMES:
+        rows = _normalize_row_list(kwargs.get(name))
+        if rows:
+            return rows
+
+    for candidate in args:
+        rows = _normalize_row_list(candidate)
+        if rows:
+            return rows
+
+    for name in METADATA_ARGUMENT_NAMES:
         value = kwargs.get(name)
         if isinstance(value, dict):
             rows = _read_csv_rows_from_metadata(value)
             if rows:
                 return rows
+
+    for candidate in args:
+        if isinstance(candidate, dict):
+            rows = _read_csv_rows_from_metadata(candidate)
+            if rows:
+                return rows
+
     return []
 
 
@@ -126,7 +150,13 @@ def _parse_sales_date(value: str) -> str:
     text = value.strip()
     if not text:
         return "unknown"
-    for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%d.%m.%Y", "%d/%m/%Y", "%Y-%m-%d %H:%M:%S"):
+    for fmt in (
+        "%Y-%m-%d",
+        "%Y/%m/%d",
+        "%d.%m.%Y",
+        "%d/%m/%Y",
+        "%Y-%m-%d %H:%M:%S",
+    ):
         try:
             return datetime.strptime(text, fmt).date().isoformat()
         except ValueError:
@@ -139,7 +169,7 @@ def _parse_sales_date(value: str) -> str:
 
 def _resolve_upload_id(args: tuple[Any, ...], kwargs: dict[str, Any]) -> str:
     value = kwargs.get("upload_id")
-    if value is None and args:
+    if value is None and args and not isinstance(args[0], list):
         value = args[0]
     text = _to_text(value)
     if not text:
@@ -167,7 +197,7 @@ def run_first_transform(*args: Any, **kwargs: Any) -> TransformArtifact:
     artifact_dir = _resolve_artifact_dir(args, kwargs)
     artifact_dir.mkdir(parents=True, exist_ok=True)
 
-    rows = _extract_rows(kwargs)
+    rows = _extract_rows(args, kwargs)
     if not rows:
         raise ValueError(
             "No canonical rows were available for the first transform run. "
@@ -206,21 +236,21 @@ def run_first_transform(*args: Any, **kwargs: Any) -> TransformArtifact:
             {
                 "sales_date": sales_date,
                 "order_ids": set(),
-                "unit_count": 0.0,
-                "revenue": 0.0,
+                "total_quantity": 0.0,
+                "total_revenue": 0.0,
             },
         )
         if order_id:
             bucket["order_ids"].add(order_id)
-        bucket["unit_count"] += quantity
-        bucket["revenue"] += revenue
+        bucket["total_quantity"] += quantity
+        bucket["total_revenue"] += revenue
 
     daily_sales = [
         TransformDailyMetricArtifact(
             sales_date=sales_date,
             order_count=len(bucket["order_ids"]),
-            unit_count=round(float(bucket["unit_count"]), 2),
-            revenue=round(float(bucket["revenue"]), 2),
+            total_quantity=round(float(bucket["total_quantity"]), 2),
+            total_revenue=round(float(bucket["total_revenue"]), 2),
         )
         for sales_date, bucket in sorted(daily_buckets.items(), key=lambda item: item[0])
     ]
@@ -229,7 +259,8 @@ def run_first_transform(*args: Any, **kwargs: Any) -> TransformArtifact:
     artifact = TransformArtifact(
         transform_run_id=transform_run_id,
         upload_id=upload_id,
-        row_count=len(rows),
+        input_row_count=len(rows),
+        output_row_count=len(rows),
         total_orders=len(order_ids),
         total_quantity=round(total_quantity, 2),
         total_revenue=round(total_revenue, 2),
