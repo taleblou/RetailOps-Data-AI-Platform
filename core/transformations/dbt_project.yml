@@ -1,0 +1,54 @@
+name: retail_ops_transformations
+version: "1.0.0"
+config-version: 2
+profile: retail_ops_transformations
+
+model-paths:
+  - models
+  - ../../modules/analytics_kpi/dbt_models
+  - ../../modules/forecasting/dbt_models
+  - ../../modules/shipment_risk/dbt_models
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+target-path: target
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  retail_ops_transformations:
+    +persist_docs:
+      relation: true
+      columns: true
+
+    base:
+      +schema: staging
+      +materialized: view
+      +tags: ["base"]
+
+    staging:
+      +schema: staging
+      +materialized: view
+      +tags: ["staging"]
+
+    marts:
+      +schema: mart
+      +materialized: table
+      +tags: ["mart"]
+
+    analytics_kpi:
+      +schema: mart
+      +materialized: view
+      +tags: ["module", "analytics_kpi"]
+
+    forecasting:
+      +schema: mart
+      +materialized: view
+      +tags: ["module", "forecasting"]
+
+    shipment_risk:
+      +schema: mart
+      +materialized: view
+      +tags: ["module", "shipment_risk"]

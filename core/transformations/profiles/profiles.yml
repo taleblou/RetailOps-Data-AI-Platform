@@ -1,0 +1,15 @@
+retail_ops_transformations:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_PGHOST', 'localhost') }}"
+      port: "{{ env_var('DBT_PGPORT', '5433') | int }}"
+      user: "{{ env_var('DBT_PGUSER', 'postgres') }}"
+      password: "{{ env_var('DBT_PGPASSWORD', 'postgres') }}"
+      dbname: "{{ env_var('DBT_PGDATABASE', 'retailops') }}"
+      schema: analytics
+      threads: 4
+      keepalives_idle: 0
+      connect_timeout: 10
+      sslmode: prefer

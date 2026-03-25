@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: Product dimension used by analytics and AI modules.
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_customer
+    description: Customer dimension derived from order activity.
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_daily_sales
+    description: Daily sales fact table by store and business date.
+    columns:
+      - name: order_date
+        tests:
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
+
+  - name: fct_inventory_daily
+    description: Daily inventory fact table by product and store.
+    columns:
+      - name: snapshot_date
+        tests:
+          - not_null
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+  - name: fct_shipments
+    description: Shipment fact table with delay labels.
+    columns:
+      - name: shipment_id
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+  - name: mart_store_kpis
+    description: KPI-ready daily mart by store.
+    columns:
+      - name: order_date
+        tests:
+          - not_null
+      - name: store_id
+        tests:
+          - not_null

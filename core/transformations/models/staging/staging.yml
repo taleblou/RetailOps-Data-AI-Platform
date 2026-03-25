@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: Cleaned order records from the raw orders table.
+    columns:
+      - name: order_id
+        description: Unique order identifier.
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Customer identifier extracted from the raw order.
+        tests:
+          - not_null
+      - name: order_status
+        description: Standardized order status value.
+        tests:
+          - accepted_values:
+              values: ['pending', 'paid', 'shipped', 'cancelled', 'returned']
+      - name: total_amount
+        description: Order monetary value.
+        tests:
+          - not_null
+
+  - name: stg_products
+    description: Cleaned product records from the raw products table.
+    columns:
+      - name: product_id
+        description: Unique product identifier.
+        tests:
+          - unique
+          - not_null
+      - name: sku
+        description: Stock keeping unit.
+        tests:
+          - not_null
+
+  - name: stg_shipments
+    description: Cleaned shipment records from the raw shipments table.
+    columns:
+      - name: shipment_id
+        description: Unique shipment identifier.
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: Parent order identifier.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+  - name: stg_inventory
+    description: Cleaned inventory snapshot records.
+    columns:
+      - name: product_id
+        description: Product identifier in the inventory snapshot.
+        tests:
+          - not_null
+      - name: snapshot_date
+        description: Snapshot business date.
+        tests:
+          - not_null

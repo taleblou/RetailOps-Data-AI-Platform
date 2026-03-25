@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: kpi_sales_daily
+    description: Lightweight KPI-facing sales view for API and dashboards.
+  - name: kpi_inventory_health
+    description: Inventory health KPI view by day and store.
+  - name: kpi_shipments
+    description: Shipment KPI view by store and carrier.

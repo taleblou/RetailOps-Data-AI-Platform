@@ -1,57 +1,48 @@
-# RetailOps Data & AI Platform
+# RetailOps Phase 7 - Modular dbt Core Starter
 
-A modular self-hosted retail data and AI platform for ingestion, analytics, forecasting, monitoring, and operational decision support.
+This package contains a ready-to-copy Phase 7 starter for the RetailOps Data & AI Platform.
 
-## Phase coverage in this repository
+## Included structure
 
-This repository is tightened around phases 1 to 6 of the project plan:
+- `core/transformations`: dbt Core project
+- `modules/analytics_kpi/dbt_models`: starter dbt models for KPI analytics
+- `modules/forecasting/dbt_models`: starter dbt models for forecasting features
+- `modules/shipment_risk/dbt_models`: starter dbt models for shipment-risk features
 
-- phase 1: product, personas, tiering, architecture, and module-boundary docs
-- phase 2: monorepo layout, uv workflow, lint/test setup, env template, and clean ignore rules
-- phase 3: core and optional Docker Compose stacks with starter services, networks, volumes, env files, and health checks
-- phase 4: canonical data model migrations and raw/staging/mart-oriented database layout
-- phase 5: connector framework, source API, CSV/database connectors, mapper, validator, and state handling
-- phase 6: Easy CSV wizard and API flow for upload, preview, mapping, validation, raw import, first transform, starter dashboard, and starter forecast
+## Expected schemas
 
-## Quick start with uv
+The models assume these PostgreSQL schemas already exist:
 
-```bash
-uv sync
-cp .env.example .env
-uv run uvicorn core.api.main:app --reload --host 0.0.0.0 --port 8000
-```
+- `raw`
+- `staging`
+- `mart`
 
-Open:
+## Expected raw tables
 
-- Swagger: `http://localhost:8000/docs`
-- Easy CSV wizard: `http://localhost:8000/easy-csv/wizard`
+- `raw.orders`
+- `raw.products`
+- `raw.shipments`
+- `raw.inventory_snapshots`
 
-## Quick start with Docker Compose
+## Quick start
 
 ```bash
-docker compose -f compose/compose.core.yaml up -d postgres metabase
-uv run uvicorn core.api.main:app --reload --host 0.0.0.0 --port 8000
+cd core/transformations
+export DBT_PROFILES_DIR=profiles
+export DBT_PGHOST=localhost
+export DBT_PGPORT=5433
+export DBT_PGUSER=postgres
+export DBT_PGPASSWORD=postgres
+export DBT_PGDATABASE=retailops
+uv run dbt debug --project-dir . --profiles-dir profiles
+uv run dbt source freshness --project-dir . --profiles-dir profiles
+uv run dbt build --project-dir . --profiles-dir profiles
+uv run dbt docs generate --project-dir . --profiles-dir profiles
+uv run dbt docs serve --project-dir . --profiles-dir profiles
 ```
 
-Optional stacks:
+## Notes
 
-```bash
-docker compose -f compose/compose.core.yaml -f compose/compose.analytics.yaml up -d analytics
-docker compose -f compose/compose.core.yaml -f compose/compose.ml.yaml up -d forecasting
-docker compose -f compose/compose.core.yaml -f compose/compose.monitoring.yaml up -d monitoring
-docker compose -f compose/compose.core.yaml -f compose/compose.cdc.yaml up -d cdc
-docker compose -f compose/compose.core.yaml -f compose/compose.lakehouse.yaml up -d lakehouse
-docker compose -f compose/compose.core.yaml -f compose/compose.metadata.yaml up -d metadata
-```
-
-## Run tests
-
-```bash
-uv run pytest
-```
-
-## Notes for scope
-
-- The Shopify connector remains a starter implementation because it needs live tenant credentials and tenant-specific testing.
-- The first transform, dashboard, and forecast in phase 6 are starter implementations designed to prove the full user path before the later specialized phases deepen them.
-- Extra local-only artifacts and package subprojects were removed so the repository stays focused on phases 1 to 6.
+- `profiles/profiles.yml` is environment-variable driven.
+- Source freshness expects an `ingested_at` timestamp in each raw table.
+- Module-level models are kept separate from the core dbt project to preserve modular boundaries.

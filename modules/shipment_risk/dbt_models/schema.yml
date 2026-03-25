@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: shipment_risk_features
+    description: Starter feature view for shipment-delay modeling.
