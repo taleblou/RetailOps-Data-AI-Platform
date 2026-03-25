@@ -1,0 +1,28 @@
+{
+  "dashboard_id": "dash_97f30fc7312c",
+  "dashboard_title": "Starter KPI dashboard · orders.csv",
+  "dashboard_url": "/easy-csv/90b572864fe2437497c3e0c2c03d699b/dashboard/view",
+  "artifact_path": "data/artifacts/dashboards/90b572864fe2437497c3e0c2c03d699b_dash_97f30fc7312c.json",
+  "cards": [
+    {
+      "title": "Total orders",
+      "value": "3",
+      "description": "Unique orders in the starter transform output."
+    },
+    {
+      "title": "Total quantity",
+      "value": "7.00",
+      "description": "Units sold across the loaded dataset."
+    },
+    {
+      "title": "Total revenue",
+      "value": "62.00",
+      "description": "Quantity multiplied by unit price."
+    },
+    {
+      "title": "Sales days",
+      "value": "3",
+      "description": "Distinct daily buckets available for simple trend views."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+order_id,order_date,customer_id,sku,quantity,unit_price,shipment_status,store_code
+1001,2026-03-20T10:00:00,5001,SKU-001,2,10.50,delivered,HEL-01
+1002,2026-03-21T11:30:00,5002,SKU-002,1,20.00,processing,HEL-01
+1003,2026-03-22T09:15:00,5003,SKU-003,4,5.25,shipped,HEL-02

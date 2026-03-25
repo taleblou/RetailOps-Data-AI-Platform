@@ -1,0 +1,18 @@
+{
+  "upload_id": "7e17b7b558a24fc183d91742e8fda73d",
+  "filename": "orders.csv",
+  "stored_path": "data/uploads/7e17b7b558a24fc183d91742e8fda73d_orders.csv",
+  "delimiter": ",",
+  "encoding": "utf-8",
+  "columns": [
+    "order_id",
+    "order_date",
+    "customer_id",
+    "sku",
+    "quantity",
+    "unit_price",
+    "shipment_status",
+    "store_code"
+  ],
+  "mapping": {}
+}

@@ -1,0 +1,66 @@
+{
+  "forecast_run_id": "fc_38f9580513de",
+  "upload_id": "90b572864fe2437497c3e0c2c03d699b",
+  "baseline_method": "daily_average_baseline",
+  "base_daily_orders": 1.0,
+  "base_daily_units": 2.33,
+  "base_daily_revenue": 20.67,
+  "horizons": [
+    {
+      "horizon_days": 7,
+      "projected_orders": 7.0,
+      "projected_units": 16.31,
+      "projected_revenue": 144.69
+    },
+    {
+      "horizon_days": 14,
+      "projected_orders": 14.0,
+      "projected_units": 32.62,
+      "projected_revenue": 289.38
+    },
+    {
+      "horizon_days": 30,
+      "projected_orders": 30.0,
+      "projected_units": 69.9,
+      "projected_revenue": 620.1
+    }
+  ],
+  "daily_forecast": [
+    {
+      "forecast_date": "2026-03-23",
+      "projected_units": 2.33,
+      "projected_revenue": 20.67
+    },
+    {
+      "forecast_date": "2026-03-24",
+      "projected_units": 2.33,
+      "projected_revenue": 20.67
+    },
+    {
+      "forecast_date": "2026-03-25",
+      "projected_units": 2.33,
+      "projected_revenue": 20.67
+    },
+    {
+      "forecast_date": "2026-03-26",
+      "projected_units": 2.33,
+      "projected_revenue": 20.67
+    },
+    {
+      "forecast_date": "2026-03-27",
+      "projected_units": 2.33,
+      "projected_revenue": 20.67
+    },
+    {
+      "forecast_date": "2026-03-28",
+      "projected_units": 2.33,
+      "projected_revenue": 20.67
+    },
+    {
+      "forecast_date": "2026-03-29",
+      "projected_units": 2.33,
+      "projected_revenue": 20.67
+    }
+  ],
+  "artifact_path": "data/artifacts/forecasts/90b572864fe2437497c3e0c2c03d699b_fc_38f9580513de.json"
+}
