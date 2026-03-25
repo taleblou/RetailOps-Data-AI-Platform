@@ -1,0 +1,29 @@
+services:
+  cdc:
+    build:
+      context: ..
+      dockerfile: modules/cdc/Dockerfile
+    container_name: retailops-cdc
+    env_file:
+      - ../.env
+    volumes:
+      - cdc_data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'python -c "print("cdc-ok")"']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+volumes:
+  cdc_data:
+
+networks:
+  retailops_net:
+    driver: bridge
