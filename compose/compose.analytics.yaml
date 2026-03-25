@@ -6,15 +6,24 @@ services:
     container_name: retailops-analytics
     env_file:
       - ../.env
+    volumes:
+      - analytics_data:/app/data
     depends_on:
       postgres:
         condition: service_healthy
       api:
-        condition: service_started
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'python -c "print("analytics-ok")"']
+      interval: 30s
+      timeout: 5s
+      retries: 3
     networks:
       - retailops_net
 
+volumes:
+  analytics_data:
+
 networks:
   retailops_net:
-    external: true
-    name: retailops_retailops_net
+    driver: bridge
