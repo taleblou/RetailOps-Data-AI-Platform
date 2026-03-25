@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from config.settings import get_settings
+from core.api.routes.easy_csv import router as easy_csv_router
 from core.api.routes.sources import router as sources_router
 from core.ingestion.base.raw_loader import RawLoader
 from core.ingestion.base.registry import build_default_registry
@@ -42,6 +43,7 @@ def create_app(repository: RepositoryProtocol | None = None) -> FastAPI:
     app.state.raw_loader = RawLoader(repo)
     app.state.registry = build_default_registry()
     app.include_router(sources_router)
+    app.include_router(easy_csv_router)
 
     @app.get("/health", tags=["health"])
     def health() -> dict[str, str]:
