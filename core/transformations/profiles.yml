@@ -1,0 +1,13 @@
+retail_ops_transformations:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: 127.0.0.1
+      port: 5433
+      user: postgres
+      password: YOUR_REAL_PASSWORD
+      dbname: retailops
+      schema: mart
+      threads: 4
+      keepalives_idle: 0

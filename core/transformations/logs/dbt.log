@@ -5562,3 +5562,220 @@ drop view if exists "retailops"."analytics_mart"."forecast_training_base__dbt_ba
 [0m20:26:34.626764 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7053b0c592b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7053b0eca030>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7053b05b9a00>]}
 [0m20:26:34.627535 [debug] [MainThread]: Flushing usage events
 [0m20:26:35.642531 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:18:10.434011 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x71bd396438c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x71bd38f0cfb0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x71bd37245a00>]}
+
+
+============================== 13:18:10.439774 | a3cd8e6e-e058-4532-89da-53d62607e471 ==============================
+[0m13:18:10.439774 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:18:10.440906 [debug] [MainThread]: running dbt with arguments {'fail_fast': 'False', 'log_format': 'default', 'target_path': 'None', 'profiles_dir': 'core/transformations', 'version_check': 'True', 'log_cache_events': 'False', 'quiet': 'False', 'static_parser': 'True', 'introspect': 'True', 'empty': 'None', 'write_json': 'True', 'cache_selected_only': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'warn_error': 'None', 'no_print': 'None', 'invocation_command': 'dbt debug --project-dir core/transformations --profiles-dir core/transformations', 'indirect_selection': 'eager', 'debug': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'printer_width': '80', 'send_anonymous_usage_stats': 'True', 'partial_parse': 'True', 'log_path': 'core/transformations/logs'}
+[0m13:18:10.462453 [info ] [MainThread]: dbt version: 1.11.7
+[0m13:18:10.463020 [info ] [MainThread]: python version: 3.12.13
+[0m13:18:10.463666 [info ] [MainThread]: python path: /home/morteza/RetailOps-Data-AI-Platform/.venv/bin/python3
+[0m13:18:10.464434 [info ] [MainThread]: os info: Linux-6.17.0-19-generic-x86_64-with-glibc2.39
+[0m13:18:10.465382 [info ] [MainThread]: Using profiles dir at core/transformations
+[0m13:18:10.466579 [info ] [MainThread]: Using profiles.yml file at core/transformations/profiles.yml
+[0m13:18:10.467254 [info ] [MainThread]: Using dbt_project.yml file at core/transformations/dbt_project.yml
+[0m13:18:10.614128 [info ] [MainThread]: Configuration:
+[0m13:18:10.614670 [info ] [MainThread]:   profiles.yml file [[31mERROR not found[0m]
+[0m13:18:10.615216 [info ] [MainThread]:   dbt_project.yml file [[32mOK found and valid[0m]
+[0m13:18:10.615787 [info ] [MainThread]: Required dependencies:
+[0m13:18:10.616513 [debug] [MainThread]: Executing "git --help"
+[0m13:18:10.621973 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]\n           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]\n           [--config-env=<name>=<envvar>] <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone     Clone a repository into a new directory\n   init      Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add       Add file contents to the index\n   mv        Move or rename a file, a directory, or a symlink\n   restore   Restore working tree files\n   rm        Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect    Use binary search to find the commit that introduced a bug\n   diff      Show changes between commits, commit and working tree, etc\n   grep      Print lines matching a pattern\n   log       Show commit logs\n   show      Show various types of objects\n   status    Show the working tree status\n\ngrow, mark and tweak your common history\n   branch    List, create, or delete branches\n   commit    Record changes to the repository\n   merge     Join two or more development histories together\n   rebase    Reapply commits on top of another base tip\n   reset     Reset current HEAD to the specified state\n   switch    Switch branches\n   tag       Create, list, delete or verify a tag object signed with GPG\n\ncollaborate (see also: git help workflows)\n   fetch     Download objects and refs from another repository\n   pull      Fetch from and integrate with another repository or a local branch\n   push      Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m13:18:10.622690 [debug] [MainThread]: STDERR: "b''"
+[0m13:18:10.623178 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m13:18:10.623694 [info ] [MainThread]: Connection test skipped since no profile was found
+[0m13:18:10.624210 [info ] [MainThread]: [31m1 check failed:[0m
+[0m13:18:10.624671 [info ] [MainThread]: dbt looked for a profiles.yml file in core/transformations/profiles.yml, but did
+not find one. For more information on configuring your profile, consult the
+documentation:
+
+https://docs.getdbt.com/docs/configure-your-profile
+
+
+[0m13:18:10.625543 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": false, "command_wall_clock_time": 0.26734674, "process_in_blocks": "57680", "process_kernel_time": 0.241401, "process_mem_max_rss": "104184", "process_out_blocks": "16", "process_user_time": 2.06744}
+[0m13:18:10.626160 [debug] [MainThread]: Command `dbt debug` failed at 13:18:10.626007 after 0.27 seconds
+[0m13:18:10.626642 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x71bd3726ff20>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x71bd373dd310>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x71bd373dfda0>]}
+[0m13:18:10.627171 [debug] [MainThread]: Flushing usage events
+[0m13:18:11.444198 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:18:13.616703 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x747365329130>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x747366f6c380>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x747364c109b0>]}
+
+
+============================== 13:18:13.620894 | 9a8ae9ce-038b-4b95-8047-12acb1298eed ==============================
+[0m13:18:13.620894 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:18:13.621951 [debug] [MainThread]: running dbt with arguments {'invocation_command': 'dbt ls --project-dir core/transformations --profiles-dir core/transformations', 'log_path': 'core/transformations/logs', 'send_anonymous_usage_stats': 'True', 'static_parser': 'True', 'debug': 'False', 'log_cache_events': 'False', 'quiet': 'False', 'use_experimental_parser': 'False', 'partial_parse': 'True', 'log_format': 'default', 'use_colors': 'True', 'introspect': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'profiles_dir': 'core/transformations', 'fail_fast': 'False', 'no_print': 'None', 'indirect_selection': 'eager', 'cache_selected_only': 'False', 'warn_error': 'None', 'empty': 'None', 'target_path': 'None', 'version_check': 'True', 'write_json': 'True'}
+[0m13:18:13.626237 [error] [MainThread]: Encountered an error:
+Runtime Error
+  Could not find profile named 'retail_ops_transformations'
+[0m13:18:13.627267 [debug] [MainThread]: Resource report: {"command_name": "list", "command_success": false, "command_wall_clock_time": 0.09517247, "process_in_blocks": "0", "process_kernel_time": 0.15086, "process_mem_max_rss": "101852", "process_out_blocks": "8", "process_user_time": 1.731403}
+[0m13:18:13.628579 [debug] [MainThread]: Command `dbt ls` failed at 13:18:13.628372 after 0.10 seconds
+[0m13:18:13.629272 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7473642c4dd0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x747364aecbf0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x747364f2a540>]}
+[0m13:18:13.630058 [debug] [MainThread]: Flushing usage events
+[0m13:18:14.617915 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:29:21.566845 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7293a855aff0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7293a78ef4a0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7293a8c95c10>]}
+
+
+============================== 13:29:21.571366 | 7f43c41b-f6b7-4f49-ba97-4427971532be ==============================
+[0m13:29:21.571366 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:29:21.572165 [debug] [MainThread]: running dbt with arguments {'log_format': 'default', 'introspect': 'True', 'no_print': 'None', 'printer_width': '80', 'debug': 'False', 'use_colors': 'True', 'warn_error': 'None', 'log_path': 'core/transformations/logs', 'version_check': 'True', 'indirect_selection': 'eager', 'profiles_dir': 'core/transformations', 'log_cache_events': 'False', 'target_path': 'None', 'write_json': 'True', 'static_parser': 'True', 'partial_parse': 'True', 'invocation_command': 'dbt debug --project-dir core/transformations --profiles-dir core/transformations', 'fail_fast': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'empty': 'None', 'use_experimental_parser': 'False', 'quiet': 'False', 'cache_selected_only': 'False', 'send_anonymous_usage_stats': 'True'}
+[0m13:29:21.585185 [info ] [MainThread]: dbt version: 1.11.7
+[0m13:29:21.585738 [info ] [MainThread]: python version: 3.12.13
+[0m13:29:21.586222 [info ] [MainThread]: python path: /home/morteza/RetailOps-Data-AI-Platform/.venv/bin/python3
+[0m13:29:21.586671 [info ] [MainThread]: os info: Linux-6.17.0-19-generic-x86_64-with-glibc2.39
+[0m13:29:21.684118 [info ] [MainThread]: Using profiles dir at core/transformations
+[0m13:29:21.684697 [info ] [MainThread]: Using profiles.yml file at core/transformations/profiles.yml
+[0m13:29:21.685427 [info ] [MainThread]: Using dbt_project.yml file at core/transformations/dbt_project.yml
+[0m13:29:21.687335 [info ] [MainThread]: adapter type: postgres
+[0m13:29:21.688503 [info ] [MainThread]: adapter version: 1.10.0
+[0m13:29:21.831125 [info ] [MainThread]: Configuration:
+[0m13:29:21.831706 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m13:29:21.832336 [info ] [MainThread]:   dbt_project.yml file [[32mOK found and valid[0m]
+[0m13:29:21.832907 [info ] [MainThread]: Required dependencies:
+[0m13:29:21.833867 [debug] [MainThread]: Executing "git --help"
+[0m13:29:21.837431 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]\n           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]\n           [--config-env=<name>=<envvar>] <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone     Clone a repository into a new directory\n   init      Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add       Add file contents to the index\n   mv        Move or rename a file, a directory, or a symlink\n   restore   Restore working tree files\n   rm        Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect    Use binary search to find the commit that introduced a bug\n   diff      Show changes between commits, commit and working tree, etc\n   grep      Print lines matching a pattern\n   log       Show commit logs\n   show      Show various types of objects\n   status    Show the working tree status\n\ngrow, mark and tweak your common history\n   branch    List, create, or delete branches\n   commit    Record changes to the repository\n   merge     Join two or more development histories together\n   rebase    Reapply commits on top of another base tip\n   reset     Reset current HEAD to the specified state\n   switch    Switch branches\n   tag       Create, list, delete or verify a tag object signed with GPG\n\ncollaborate (see also: git help workflows)\n   fetch     Download objects and refs from another repository\n   pull      Fetch from and integrate with another repository or a local branch\n   push      Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m13:29:21.838310 [debug] [MainThread]: STDERR: "b''"
+[0m13:29:21.839057 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m13:29:21.839652 [info ] [MainThread]: Connection:
+[0m13:29:21.840221 [info ] [MainThread]:   host: 127.0.0.1
+[0m13:29:21.840747 [info ] [MainThread]:   port: 5433
+[0m13:29:21.841309 [info ] [MainThread]:   user: postgres
+[0m13:29:21.841820 [info ] [MainThread]:   database: retailops
+[0m13:29:21.842359 [info ] [MainThread]:   schema: mart
+[0m13:29:21.842859 [info ] [MainThread]:   connect_timeout: 10
+[0m13:29:21.843376 [info ] [MainThread]:   role: None
+[0m13:29:21.844024 [info ] [MainThread]:   search_path: None
+[0m13:29:21.844558 [info ] [MainThread]:   keepalives_idle: 0
+[0m13:29:21.845071 [info ] [MainThread]:   sslmode: None
+[0m13:29:21.845580 [info ] [MainThread]:   sslcert: None
+[0m13:29:21.846055 [info ] [MainThread]:   sslkey: None
+[0m13:29:21.846573 [info ] [MainThread]:   sslrootcert: None
+[0m13:29:21.847035 [info ] [MainThread]:   application_name: dbt
+[0m13:29:21.847502 [info ] [MainThread]:   retries: 1
+[0m13:29:21.848156 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:29:21.944398 [debug] [MainThread]: Acquiring new postgres connection 'debug'
+[0m13:29:21.984582 [debug] [MainThread]: Using postgres connection "debug"
+[0m13:29:21.985116 [debug] [MainThread]: On debug: select 1 as id
+[0m13:29:21.985631 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m13:29:22.035342 [debug] [MainThread]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:29:22.047884 [debug] [MainThread]: Postgres adapter: Error running SQL: select 1 as id
+[0m13:29:22.048444 [debug] [MainThread]: Postgres adapter: Rolling back transaction.
+[0m13:29:22.048974 [debug] [MainThread]: On debug: No close available on handle
+[0m13:29:22.049481 [info ] [MainThread]:   Connection test: [[31mERROR[0m]
+
+[0m13:29:22.050114 [info ] [MainThread]: [31m1 check failed:[0m
+[0m13:29:22.050713 [info ] [MainThread]: dbt was unable to connect to the specified database.
+The database returned the following error:
+
+  >Database Error
+  connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+  
+
+Check your database credentials and try again. For more information, visit:
+https://docs.getdbt.com/docs/configure-your-profile
+
+
+[0m13:29:22.051844 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": false, "command_wall_clock_time": 0.5638354, "process_in_blocks": "19784", "process_kernel_time": 0.195794, "process_mem_max_rss": "117252", "process_out_blocks": "32", "process_user_time": 2.042425}
+[0m13:29:22.052764 [debug] [MainThread]: Command `dbt debug` failed at 13:29:22.052515 after 0.56 seconds
+[0m13:29:22.053671 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m13:29:22.054366 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7293a67aa9c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7293a70c4c80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7293a5bc8860>]}
+[0m13:29:22.055156 [debug] [MainThread]: Flushing usage events
+[0m13:29:22.892521 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:29:25.145760 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c3707d10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c35d6c30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c359fe90>]}
+
+
+============================== 13:29:25.150062 | 95502fc7-9729-44da-901b-40f1be7c489e ==============================
+[0m13:29:25.150062 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:29:25.151199 [debug] [MainThread]: running dbt with arguments {'warn_error': 'None', 'invocation_command': 'dbt ls --project-dir core/transformations --profiles-dir core/transformations', 'no_print': 'None', 'empty': 'None', 'fail_fast': 'False', 'log_format': 'default', 'use_colors': 'True', 'partial_parse': 'True', 'profiles_dir': 'core/transformations', 'log_cache_events': 'False', 'use_experimental_parser': 'False', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'send_anonymous_usage_stats': 'True', 'cache_selected_only': 'False', 'indirect_selection': 'eager', 'introspect': 'True', 'printer_width': '80', 'write_json': 'True', 'static_parser': 'True', 'quiet': 'False', 'version_check': 'True', 'debug': 'False', 'log_path': 'core/transformations/logs'}
+[0m13:29:25.385488 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '95502fc7-9729-44da-901b-40f1be7c489e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c2d34920>]}
+[0m13:29:25.467512 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '95502fc7-9729-44da-901b-40f1be7c489e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c2d02660>]}
+[0m13:29:25.468574 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:29:25.574783 [debug] [MainThread]: checksum: b80718358155fc17c3559352095564dd56ada1cc1a1c0ef2e62c857e71583775, vars: {}, profile: , target: , version: 1.11.7
+[0m13:29:25.704499 [info ] [MainThread]: Unable to do partial parsing because profile has changed
+[0m13:29:25.705128 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': '95502fc7-9729-44da-901b-40f1be7c489e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c356e180>]}
+[0m13:29:27.158691 [warn ] [MainThread]: [[33mWARNING[0m][MissingArgumentsPropertyInGenericTestDeprecation]: Deprecated
+functionality
+Found top-level arguments to test `relationships` defined on
+'fct_inventory_daily' in package 'retail_ops_transformations'
+(models/marts/core/marts.yml). Arguments to generic tests should be nested under
+the `arguments` property.
+[0m13:29:27.159418 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': '95502fc7-9729-44da-901b-40f1be7c489e', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c0b87a10>]}
+[0m13:29:27.471523 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.retail_ops_transformations.analytics_kpi
+- models.retail_ops_transformations.shipment_risk
+- models.retail_ops_transformations.forecasting
+[0m13:29:27.484833 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '95502fc7-9729-44da-901b-40f1be7c489e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c0b42060>]}
+[0m13:29:27.589663 [debug] [MainThread]: Wrote artifact WritableManifest to core/transformations/target/manifest.json
+[0m13:29:27.592947 [debug] [MainThread]: Wrote artifact SemanticManifest to core/transformations/target/semantic_manifest.json
+[0m13:29:27.619659 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '95502fc7-9729-44da-901b-40f1be7c489e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8bfb97350>]}
+[0m13:29:27.620332 [info ] [MainThread]: Found 19 models, 29 data tests, 4 sources, 465 macros
+[0m13:29:27.620814 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '95502fc7-9729-44da-901b-40f1be7c489e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c0ba7ec0>]}
+[0m13:29:27.622612 [info ] [MainThread]: retail_ops_transformations.base.base_inventory
+[0m13:29:27.623305 [info ] [MainThread]: retail_ops_transformations.base.base_orders
+[0m13:29:27.623833 [info ] [MainThread]: retail_ops_transformations.base.base_products
+[0m13:29:27.624856 [info ] [MainThread]: retail_ops_transformations.base.base_shipments
+[0m13:29:27.625787 [info ] [MainThread]: retail_ops_transformations.marts.core.dim_customer
+[0m13:29:27.626687 [info ] [MainThread]: retail_ops_transformations.marts.core.dim_product
+[0m13:29:27.627415 [info ] [MainThread]: retail_ops_transformations.marts.core.fct_daily_sales
+[0m13:29:27.628072 [info ] [MainThread]: retail_ops_transformations.marts.core.fct_inventory_daily
+[0m13:29:27.628651 [info ] [MainThread]: retail_ops_transformations.marts.core.fct_shipments
+[0m13:29:27.629200 [info ] [MainThread]: retail_ops_transformations.forecast_training_base
+[0m13:29:27.629692 [info ] [MainThread]: retail_ops_transformations.kpi_inventory_health
+[0m13:29:27.630152 [info ] [MainThread]: retail_ops_transformations.kpi_sales_daily
+[0m13:29:27.630599 [info ] [MainThread]: retail_ops_transformations.kpi_shipments
+[0m13:29:27.631039 [info ] [MainThread]: retail_ops_transformations.marts.core.mart_store_kpis
+[0m13:29:27.631502 [info ] [MainThread]: retail_ops_transformations.shipment_risk_features
+[0m13:29:27.631942 [info ] [MainThread]: retail_ops_transformations.staging.stg_inventory
+[0m13:29:27.632391 [info ] [MainThread]: retail_ops_transformations.staging.stg_orders
+[0m13:29:27.632831 [info ] [MainThread]: retail_ops_transformations.staging.stg_products
+[0m13:29:27.633281 [info ] [MainThread]: retail_ops_transformations.staging.stg_shipments
+[0m13:29:27.633728 [info ] [MainThread]: source:retail_ops_transformations.raw.inventory_snapshots
+[0m13:29:27.634181 [info ] [MainThread]: source:retail_ops_transformations.raw.orders
+[0m13:29:27.634613 [info ] [MainThread]: source:retail_ops_transformations.raw.products
+[0m13:29:27.635028 [info ] [MainThread]: source:retail_ops_transformations.raw.shipments
+[0m13:29:27.635482 [info ] [MainThread]: retail_ops_transformations.staging.accepted_values_stg_orders_order_status__pending__paid__shipped__cancelled__returned
+[0m13:29:27.635931 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_dim_customer_customer_id
+[0m13:29:27.636399 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_dim_product_product_id
+[0m13:29:27.636829 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_fct_daily_sales_order_date
+[0m13:29:27.637271 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_fct_daily_sales_store_id
+[0m13:29:27.637730 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_fct_inventory_daily_product_id
+[0m13:29:27.638225 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_fct_inventory_daily_snapshot_date
+[0m13:29:27.638672 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_fct_shipments_order_id
+[0m13:29:27.639124 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_fct_shipments_shipment_id
+[0m13:29:27.639561 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_mart_store_kpis_order_date
+[0m13:29:27.639976 [info ] [MainThread]: retail_ops_transformations.marts.core.not_null_mart_store_kpis_store_id
+[0m13:29:27.640467 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_inventory_product_id
+[0m13:29:27.641331 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_inventory_snapshot_date
+[0m13:29:27.642101 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_orders_customer_id
+[0m13:29:27.643069 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_orders_order_id
+[0m13:29:27.643800 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_orders_total_amount
+[0m13:29:27.644493 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_products_product_id
+[0m13:29:27.645151 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_products_sku
+[0m13:29:27.645669 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_shipments_order_id
+[0m13:29:27.646217 [info ] [MainThread]: retail_ops_transformations.staging.not_null_stg_shipments_shipment_id
+[0m13:29:27.646685 [info ] [MainThread]: retail_ops_transformations.marts.core.relationships_fct_inventory_daily_product_id__product_id__ref_dim_product_
+[0m13:29:27.647235 [info ] [MainThread]: retail_ops_transformations.marts.core.relationships_fct_shipments_order_id__order_id__ref_stg_orders_
+[0m13:29:27.647709 [info ] [MainThread]: retail_ops_transformations.staging.relationships_stg_shipments_order_id__order_id__ref_stg_orders_
+[0m13:29:27.648199 [info ] [MainThread]: retail_ops_transformations.marts.core.unique_dim_customer_customer_id
+[0m13:29:27.648659 [info ] [MainThread]: retail_ops_transformations.marts.core.unique_dim_product_product_id
+[0m13:29:27.649125 [info ] [MainThread]: retail_ops_transformations.marts.core.unique_fct_shipments_shipment_id
+[0m13:29:27.649581 [info ] [MainThread]: retail_ops_transformations.staging.unique_stg_orders_order_id
+[0m13:29:27.650033 [info ] [MainThread]: retail_ops_transformations.staging.unique_stg_products_product_id
+[0m13:29:27.650498 [info ] [MainThread]: retail_ops_transformations.staging.unique_stg_shipments_shipment_id
+[0m13:29:27.651275 [warn ] [MainThread]: [[33mWARNING[0m][DeprecationsSummary]: Deprecated functionality
+Summary of encountered deprecations:
+- MissingArgumentsPropertyInGenericTestDeprecation: 4 occurrences
+To see all deprecation instances instead of just the first occurrence of each,
+run command again with the `--show-all-deprecations` flag. You may also need to
+run with `--no-partial-parse` as some deprecations are only encountered during
+parsing.
+[0m13:29:27.652226 [debug] [MainThread]: Resource report: {"command_name": "list", "command_success": true, "command_wall_clock_time": 2.5908608, "process_in_blocks": "6008", "process_kernel_time": 0.21072, "process_mem_max_rss": "123080", "process_out_blocks": "2416", "process_user_time": 4.161479}
+[0m13:29:27.652884 [debug] [MainThread]: Command `dbt ls` succeeded at 13:29:27.652734 after 2.59 seconds
+[0m13:29:27.653429 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c38162d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c3caaa50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73d8c2d347d0>]}
+[0m13:29:27.653939 [debug] [MainThread]: Flushing usage events
+[0m13:29:28.469652 [debug] [MainThread]: An error was encountered while trying to flush usage events
