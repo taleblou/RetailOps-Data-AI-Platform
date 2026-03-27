@@ -6100,3 +6100,645 @@ Database Error
 [0m13:42:18.148166 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x75035ca40770>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x75035a1dcc50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x75035cb07e60>]}
 [0m13:42:18.148874 [debug] [MainThread]: Flushing usage events
 [0m13:42:18.999028 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:46:43.975803 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73b106183560>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73b10633cad0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73b105d2ac30>]}
+
+
+============================== 13:46:43.979769 | 17e1520d-9957-4628-8b5b-435449d4c1fa ==============================
+[0m13:46:43.979769 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:46:43.980605 [debug] [MainThread]: running dbt with arguments {'use_experimental_parser': 'False', 'introspect': 'True', 'log_path': 'core/transformations/logs', 'profiles_dir': 'core/transformations', 'log_cache_events': 'False', 'version_check': 'True', 'warn_error': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'fail_fast': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'static_parser': 'True', 'printer_width': '80', 'invocation_command': 'dbt debug --project-dir core/transformations --profiles-dir core/transformations', 'log_format': 'default', 'empty': 'None', 'debug': 'False', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'use_colors': 'True', 'target_path': 'None', 'indirect_selection': 'eager', 'no_print': 'None'}
+[0m13:46:43.991965 [info ] [MainThread]: dbt version: 1.11.7
+[0m13:46:43.992537 [info ] [MainThread]: python version: 3.12.13
+[0m13:46:43.993017 [info ] [MainThread]: python path: /home/morteza/RetailOps-Data-AI-Platform/.venv/bin/python3
+[0m13:46:43.993493 [info ] [MainThread]: os info: Linux-6.17.0-19-generic-x86_64-with-glibc2.39
+[0m13:46:44.050924 [info ] [MainThread]: Using profiles dir at core/transformations
+[0m13:46:44.051494 [info ] [MainThread]: Using profiles.yml file at core/transformations/profiles.yml
+[0m13:46:44.052066 [info ] [MainThread]: Using dbt_project.yml file at core/transformations/dbt_project.yml
+[0m13:46:44.052873 [info ] [MainThread]: adapter type: postgres
+[0m13:46:44.053672 [info ] [MainThread]: adapter version: 1.10.0
+[0m13:46:44.206293 [info ] [MainThread]: Configuration:
+[0m13:46:44.206863 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m13:46:44.207430 [info ] [MainThread]:   dbt_project.yml file [[32mOK found and valid[0m]
+[0m13:46:44.208079 [info ] [MainThread]: Required dependencies:
+[0m13:46:44.208728 [debug] [MainThread]: Executing "git --help"
+[0m13:46:44.211473 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]\n           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]\n           [--config-env=<name>=<envvar>] <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone     Clone a repository into a new directory\n   init      Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add       Add file contents to the index\n   mv        Move or rename a file, a directory, or a symlink\n   restore   Restore working tree files\n   rm        Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect    Use binary search to find the commit that introduced a bug\n   diff      Show changes between commits, commit and working tree, etc\n   grep      Print lines matching a pattern\n   log       Show commit logs\n   show      Show various types of objects\n   status    Show the working tree status\n\ngrow, mark and tweak your common history\n   branch    List, create, or delete branches\n   commit    Record changes to the repository\n   merge     Join two or more development histories together\n   rebase    Reapply commits on top of another base tip\n   reset     Reset current HEAD to the specified state\n   switch    Switch branches\n   tag       Create, list, delete or verify a tag object signed with GPG\n\ncollaborate (see also: git help workflows)\n   fetch     Download objects and refs from another repository\n   pull      Fetch from and integrate with another repository or a local branch\n   push      Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m13:46:44.212064 [debug] [MainThread]: STDERR: "b''"
+[0m13:46:44.212566 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m13:46:44.213221 [info ] [MainThread]: Connection:
+[0m13:46:44.213831 [info ] [MainThread]:   host: 127.0.0.1
+[0m13:46:44.214390 [info ] [MainThread]:   port: 5433
+[0m13:46:44.214900 [info ] [MainThread]:   user: postgres
+[0m13:46:44.215410 [info ] [MainThread]:   database: retailops
+[0m13:46:44.215897 [info ] [MainThread]:   schema: mart
+[0m13:46:44.216604 [info ] [MainThread]:   connect_timeout: 10
+[0m13:46:44.217190 [info ] [MainThread]:   role: None
+[0m13:46:44.217735 [info ] [MainThread]:   search_path: None
+[0m13:46:44.218285 [info ] [MainThread]:   keepalives_idle: 0
+[0m13:46:44.218833 [info ] [MainThread]:   sslmode: None
+[0m13:46:44.219380 [info ] [MainThread]:   sslcert: None
+[0m13:46:44.219921 [info ] [MainThread]:   sslkey: None
+[0m13:46:44.220609 [info ] [MainThread]:   sslrootcert: None
+[0m13:46:44.221699 [info ] [MainThread]:   application_name: dbt
+[0m13:46:44.222470 [info ] [MainThread]:   retries: 1
+[0m13:46:44.223390 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:46:44.341745 [debug] [MainThread]: Acquiring new postgres connection 'debug'
+[0m13:46:44.384032 [debug] [MainThread]: Using postgres connection "debug"
+[0m13:46:44.385018 [debug] [MainThread]: On debug: select 1 as id
+[0m13:46:44.386170 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m13:46:44.408868 [debug] [MainThread]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:46:44.422661 [debug] [MainThread]: Postgres adapter: Error running SQL: select 1 as id
+[0m13:46:44.423376 [debug] [MainThread]: Postgres adapter: Rolling back transaction.
+[0m13:46:44.423903 [debug] [MainThread]: On debug: No close available on handle
+[0m13:46:44.424404 [info ] [MainThread]:   Connection test: [[31mERROR[0m]
+
+[0m13:46:44.424953 [info ] [MainThread]: [31m1 check failed:[0m
+[0m13:46:44.425544 [info ] [MainThread]: dbt was unable to connect to the specified database.
+The database returned the following error:
+
+  >Database Error
+  connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+  
+
+Check your database credentials and try again. For more information, visit:
+https://docs.getdbt.com/docs/configure-your-profile
+
+
+[0m13:46:44.426824 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": false, "command_wall_clock_time": 0.52516264, "process_in_blocks": "0", "process_kernel_time": 0.204418, "process_mem_max_rss": "117608", "process_out_blocks": "24", "process_user_time": 2.125954}
+[0m13:46:44.427992 [debug] [MainThread]: Command `dbt debug` failed at 13:46:44.427694 after 0.53 seconds
+[0m13:46:44.429056 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m13:46:44.429756 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73b10636ee70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73b1067a3e00>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x73b105d2ac90>]}
+[0m13:46:44.430708 [debug] [MainThread]: Flushing usage events
+[0m13:46:45.348955 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:46:47.619765 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fe146210>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fff0c140>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fd76d1c0>]}
+
+
+============================== 13:46:47.623947 | b83e429c-26eb-471d-bedb-4b9c2905f5ec ==============================
+[0m13:46:47.623947 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:46:47.624801 [debug] [MainThread]: running dbt with arguments {'quiet': 'False', 'version_check': 'True', 'warn_error': 'None', 'invocation_command': 'dbt run --project-dir core/transformations --profiles-dir core/transformations', 'debug': 'False', 'target_path': 'None', 'empty': 'False', 'write_json': 'True', 'indirect_selection': 'eager', 'log_format': 'default', 'cache_selected_only': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_cache_events': 'False', 'profiles_dir': 'core/transformations', 'log_path': 'core/transformations/logs', 'send_anonymous_usage_stats': 'True', 'partial_parse': 'True', 'static_parser': 'True', 'introspect': 'True', 'use_colors': 'True', 'printer_width': '80', 'fail_fast': 'False', 'use_experimental_parser': 'False', 'no_print': 'None'}
+[0m13:46:47.844645 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'b83e429c-26eb-471d-bedb-4b9c2905f5ec', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fd32e030>]}
+[0m13:46:47.929236 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'b83e429c-26eb-471d-bedb-4b9c2905f5ec', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fd3adf40>]}
+[0m13:46:47.930215 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:46:48.051237 [debug] [MainThread]: checksum: b80718358155fc17c3559352095564dd56ada1cc1a1c0ef2e62c857e71583775, vars: {}, profile: , target: , version: 1.11.7
+[0m13:46:48.205358 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m13:46:48.205848 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m13:46:48.206290 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m13:46:48.214817 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.retail_ops_transformations.analytics_kpi
+- models.retail_ops_transformations.shipment_risk
+- models.retail_ops_transformations.forecasting
+[0m13:46:48.269218 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'b83e429c-26eb-471d-bedb-4b9c2905f5ec', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fd1eae10>]}
+[0m13:46:48.395288 [debug] [MainThread]: Wrote artifact WritableManifest to core/transformations/target/manifest.json
+[0m13:46:48.397563 [debug] [MainThread]: Wrote artifact SemanticManifest to core/transformations/target/semantic_manifest.json
+[0m13:46:48.415411 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'b83e429c-26eb-471d-bedb-4b9c2905f5ec', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fb520530>]}
+[0m13:46:48.416028 [info ] [MainThread]: Found 19 models, 29 data tests, 4 sources, 465 macros
+[0m13:46:48.416573 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'b83e429c-26eb-471d-bedb-4b9c2905f5ec', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fbd1d970>]}
+[0m13:46:48.421590 [info ] [MainThread]: 
+[0m13:46:48.422200 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m13:46:48.422788 [info ] [MainThread]: 
+[0m13:46:48.423575 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m13:46:48.429813 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops'
+[0m13:46:48.438928 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops'
+[0m13:46:48.475412 [debug] [ThreadPool]: Using postgres connection "list_retailops"
+[0m13:46:48.475927 [debug] [ThreadPool]: Using postgres connection "list_retailops"
+[0m13:46:48.476397 [debug] [ThreadPool]: On list_retailops: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m13:46:48.476913 [debug] [ThreadPool]: On list_retailops: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m13:46:48.477394 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:46:48.477832 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:46:48.492409 [debug] [ThreadPool]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:46:48.493792 [debug] [ThreadPool]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:46:48.505305 [debug] [ThreadPool]: Postgres adapter: Error running SQL: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m13:46:48.506234 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:46:48.507202 [debug] [ThreadPool]: Postgres adapter: Error running SQL: macro list_schemas
+[0m13:46:48.508360 [debug] [ThreadPool]: Postgres adapter: Error running SQL: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m13:46:48.509020 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:46:48.509587 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:46:48.510182 [debug] [ThreadPool]: On list_retailops: No close available on handle
+[0m13:46:48.510793 [debug] [ThreadPool]: Postgres adapter: Error running SQL: macro list_schemas
+[0m13:46:48.511833 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:46:48.512443 [debug] [ThreadPool]: On list_retailops: No close available on handle
+[0m13:46:48.513295 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m13:46:48.513706 [debug] [MainThread]: Connection 'list_retailops' was properly closed.
+[0m13:46:48.514106 [debug] [MainThread]: Connection 'list_retailops' was properly closed.
+[0m13:46:48.514518 [info ] [MainThread]: 
+[0m13:46:48.515069 [info ] [MainThread]: Finished running  in 0 hours 0 minutes and 0.09 seconds (0.09s).
+[0m13:46:48.516191 [error] [MainThread]: Encountered an error:
+Database Error
+  connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+  
+[0m13:46:48.517493 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.972427, "process_in_blocks": "0", "process_kernel_time": 0.239241, "process_mem_max_rss": "124128", "process_out_blocks": "1304", "process_user_time": 2.575837}
+[0m13:46:48.518351 [debug] [MainThread]: Command `dbt run` failed at 13:46:48.518160 after 0.97 seconds
+[0m13:46:48.519378 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fde40d70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fb585ca0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7361fd450470>]}
+[0m13:46:48.520366 [debug] [MainThread]: Flushing usage events
+[0m13:46:49.442747 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:46:51.717727 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7aca95be0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7ad05bc80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7ad05bbf0>]}
+
+
+============================== 13:46:51.721674 | 2757135e-6213-46eb-a66b-f3eb4a2f660f ==============================
+[0m13:46:51.721674 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:46:51.722528 [debug] [MainThread]: running dbt with arguments {'send_anonymous_usage_stats': 'True', 'use_colors': 'True', 'log_cache_events': 'False', 'empty': 'None', 'write_json': 'True', 'invocation_command': 'dbt test --project-dir core/transformations --profiles-dir core/transformations', 'static_parser': 'True', 'cache_selected_only': 'False', 'quiet': 'False', 'indirect_selection': 'eager', 'version_check': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'fail_fast': 'False', 'log_format': 'default', 'target_path': 'None', 'introspect': 'True', 'warn_error': 'None', 'profiles_dir': 'core/transformations', 'debug': 'False', 'log_path': 'core/transformations/logs', 'partial_parse': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80'}
+[0m13:46:51.941339 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '2757135e-6213-46eb-a66b-f3eb4a2f660f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7ad08aff0>]}
+[0m13:46:52.028979 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '2757135e-6213-46eb-a66b-f3eb4a2f660f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7acae7290>]}
+[0m13:46:52.029975 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:46:52.147917 [debug] [MainThread]: checksum: b80718358155fc17c3559352095564dd56ada1cc1a1c0ef2e62c857e71583775, vars: {}, profile: , target: , version: 1.11.7
+[0m13:46:52.294540 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m13:46:52.295044 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m13:46:52.295488 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m13:46:52.304429 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.retail_ops_transformations.analytics_kpi
+- models.retail_ops_transformations.forecasting
+- models.retail_ops_transformations.shipment_risk
+[0m13:46:52.356416 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '2757135e-6213-46eb-a66b-f3eb4a2f660f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7abf24cb0>]}
+[0m13:46:52.467964 [debug] [MainThread]: Wrote artifact WritableManifest to core/transformations/target/manifest.json
+[0m13:46:52.470184 [debug] [MainThread]: Wrote artifact SemanticManifest to core/transformations/target/semantic_manifest.json
+[0m13:46:52.502106 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '2757135e-6213-46eb-a66b-f3eb4a2f660f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7aa311310>]}
+[0m13:46:52.502791 [info ] [MainThread]: Found 19 models, 29 data tests, 4 sources, 465 macros
+[0m13:46:52.503332 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '2757135e-6213-46eb-a66b-f3eb4a2f660f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7ab7295e0>]}
+[0m13:46:52.509245 [info ] [MainThread]: 
+[0m13:46:52.509838 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m13:46:52.510400 [info ] [MainThread]: 
+[0m13:46:52.511200 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m13:46:52.517388 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops_mart_mart'
+[0m13:46:52.525558 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops_mart_staging'
+[0m13:46:52.565703 [debug] [ThreadPool]: Using postgres connection "list_retailops_mart_mart"
+[0m13:46:52.566296 [debug] [ThreadPool]: Using postgres connection "list_retailops_mart_staging"
+[0m13:46:52.566879 [debug] [ThreadPool]: On list_retailops_mart_mart: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_mart_mart"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'mart_mart'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'mart_mart'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'mart_mart'
+  
+[0m13:46:52.567533 [debug] [ThreadPool]: On list_retailops_mart_staging: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_mart_staging"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'mart_staging'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'mart_staging'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'mart_staging'
+  
+[0m13:46:52.568131 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:46:52.568699 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:46:52.583498 [debug] [ThreadPool]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:46:52.584579 [debug] [ThreadPool]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:46:52.603114 [debug] [ThreadPool]: Postgres adapter: Error running SQL: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_mart_staging"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'mart_staging'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'mart_staging'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'mart_staging'
+  
+[0m13:46:52.604128 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:46:52.605155 [debug] [ThreadPool]: Postgres adapter: Error running SQL: macro list_relations_without_caching
+[0m13:46:52.605846 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:46:52.606631 [debug] [ThreadPool]: Postgres adapter: Error running SQL: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_mart_mart"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'mart_mart'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'mart_mart'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'mart_mart'
+  
+[0m13:46:52.607216 [debug] [ThreadPool]: On list_retailops_mart_staging: No close available on handle
+[0m13:46:52.607771 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:46:52.608822 [debug] [ThreadPool]: Postgres adapter: Error running SQL: macro list_relations_without_caching
+[0m13:46:52.609472 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:46:52.610140 [debug] [ThreadPool]: On list_retailops_mart_mart: No close available on handle
+[0m13:46:52.610921 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m13:46:52.611399 [debug] [MainThread]: Connection 'list_retailops_mart_mart' was properly closed.
+[0m13:46:52.611847 [debug] [MainThread]: Connection 'list_retailops_mart_staging' was properly closed.
+[0m13:46:52.612331 [info ] [MainThread]: 
+[0m13:46:52.612908 [info ] [MainThread]: Finished running  in 0 hours 0 minutes and 0.10 seconds (0.10s).
+[0m13:46:52.614024 [error] [MainThread]: Encountered an error:
+Database Error
+  connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+  
+[0m13:46:52.615365 [debug] [MainThread]: Resource report: {"command_name": "test", "command_success": false, "command_wall_clock_time": 0.97302705, "process_in_blocks": "0", "process_kernel_time": 0.221427, "process_mem_max_rss": "125444", "process_out_blocks": "1312", "process_user_time": 2.595286}
+[0m13:46:52.616199 [debug] [MainThread]: Command `dbt test` failed at 13:46:52.615992 after 0.97 seconds
+[0m13:46:52.617217 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7ad115550>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7ab370620>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bd7aa35bc20>]}
+[0m13:46:52.617993 [debug] [MainThread]: Flushing usage events
+[0m13:46:53.436150 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:47:43.909652 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78dc48ed80e0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78dc4a5e82c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78dc48c2caa0>]}
+
+
+============================== 13:47:43.913852 | 48a7d5e4-0686-4cdc-accc-81c06eefdf8f ==============================
+[0m13:47:43.913852 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:47:43.914783 [debug] [MainThread]: running dbt with arguments {'profiles_dir': 'core/transformations', 'use_colors': 'True', 'use_experimental_parser': 'False', 'quiet': 'False', 'log_cache_events': 'False', 'log_format': 'default', 'empty': 'None', 'no_print': 'None', 'indirect_selection': 'eager', 'fail_fast': 'False', 'printer_width': '80', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'debug': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'send_anonymous_usage_stats': 'True', 'warn_error': 'None', 'write_json': 'True', 'partial_parse': 'True', 'target_path': 'None', 'invocation_command': 'dbt debug --project-dir core/transformations --profiles-dir core/transformations', 'static_parser': 'True', 'log_path': 'core/transformations/logs'}
+[0m13:47:43.926861 [info ] [MainThread]: dbt version: 1.11.7
+[0m13:47:43.927423 [info ] [MainThread]: python version: 3.12.13
+[0m13:47:43.927876 [info ] [MainThread]: python path: /home/morteza/RetailOps-Data-AI-Platform/.venv/bin/python3
+[0m13:47:43.928446 [info ] [MainThread]: os info: Linux-6.17.0-19-generic-x86_64-with-glibc2.39
+[0m13:47:43.983947 [info ] [MainThread]: Using profiles dir at core/transformations
+[0m13:47:43.984472 [info ] [MainThread]: Using profiles.yml file at core/transformations/profiles.yml
+[0m13:47:43.984990 [info ] [MainThread]: Using dbt_project.yml file at core/transformations/dbt_project.yml
+[0m13:47:43.985877 [info ] [MainThread]: adapter type: postgres
+[0m13:47:43.986588 [info ] [MainThread]: adapter version: 1.10.0
+[0m13:47:44.129027 [info ] [MainThread]: Configuration:
+[0m13:47:44.129596 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m13:47:44.130120 [info ] [MainThread]:   dbt_project.yml file [[32mOK found and valid[0m]
+[0m13:47:44.130725 [info ] [MainThread]: Required dependencies:
+[0m13:47:44.131338 [debug] [MainThread]: Executing "git --help"
+[0m13:47:44.134946 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]\n           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]\n           [--config-env=<name>=<envvar>] <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone     Clone a repository into a new directory\n   init      Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add       Add file contents to the index\n   mv        Move or rename a file, a directory, or a symlink\n   restore   Restore working tree files\n   rm        Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect    Use binary search to find the commit that introduced a bug\n   diff      Show changes between commits, commit and working tree, etc\n   grep      Print lines matching a pattern\n   log       Show commit logs\n   show      Show various types of objects\n   status    Show the working tree status\n\ngrow, mark and tweak your common history\n   branch    List, create, or delete branches\n   commit    Record changes to the repository\n   merge     Join two or more development histories together\n   rebase    Reapply commits on top of another base tip\n   reset     Reset current HEAD to the specified state\n   switch    Switch branches\n   tag       Create, list, delete or verify a tag object signed with GPG\n\ncollaborate (see also: git help workflows)\n   fetch     Download objects and refs from another repository\n   pull      Fetch from and integrate with another repository or a local branch\n   push      Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m13:47:44.135936 [debug] [MainThread]: STDERR: "b''"
+[0m13:47:44.136749 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m13:47:44.137617 [info ] [MainThread]: Connection:
+[0m13:47:44.138267 [info ] [MainThread]:   host: 127.0.0.1
+[0m13:47:44.138790 [info ] [MainThread]:   port: 5433
+[0m13:47:44.139405 [info ] [MainThread]:   user: postgres
+[0m13:47:44.140075 [info ] [MainThread]:   database: retailops
+[0m13:47:44.140718 [info ] [MainThread]:   schema: mart
+[0m13:47:44.141278 [info ] [MainThread]:   connect_timeout: 10
+[0m13:47:44.141799 [info ] [MainThread]:   role: None
+[0m13:47:44.142361 [info ] [MainThread]:   search_path: None
+[0m13:47:44.142848 [info ] [MainThread]:   keepalives_idle: 0
+[0m13:47:44.143368 [info ] [MainThread]:   sslmode: None
+[0m13:47:44.143850 [info ] [MainThread]:   sslcert: None
+[0m13:47:44.144368 [info ] [MainThread]:   sslkey: None
+[0m13:47:44.144840 [info ] [MainThread]:   sslrootcert: None
+[0m13:47:44.145367 [info ] [MainThread]:   application_name: dbt
+[0m13:47:44.145844 [info ] [MainThread]:   retries: 1
+[0m13:47:44.146555 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:47:44.239472 [debug] [MainThread]: Acquiring new postgres connection 'debug'
+[0m13:47:44.266316 [debug] [MainThread]: Using postgres connection "debug"
+[0m13:47:44.266791 [debug] [MainThread]: On debug: select 1 as id
+[0m13:47:44.267197 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m13:47:44.280299 [debug] [MainThread]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:47:44.291425 [debug] [MainThread]: Postgres adapter: Error running SQL: select 1 as id
+[0m13:47:44.292035 [debug] [MainThread]: Postgres adapter: Rolling back transaction.
+[0m13:47:44.292638 [debug] [MainThread]: On debug: No close available on handle
+[0m13:47:44.293171 [info ] [MainThread]:   Connection test: [[31mERROR[0m]
+
+[0m13:47:44.293780 [info ] [MainThread]: [31m1 check failed:[0m
+[0m13:47:44.294440 [info ] [MainThread]: dbt was unable to connect to the specified database.
+The database returned the following error:
+
+  >Database Error
+  connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+  
+
+Check your database credentials and try again. For more information, visit:
+https://docs.getdbt.com/docs/configure-your-profile
+
+
+[0m13:47:44.295714 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": false, "command_wall_clock_time": 0.4788752, "process_in_blocks": "0", "process_kernel_time": 0.204382, "process_mem_max_rss": "117612", "process_out_blocks": "24", "process_user_time": 2.135547}
+[0m13:47:44.297011 [debug] [MainThread]: Command `dbt debug` failed at 13:47:44.296655 after 0.48 seconds
+[0m13:47:44.297754 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m13:47:44.298479 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78dc4a606d20>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78dc49529ac0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78dc48e70b90>]}
+[0m13:47:44.299303 [debug] [MainThread]: Flushing usage events
+[0m13:47:45.149132 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:47:47.301893 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baab8abaa0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baab1fb140>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baac765a60>]}
+
+
+============================== 13:47:47.305813 | 68c4516f-bb4f-43a0-ae8e-64a3fd05ac8b ==============================
+[0m13:47:47.305813 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:47:47.306632 [debug] [MainThread]: running dbt with arguments {'introspect': 'True', 'static_parser': 'True', 'log_format': 'default', 'partial_parse': 'True', 'target_path': 'None', 'profiles_dir': 'core/transformations', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'version_check': 'True', 'log_cache_events': 'False', 'no_print': 'None', 'quiet': 'False', 'warn_error': 'None', 'printer_width': '80', 'write_json': 'True', 'cache_selected_only': 'False', 'empty': 'False', 'log_path': 'core/transformations/logs', 'use_colors': 'True', 'send_anonymous_usage_stats': 'True', 'use_experimental_parser': 'False', 'debug': 'False', 'invocation_command': 'dbt run --project-dir core/transformations --profiles-dir core/transformations', 'fail_fast': 'False', 'indirect_selection': 'eager'}
+[0m13:47:47.512881 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '68c4516f-bb4f-43a0-ae8e-64a3fd05ac8b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baad36e780>]}
+[0m13:47:47.621914 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '68c4516f-bb4f-43a0-ae8e-64a3fd05ac8b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baab739520>]}
+[0m13:47:47.622840 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:47:47.723695 [debug] [MainThread]: checksum: b80718358155fc17c3559352095564dd56ada1cc1a1c0ef2e62c857e71583775, vars: {}, profile: , target: , version: 1.11.7
+[0m13:47:47.865932 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m13:47:47.866557 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m13:47:47.866957 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m13:47:47.875160 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.retail_ops_transformations.shipment_risk
+- models.retail_ops_transformations.analytics_kpi
+- models.retail_ops_transformations.forecasting
+[0m13:47:47.928900 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '68c4516f-bb4f-43a0-ae8e-64a3fd05ac8b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baa9b6f5c0>]}
+[0m13:47:48.040736 [debug] [MainThread]: Wrote artifact WritableManifest to core/transformations/target/manifest.json
+[0m13:47:48.042881 [debug] [MainThread]: Wrote artifact SemanticManifest to core/transformations/target/semantic_manifest.json
+[0m13:47:48.060747 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '68c4516f-bb4f-43a0-ae8e-64a3fd05ac8b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baa8b17f20>]}
+[0m13:47:48.061402 [info ] [MainThread]: Found 19 models, 29 data tests, 4 sources, 465 macros
+[0m13:47:48.061881 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '68c4516f-bb4f-43a0-ae8e-64a3fd05ac8b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baa978c6e0>]}
+[0m13:47:48.066472 [info ] [MainThread]: 
+[0m13:47:48.067126 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m13:47:48.067632 [info ] [MainThread]: 
+[0m13:47:48.068425 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m13:47:48.074500 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops'
+[0m13:47:48.083507 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops'
+[0m13:47:48.118843 [debug] [ThreadPool]: Using postgres connection "list_retailops"
+[0m13:47:48.119393 [debug] [ThreadPool]: Using postgres connection "list_retailops"
+[0m13:47:48.119825 [debug] [ThreadPool]: On list_retailops: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m13:47:48.120311 [debug] [ThreadPool]: On list_retailops: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m13:47:48.120785 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:47:48.121256 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:47:48.135754 [debug] [ThreadPool]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:47:48.136783 [debug] [ThreadPool]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:47:48.149228 [debug] [ThreadPool]: Postgres adapter: Error running SQL: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m13:47:48.150129 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:47:48.151207 [debug] [ThreadPool]: Postgres adapter: Error running SQL: macro list_schemas
+[0m13:47:48.152076 [debug] [ThreadPool]: Postgres adapter: Error running SQL: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m13:47:48.152674 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:47:48.153184 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:47:48.153739 [debug] [ThreadPool]: On list_retailops: No close available on handle
+[0m13:47:48.154425 [debug] [ThreadPool]: Postgres adapter: Error running SQL: macro list_schemas
+[0m13:47:48.155384 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:47:48.156006 [debug] [ThreadPool]: On list_retailops: No close available on handle
+[0m13:47:48.156896 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m13:47:48.157348 [debug] [MainThread]: Connection 'list_retailops' was properly closed.
+[0m13:47:48.157761 [debug] [MainThread]: Connection 'list_retailops' was properly closed.
+[0m13:47:48.158264 [info ] [MainThread]: 
+[0m13:47:48.158802 [info ] [MainThread]: Finished running  in 0 hours 0 minutes and 0.09 seconds (0.09s).
+[0m13:47:48.159661 [error] [MainThread]: Encountered an error:
+Database Error
+  connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+  
+[0m13:47:48.160937 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.9312404, "process_in_blocks": "8", "process_kernel_time": 0.183788, "process_mem_max_rss": "124416", "process_out_blocks": "1312", "process_user_time": 2.518097}
+[0m13:47:48.162211 [debug] [MainThread]: Command `dbt run` failed at 13:47:48.161617 after 0.93 seconds
+[0m13:47:48.163073 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baab8abaa0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baa8b14ce0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78baa8b17f80>]}
+[0m13:47:48.163878 [debug] [MainThread]: Flushing usage events
+[0m13:47:49.041144 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:47:51.255269 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c3b574b90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c3a566db0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c3acd80b0>]}
+
+
+============================== 13:47:51.259250 | 08fabe5a-8d15-426f-9155-191a7ccf7d14 ==============================
+[0m13:47:51.259250 [info ] [MainThread]: Running with dbt=1.11.7
+[0m13:47:51.260274 [debug] [MainThread]: running dbt with arguments {'fail_fast': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'send_anonymous_usage_stats': 'True', 'static_parser': 'True', 'use_colors': 'True', 'quiet': 'False', 'profiles_dir': 'core/transformations', 'printer_width': '80', 'version_check': 'True', 'introspect': 'True', 'no_print': 'None', 'write_json': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'empty': 'None', 'warn_error': 'None', 'invocation_command': 'dbt test --project-dir core/transformations --profiles-dir core/transformations', 'cache_selected_only': 'False', 'log_path': 'core/transformations/logs', 'debug': 'False', 'target_path': 'None', 'partial_parse': 'True', 'log_format': 'default', 'log_cache_events': 'False'}
+[0m13:47:51.467583 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '08fabe5a-8d15-426f-9155-191a7ccf7d14', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c3a3619a0>]}
+[0m13:47:51.555604 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '08fabe5a-8d15-426f-9155-191a7ccf7d14', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c3a407ad0>]}
+[0m13:47:51.556526 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m13:47:51.667508 [debug] [MainThread]: checksum: b80718358155fc17c3559352095564dd56ada1cc1a1c0ef2e62c857e71583775, vars: {}, profile: , target: , version: 1.11.7
+[0m13:47:51.814601 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m13:47:51.815109 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m13:47:51.815506 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m13:47:51.823742 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.retail_ops_transformations.shipment_risk
+- models.retail_ops_transformations.analytics_kpi
+- models.retail_ops_transformations.forecasting
+[0m13:47:51.877639 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '08fabe5a-8d15-426f-9155-191a7ccf7d14', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c39777cb0>]}
+[0m13:47:51.991665 [debug] [MainThread]: Wrote artifact WritableManifest to core/transformations/target/manifest.json
+[0m13:47:51.993896 [debug] [MainThread]: Wrote artifact SemanticManifest to core/transformations/target/semantic_manifest.json
+[0m13:47:52.023718 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '08fabe5a-8d15-426f-9155-191a7ccf7d14', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c38339520>]}
+[0m13:47:52.024370 [info ] [MainThread]: Found 19 models, 29 data tests, 4 sources, 465 macros
+[0m13:47:52.024939 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '08fabe5a-8d15-426f-9155-191a7ccf7d14', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c39777b00>]}
+[0m13:47:52.030586 [info ] [MainThread]: 
+[0m13:47:52.031220 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m13:47:52.031769 [info ] [MainThread]: 
+[0m13:47:52.032542 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m13:47:52.038647 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops_mart_mart'
+[0m13:47:52.046569 [debug] [ThreadPool]: Acquiring new postgres connection 'list_retailops_mart_staging'
+[0m13:47:52.085355 [debug] [ThreadPool]: Using postgres connection "list_retailops_mart_mart"
+[0m13:47:52.085981 [debug] [ThreadPool]: Using postgres connection "list_retailops_mart_staging"
+[0m13:47:52.086560 [debug] [ThreadPool]: On list_retailops_mart_mart: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_mart_mart"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'mart_mart'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'mart_mart'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'mart_mart'
+  
+[0m13:47:52.087199 [debug] [ThreadPool]: On list_retailops_mart_staging: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_mart_staging"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'mart_staging'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'mart_staging'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'mart_staging'
+  
+[0m13:47:52.087787 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:47:52.088422 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:47:52.103352 [debug] [ThreadPool]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:47:52.104407 [debug] [ThreadPool]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
+[0m13:47:52.116853 [debug] [ThreadPool]: Postgres adapter: Error running SQL: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_mart_staging"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'mart_staging'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'mart_staging'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'mart_staging'
+  
+[0m13:47:52.117895 [debug] [ThreadPool]: Postgres adapter: Error running SQL: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "retail_ops_transformations", "target_name": "dev", "connection_name": "list_retailops_mart_mart"} */
+select
+      'retailops' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'mart_mart'
+    union all
+    select
+      'retailops' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'mart_mart'
+    union all
+    select
+      'retailops' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'mart_mart'
+  
+[0m13:47:52.118710 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:47:52.119343 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:47:52.119958 [debug] [ThreadPool]: Postgres adapter: Error running SQL: macro list_relations_without_caching
+[0m13:47:52.120583 [debug] [ThreadPool]: Postgres adapter: Error running SQL: macro list_relations_without_caching
+[0m13:47:52.121181 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:47:52.121868 [debug] [ThreadPool]: Postgres adapter: Rolling back transaction.
+[0m13:47:52.122529 [debug] [ThreadPool]: On list_retailops_mart_staging: No close available on handle
+[0m13:47:52.123129 [debug] [ThreadPool]: On list_retailops_mart_mart: No close available on handle
+[0m13:47:52.124505 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m13:47:52.125055 [debug] [MainThread]: Connection 'list_retailops_mart_mart' was properly closed.
+[0m13:47:52.125633 [debug] [MainThread]: Connection 'list_retailops_mart_staging' was properly closed.
+[0m13:47:52.126479 [info ] [MainThread]: 
+[0m13:47:52.127059 [info ] [MainThread]: Finished running  in 0 hours 0 minutes and 0.09 seconds (0.09s).
+[0m13:47:52.127973 [error] [MainThread]: Encountered an error:
+Database Error
+  connection to server at "127.0.0.1", port 5433 failed: FATAL:  password authentication failed for user "postgres"
+  
+[0m13:47:52.129308 [debug] [MainThread]: Resource report: {"command_name": "test", "command_success": false, "command_wall_clock_time": 0.9469738, "process_in_blocks": "0", "process_kernel_time": 0.198532, "process_mem_max_rss": "125432", "process_out_blocks": "1320", "process_user_time": 2.557977}
+[0m13:47:52.130401 [debug] [MainThread]: Command `dbt test` failed at 13:47:52.130029 after 0.95 seconds
+[0m13:47:52.131238 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c3a5867b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c36b528d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7d0c36a9da00>]}
+[0m13:47:52.131983 [debug] [MainThread]: Flushing usage events
+[0m13:47:52.933268 [debug] [MainThread]: An error was encountered while trying to flush usage events
