@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+
+# Local environment
+.env
+.env.local
+
+# Build and packaging
+build/
+dist/
+*.egg-info/
+
+# dbt
+core/transformations/logs/
+core/transformations/target/
+
+# Runtime data and backups
+backups/
+data/uploads/*
+!data/uploads/.gitkeep
+data/artifacts/**
+!data/artifacts/**/.gitkeep
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
