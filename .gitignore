@@ -38,3 +38,7 @@ data/artifacts/**
 .DS_Store
 .vscode/
 .idea/
+
+# Local dbt metadata
+core/transformations/.user.yml
+core/transformations/profiles/.user.yml
