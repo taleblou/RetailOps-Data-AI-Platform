@@ -1,4 +1,35 @@
 services:
+  minio:
+    image: minio/minio:latest
+    container_name: retailops-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio123}
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 10
+    networks:
+      - retailops_net
+
+  spark:
+    image: bitnami/spark:3.5
+    container_name: retailops-spark
+    environment:
+      SPARK_MODE: master
+    ports:
+      - "${SPARK_UI_PORT:-8080}:8080"
+      - "${SPARK_MASTER_PORT:-7077}:7077"
+    networks:
+      - retailops_net
+
   lakehouse:
     build:
       context: ..
@@ -13,8 +44,10 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
+      minio:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'print(\"lakehouse-ok\")'"]
+      test: ["CMD-SHELL", "python -c 'print("lakehouse-ok")'"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -22,6 +55,7 @@ services:
       - retailops_net
 
 volumes:
+  minio_data:
   lakehouse_data:
 
 networks:
