@@ -1,0 +1,31 @@
+services:
+  advanced_serving:
+    build:
+      context: ..
+      dockerfile: modules/advanced_serving/Dockerfile
+    container_name: retailops-advanced-serving
+    env_file:
+      - ../.env
+    volumes:
+      - advanced_serving_data:/app/data
+    depends_on:
+      mlflow:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    ports:
+      - "${BENTOML_PORT:-3010}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'print("advanced-serving-ok")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+volumes:
+  advanced_serving_data:
+
+networks:
+  retailops_net:
+    driver: bridge
