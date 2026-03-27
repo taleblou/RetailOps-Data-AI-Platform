@@ -21,8 +21,121 @@ services:
     networks:
       - retailops_net
 
+  shipment_risk:
+    build:
+      context: ..
+      dockerfile: modules/shipment_risk/Dockerfile
+    container_name: retailops-shipment-risk
+    env_file:
+      - ../.env
+    volumes:
+      - shipment_risk_data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import modules.shipment_risk.main; print(\"shipment-risk-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+  stockout_intelligence:
+    build:
+      context: ..
+      dockerfile: modules/stockout_intelligence/Dockerfile
+    container_name: retailops-stockout-intelligence
+    env_file:
+      - ../.env
+    volumes:
+      - stockout_intelligence_data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import modules.stockout_intelligence.main; print(\"stockout-intelligence-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+  returns_intelligence:
+    build:
+      context: ..
+      dockerfile: modules/returns_intelligence/Dockerfile
+    container_name: retailops-returns-intelligence
+    env_file:
+      - ../.env
+    volumes:
+      - returns_intelligence_data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import modules.returns_intelligence.main; print(\"returns-intelligence-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+  reorder_engine:
+    build:
+      context: ..
+      dockerfile: modules/reorder_engine/Dockerfile
+    container_name: retailops-reorder-engine
+    env_file:
+      - ../.env
+    volumes:
+      - reorder_engine_data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import modules.reorder_engine.main; print(\"reorder-engine-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+  ml_registry:
+    build:
+      context: ..
+      dockerfile: modules/ml_registry/Dockerfile
+    container_name: retailops-ml-registry
+    env_file:
+      - ../.env
+    volumes:
+      - ml_registry_data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import modules.ml_registry.main; print(\"ml-registry-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
 volumes:
   forecasting_data:
+  shipment_risk_data:
+  stockout_intelligence_data:
+  returns_intelligence_data:
+  reorder_engine_data:
+  ml_registry_data:
 
 networks:
   retailops_net:
