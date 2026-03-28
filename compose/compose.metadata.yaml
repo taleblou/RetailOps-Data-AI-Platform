@@ -8,7 +8,7 @@ services:
       MYSQL_USER: openmetadata_user
       MYSQL_PASSWORD: openmetadata_password
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -propenmetadata || exit 1"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -popenmetadata || exit 1"]
       interval: 20s
       timeout: 10s
       retries: 10
@@ -46,7 +46,9 @@ services:
       metadata_elasticsearch:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'print("metadata-ok")'"]
+      test:
+        - CMD-SHELL
+        - python -c "print('metadata-ok')"
       interval: 30s
       timeout: 5s
       retries: 3
