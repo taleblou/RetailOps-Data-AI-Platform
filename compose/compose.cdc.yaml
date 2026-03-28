@@ -68,7 +68,9 @@ services:
       debezium_connect:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'print("cdc-ok")'"]
+      test:
+        - CMD-SHELL
+        - python -c "print('cdc-ok')"
       interval: 30s
       timeout: 5s
       retries: 3
