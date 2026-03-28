@@ -1,0 +1,19 @@
+{
+  "dashboard_name": "Inventory Dashboard",
+  "phase": 8,
+  "collection": "RetailOps Starter Dashboards",
+  "description": "Inventory health dashboard for stock on hand, low-stock flags, and days of cover.",
+  "source_tables": [
+    "mart.fct_inventory_daily"
+  ],
+  "cards": [
+    {"title": "Items at Risk", "visualization": "scalar", "sql_file": "../sql/inventory_dashboard.sql"},
+    {"title": "Inventory Health Table", "visualization": "table", "sql_file": "../sql/inventory_dashboard.sql"},
+    {"title": "Average Days of Cover", "visualization": "scalar", "sql_file": "../sql/inventory_dashboard.sql"}
+  ],
+  "layout_notes": [
+    "Keep the scalar cards on top.",
+    "Use conditional formatting for low-stock rows.",
+    "Default sort should surface lowest days_of_cover first."
+  ]
+}
