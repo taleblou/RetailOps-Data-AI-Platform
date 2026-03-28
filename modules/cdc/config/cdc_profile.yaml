@@ -1,0 +1,11 @@
+profile_name: retailops-cdc
+snapshot_mode: initial
+source_schema: public
+tables:
+  - products
+  - orders
+  - order_items
+  - inventory_snapshots
+routing:
+  raw_topic_prefix: retailops.raw_cdc
+  dead_letter_topic: retailops.raw_cdc.dead_letter
