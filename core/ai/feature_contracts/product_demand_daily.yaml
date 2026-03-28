@@ -1,0 +1,39 @@
+name: product_demand_daily
+description: Daily product demand aggregates used by forecasting and stockout modules.
+entity:
+  - store_id
+  - product_id
+source:
+  relation: features.product_demand_daily
+  sql_file: modules/forecasting/features/product_demand_daily.sql
+  timestamp_column: feature_date
+feature_columns:
+  - units_sold_1d
+  - revenue_1d
+  - units_sold_7d
+  - revenue_7d
+  - demand_trend_7d_vs_28d
+labels:
+  relation: predictions.forecast_training_labels
+  timestamp_column: prediction_date
+transformation: modular_sql
+materialization: table
+freshness:
+  warn_after_hours: 24
+  error_after_hours: 48
+null_handling:
+  strategy: fill_defaults
+  defaults:
+    units_sold_1d: 0
+    revenue_1d: 0
+    units_sold_7d: 0
+    revenue_7d: 0
+    demand_trend_7d_vs_28d: 0
+owner: forecasting
+training_serving_parity: true
+serving_join_keys:
+  - store_id
+  - product_id
+leakage_prevention:
+  - feature_date <= prediction_timestamp
+  - use point-in-time latest eligible row
