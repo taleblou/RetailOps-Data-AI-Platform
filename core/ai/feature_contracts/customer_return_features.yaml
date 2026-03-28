@@ -1,0 +1,39 @@
+name: customer_return_features
+description: Early return-risk features prepared for the later returns intelligence module.
+entity:
+  - customer_id
+  - product_id
+source:
+  relation: features.customer_return_features
+  sql_file: modules/returns_intelligence/features/customer_return_features.sql
+  timestamp_column: feature_date
+feature_columns:
+  - customer_orders_90d
+  - customer_return_rate_180d
+  - product_return_rate_180d
+  - discount_rate
+  - delayed_delivery_flag
+labels:
+  relation: predictions.return_training_labels
+  timestamp_column: prediction_date
+transformation: modular_sql
+materialization: table
+freshness:
+  warn_after_hours: 24
+  error_after_hours: 48
+null_handling:
+  strategy: fill_defaults
+  defaults:
+    customer_orders_90d: 0
+    customer_return_rate_180d: 0
+    product_return_rate_180d: 0
+    discount_rate: 0
+    delayed_delivery_flag: false
+owner: returns_intelligence
+training_serving_parity: true
+serving_join_keys:
+  - customer_id
+  - product_id
+leakage_prevention:
+  - feature_date <= prediction_timestamp
+  - historical return rates must exclude current label window
