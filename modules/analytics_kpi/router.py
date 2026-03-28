@@ -23,10 +23,96 @@ from .service import (
     build_sales_daily,
     build_shipment_summary,
     load_dashboard_artifact,
+    load_transform_summary_from_upload,
     publish_first_dashboard,
 )
 
 router = APIRouter(prefix="/api/v1/kpis", tags=["analytics-kpi"])
+
+
+def _transform_summary_from_upload(
+    *,
+    upload_id: str,
+    uploads_dir: str,
+) -> dict[str, object]:
+    try:
+        return load_transform_summary_from_upload(
+            upload_id=upload_id,
+            uploads_dir=Path(uploads_dir),
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.get("/overview", response_model=KpiOverviewResponse)
+async def get_overview_by_upload(
+    upload_id: str = Query(...),
+    uploads_dir: str = Query(default="data/uploads"),
+) -> KpiOverviewResponse:
+    payload = _transform_summary_from_upload(upload_id=upload_id, uploads_dir=uploads_dir)
+    return KpiOverviewResponse.model_validate(build_overview(payload))
+
+
+@router.get("/sales-daily", response_model=list[DailySalesPoint])
+async def get_sales_daily_by_upload(
+    upload_id: str = Query(...),
+    uploads_dir: str = Query(default="data/uploads"),
+    format: Literal["json", "csv"] = Query(default="json"),
+):
+    payload = _transform_summary_from_upload(upload_id=upload_id, uploads_dir=uploads_dir)
+    rows = build_sales_daily(payload)
+    if format == "csv":
+        return csv_response(
+            filename=f"{upload_id}_sales_daily.csv",
+            rows=rows,
+            headers=["sales_date", "revenue", "order_count"],
+        )
+    return [DailySalesPoint.model_validate(row) for row in rows]
+
+
+@router.get("/revenue-by-category", response_model=list[RevenueByCategoryPoint])
+async def get_revenue_by_category_by_upload(
+    upload_id: str = Query(...),
+    uploads_dir: str = Query(default="data/uploads"),
+    format: Literal["json", "csv"] = Query(default="json"),
+):
+    payload = _transform_summary_from_upload(upload_id=upload_id, uploads_dir=uploads_dir)
+    rows = build_revenue_by_category(payload)
+    if format == "csv":
+        return csv_response(
+            filename=f"{upload_id}_revenue_by_category.csv",
+            rows=rows,
+            headers=["category", "revenue", "order_count"],
+        )
+    return [RevenueByCategoryPoint.model_validate(row) for row in rows]
+
+
+@router.get("/inventory-health", response_model=list[InventoryHealthItem])
+async def get_inventory_health_by_upload(
+    upload_id: str = Query(...),
+    uploads_dir: str = Query(default="data/uploads"),
+    format: Literal["json", "csv"] = Query(default="json"),
+):
+    payload = _transform_summary_from_upload(upload_id=upload_id, uploads_dir=uploads_dir)
+    rows = build_inventory_health(payload)
+    if format == "csv":
+        return csv_response(
+            filename=f"{upload_id}_inventory_health.csv",
+            rows=rows,
+            headers=["sku", "on_hand", "days_of_cover", "low_stock"],
+        )
+    return [InventoryHealthItem.model_validate(row) for row in rows]
+
+
+@router.get("/shipments", response_model=ShipmentSummaryResponse)
+async def get_shipments_by_upload(
+    upload_id: str = Query(...),
+    uploads_dir: str = Query(default="data/uploads"),
+) -> ShipmentSummaryResponse:
+    payload = _transform_summary_from_upload(upload_id=upload_id, uploads_dir=uploads_dir)
+    return ShipmentSummaryResponse.model_validate(build_shipment_summary(payload))
 
 
 @router.post("/overview", response_model=KpiOverviewResponse)
