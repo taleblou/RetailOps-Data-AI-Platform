@@ -1,28 +1,46 @@
 # RetailOps Data & AI Platform
 
-A modular, self-hosted retail data and AI platform for stores that want one package for ingestion, canonical modeling, KPI dashboards, forecasting, and optional advanced modules such as CDC, lakehouse, metadata, and feature services.
+A modular, self-hosted retail data and AI platform for stores that want one package for ingestion, canonical modeling, KPI dashboards, forecasting, operational recommendations, and optional advanced modules such as CDC, lakehouse, metadata, feature services, and advanced serving.
 
-## What this package covers
+This repository is aligned to **phases 1 to 20** of the roadmap described in the project PDF.
+It includes the core platform, business modules, setup wizard, packaging layer, and a phase 20 Pro data-platform surface.
 
-This repository now contains the deliverables for phases 1 to 7 of the platform roadmap:
+## Coverage summary
 
-1. **Product definition and module boundaries** in `docs/`
-2. **Modular monorepo skeleton** with Python tooling, quality gates, and environment samples
-3. **Composable Docker deployment** for core and optional add-on services
-4. **Canonical retail data model** with SQL migrations and documentation
-5. **Connector framework** for CSV, database, and Shopify-style sources
-6. **Easy CSV path** with upload, preview, mapping, validation, raw import, starter transform, dashboard, and forecast
-7. **Modular dbt Core project** for staging and mart transformations
+1. **Phase 1** - product definition, personas, tiering, and module boundaries
+2. **Phase 2** - modular monorepo skeleton and quality tooling
+3. **Phase 3** - Docker Compose architecture for core and add-on services
+4. **Phase 4** - canonical retail data model and SQL migrations
+5. **Phase 5** - connector framework for CSV, database, and Shopify-style sources
+6. **Phase 6** - easy CSV onboarding path with upload, preview, mapping, validation, import, transform, dashboard publish, and first forecast
+7. **Phase 7** - dbt Core transformations for staging and marts
+8. **Phase 8** - KPI analytics module and dashboard starter assets
+9. **Phase 9** - feature contracts, dataset builders, and feature tables
+10. **Phase 10** - forecasting module with interval outputs and backtest helpers
+11. **Phase 11** - shipment-risk module with explanations and manual review
+12. **Phase 12** - stockout intelligence
+13. **Phase 13** - reorder engine
+14. **Phase 14** - returns intelligence
+15. **Phase 15** - ML registry lifecycle and promotion gates
+16. **Phase 16** - serving layer with standard response envelopes and explain endpoints
+17. **Phase 17** - monitoring, drift checks, alerts, and override logging
+18. **Phase 18** - onboarding and setup wizard
+19. **Phase 19** - packaging, release, quickstarts, and operational scripts
+20. **Phase 20** - CDC, streaming, lakehouse, query-layer, metadata, feature-store, and advanced-serving blueprints
 
 ## Repository structure
 
-- `core/` - platform capabilities shared by all modules
-- `modules/` - optional business and connector modules
-- `compose/` - Docker Compose stacks for core and add-ons
-- `docs/` - product, architecture, and data-model documentation
-- `tests/` - API, ingestion, and workflow tests
+- `core/` - shared platform capabilities used by all modules
+- `modules/` - connector, analytics, AI, registry, operations, and Pro platform modules
+- `compose/` - composable Docker stacks for core and optional overlays
+- `config/` - runtime settings and sample profile env files
+- `data/` - demo CSVs, uploads, and generated artifacts
+- `docs/` - product, architecture, audits, gap reports, quickstarts, and phase docs
+- `scripts/` - install, upgrade, backup, restore, demo-data, and health commands
+- `tests/` - phase-aligned tests for ingestion, analytics, AI, serving, monitoring, setup, packaging, and phase 20 Pro modules
+- `packages/` - starter package wrappers for future package split work
 
-## Phase mapping
+## Phase-to-file highlights
 
 ### Phase 1
 
@@ -50,13 +68,18 @@ This repository now contains the deliverables for phases 1 to 7 of the platform 
 - `compose/compose.ml.yaml`
 - `compose/compose.monitoring.yaml`
 - `compose/compose.cdc.yaml`
+- `compose/compose.streaming.yaml`
 - `compose/compose.lakehouse.yaml`
+- `compose/compose.query.yaml`
 - `compose/compose.metadata.yaml`
+- `compose/compose.feature_store.yaml`
+- `compose/compose.advanced_serving.yaml`
 
 ### Phase 4
 
 - `core/db/migrations/001_schemas.sql`
 - `core/db/migrations/002_core_tables.sql`
+- `core/db/migrations/003_connector_framework.sql`
 - `docs/canonical_data_model.md`
 
 ### Phase 5
@@ -83,6 +106,41 @@ This repository now contains the deliverables for phases 1 to 7 of the platform 
 - `modules/forecasting/dbt_models/`
 - `modules/shipment_risk/dbt_models/`
 
+### Phases 8 to 18
+
+See the phase documentation and audits under `docs/`.
+
+### Phase 19
+
+- `scripts/install.sh`
+- `scripts/upgrade.sh`
+- `scripts/backup.sh`
+- `scripts/restore.sh`
+- `scripts/load_demo_data.sh`
+- `scripts/health.sh`
+- `docs/quickstart/lite.md`
+- `docs/quickstart/standard.md`
+- `docs/quickstart/pro.md`
+- `config/samples/lite.env`
+- `config/samples/standard.env`
+- `config/samples/pro.env`
+- `docs/release_notes_phase19.md`
+
+### Phase 20
+
+- `docs/pro_data_platform_phase20.md`
+- `docs/phase_1_to_20_gap_report.md`
+- `docs/phase_1_to_20_audit.md`
+- `core/api/routes/pro_platform.py`
+- `core/api/schemas/pro_platform.py`
+- `modules/cdc/`
+- `modules/streaming/`
+- `modules/lakehouse/`
+- `modules/query_layer/`
+- `modules/metadata/`
+- `modules/feature_store/`
+- `modules/advanced_serving/`
+
 ## Local setup
 
 ```bash
@@ -99,10 +157,10 @@ make check
 ## Run tests
 
 ```bash
-make test
+pytest -q
 ```
 
-## Start Docker stacks
+## Start Docker stacks manually
 
 ### Core only
 
@@ -110,63 +168,40 @@ make test
 docker compose -f compose/compose.core.yaml up -d
 ```
 
-### Core plus starter analytics and connectors
+### Lite profile
 
 ```bash
-docker compose \
-  -f compose/compose.core.yaml \
-  -f compose/compose.connectors.yaml \
-  -f compose/compose.analytics.yaml up -d
+docker compose   -f compose/compose.core.yaml   -f compose/compose.connectors.yaml   -f compose/compose.analytics.yaml up -d
 ```
 
-### Full phase-1-to-7 stack
+### Standard profile
 
 ```bash
-docker compose \
-  -f compose/compose.core.yaml \
-  -f compose/compose.connectors.yaml \
-  -f compose/compose.analytics.yaml \
-  -f compose/compose.ml.yaml \
-  -f compose/compose.monitoring.yaml \
-  -f compose/compose.cdc.yaml \
-  -f compose/compose.lakehouse.yaml \
-  -f compose/compose.metadata.yaml up -d
+docker compose   -f compose/compose.core.yaml   -f compose/compose.connectors.yaml   -f compose/compose.analytics.yaml   -f compose/compose.ml.yaml   -f compose/compose.monitoring.yaml up -d
 ```
 
-## Easy CSV workflow
-
-Start the API and open the wizard:
+### Pro profile
 
 ```bash
-uv run uvicorn core.api.main:app --reload
+docker compose   -f compose/compose.core.yaml   -f compose/compose.connectors.yaml   -f compose/compose.analytics.yaml   -f compose/compose.ml.yaml   -f compose/compose.monitoring.yaml   -f compose/compose.cdc.yaml   -f compose/compose.streaming.yaml   -f compose/compose.lakehouse.yaml   -f compose/compose.query.yaml   -f compose/compose.metadata.yaml   -f compose/compose.feature_store.yaml   -f compose/compose.advanced_serving.yaml up -d
 ```
 
-Then visit:
+## Useful phase 20 APIs
 
-- `/easy-csv/wizard` for the guided HTML flow
-- `/docs` for the JSON API flow
+- `GET /api/v1/pro/cdc/blueprint`
+- `GET /api/v1/pro/streaming/blueprint`
+- `GET /api/v1/pro/lakehouse/blueprint`
+- `GET /api/v1/pro/query-layer/blueprint`
+- `GET /api/v1/pro/metadata/blueprint`
+- `GET /api/v1/pro/feature-store/blueprint`
+- `GET /api/v1/pro/advanced-serving/blueprint`
+- `GET /api/v1/pro-platform/summary`
 
-The phase 6 workflow supports:
+## Useful docs
 
-- CSV upload
-- preview
-- mapping
-- validation report
-- raw import
-- starter transform
-- starter dashboard
-- starter forecast
-
-## dbt workflow
-
-```bash
-cd core/transformations
-export DBT_PROFILES_DIR=profiles
-export DBT_PGHOST=localhost
-export DBT_PGPORT=5433
-export DBT_PGUSER=postgres
-export DBT_PGPASSWORD=postgres
-export DBT_PGDATABASE=retailops
-uv run dbt debug --project-dir . --profiles-dir profiles
-uv run dbt build --project-dir . --profiles-dir profiles
-```
+- `docs/quickstart/lite.md`
+- `docs/quickstart/standard.md`
+- `docs/quickstart/pro.md`
+- `docs/pro_data_platform_phase20.md`
+- `docs/phase_1_to_20_gap_report.md`
+- `docs/phase_1_to_20_audit.md`
