@@ -1,0 +1,17 @@
+{
+  "name": "retailops-postgres-cdc",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "postgres",
+    "database.dbname": "retailops",
+    "topic.prefix": "retailops.raw_cdc",
+    "slot.name": "retailops_cdc_slot",
+    "publication.name": "retailops_cdc_publication",
+    "snapshot.mode": "initial",
+    "plugin.name": "pgoutput",
+    "tombstones.on.delete": "false"
+  }
+}
