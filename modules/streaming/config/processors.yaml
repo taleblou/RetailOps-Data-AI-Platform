@@ -1,0 +1,9 @@
+processors:
+  - name: cdc_to_bronze_router
+    input_topic: retailops.raw_cdc.public.orders
+    output_topic: retailops.bronze.orders
+    responsibility: normalize Debezium envelopes into bronze events
+  - name: shipment_delay_feature_enricher
+    input_topic: retailops.bronze.shipments
+    output_topic: retailops.features.materialized.shipment_delay
+    responsibility: attach carrier and regional aggregates before feature materialization
