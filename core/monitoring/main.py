@@ -7,7 +7,7 @@ SERVICE_NAME = "monitoring"
 
 def main() -> None:
     while True:
-        print(f"RetailOps {SERVICE_NAME} service heartbeat")
+        print("RetailOps monitoring service heartbeat - phase 17 governance routes are ready.")
         time.sleep(30)
 
 
