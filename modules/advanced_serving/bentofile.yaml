@@ -1,0 +1,9 @@
+service: "modules.advanced_serving.bentoml.service:svc"
+labels:
+  owner: retailops-ml-platform
+include:
+  - "modules/advanced_serving/bentoml/*.py"
+python:
+  packages:
+    - fastapi
+    - pydantic
