@@ -79,6 +79,11 @@ The service also accepts a few fallback key names such as `category_sales`, `inv
 
 All routes are mounted under `/api/v1/kpis`.
 
+- `GET /overview?upload_id=<id>`
+- `GET /sales-daily?upload_id=<id>&format=json|csv`
+- `GET /revenue-by-category?upload_id=<id>&format=json|csv`
+- `GET /inventory-health?upload_id=<id>&format=json|csv`
+- `GET /shipments?upload_id=<id>`
 - `POST /overview`
 - `POST /sales-daily?format=json|csv`
 - `POST /revenue-by-category?format=json|csv`
