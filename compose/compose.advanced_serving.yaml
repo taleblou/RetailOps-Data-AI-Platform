@@ -16,7 +16,9 @@ services:
     ports:
       - "${BENTOML_PORT:-3010}:3000"
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'print("advanced-serving-ok")'"]
+      test:
+        - CMD-SHELL
+        - python -c "print('advanced-serving-ok')"
       interval: 30s
       timeout: 5s
       retries: 3
