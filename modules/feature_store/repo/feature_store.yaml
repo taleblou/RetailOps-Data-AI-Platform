@@ -1,0 +1,7 @@
+project: retailops-feature-store
+registry: data/artifacts/pro_platform/feature_store/registry.db
+provider: local
+offline_store:
+  type: postgres
+online_store:
+  type: redis
