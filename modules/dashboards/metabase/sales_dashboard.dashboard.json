@@ -1,0 +1,19 @@
+{
+  "dashboard_name": "Sales Dashboard",
+  "phase": 8,
+  "collection": "RetailOps Starter Dashboards",
+  "description": "Sales trend dashboard for daily revenue and category contribution.",
+  "source_tables": [
+    "mart.fct_daily_sales"
+  ],
+  "cards": [
+    {"title": "Daily Sales Trend", "visualization": "line", "sql_file": "../sql/sales_dashboard.sql"},
+    {"title": "Revenue by Category", "visualization": "bar", "sql_file": "../sql/sales_dashboard.sql"},
+    {"title": "Orders by Day", "visualization": "table", "sql_file": "../sql/sales_dashboard.sql"}
+  ],
+  "layout_notes": [
+    "Use a wide line chart on the first row.",
+    "Place revenue by category under the trend chart.",
+    "Include store and date filters."
+  ]
+}
