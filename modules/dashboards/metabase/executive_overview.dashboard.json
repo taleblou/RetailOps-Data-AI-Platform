@@ -1,0 +1,21 @@
+{
+  "dashboard_name": "Executive Overview",
+  "phase": 8,
+  "collection": "RetailOps Starter Dashboards",
+  "description": "High-level KPI dashboard for store performance, inventory pressure, and shipment service level.",
+  "source_tables": [
+    "mart.mart_store_kpis"
+  ],
+  "cards": [
+    {"title": "Total Revenue", "visualization": "scalar", "sql_file": "../sql/executive_overview.sql"},
+    {"title": "Total Orders", "visualization": "scalar", "sql_file": "../sql/executive_overview.sql"},
+    {"title": "Average Order Value", "visualization": "scalar", "sql_file": "../sql/executive_overview.sql"},
+    {"title": "Low Stock Items", "visualization": "scalar", "sql_file": "../sql/executive_overview.sql"},
+    {"title": "On-Time Rate", "visualization": "scalar", "sql_file": "../sql/executive_overview.sql"}
+  ],
+  "layout_notes": [
+    "Use the first row for five number cards.",
+    "Add a date filter for order_date.",
+    "Default sort should show newest business date first."
+  ]
+}
