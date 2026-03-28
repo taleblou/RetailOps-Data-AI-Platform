@@ -9,6 +9,7 @@ from .service import (
     build_sales_daily,
     build_shipment_summary,
     load_dashboard_artifact,
+    load_transform_summary_from_upload,
     publish_first_dashboard,
 )
 
@@ -21,5 +22,6 @@ __all__ = [
     "build_sales_daily",
     "build_shipment_summary",
     "load_dashboard_artifact",
+    "load_transform_summary_from_upload",
     "publish_first_dashboard",
 ]
