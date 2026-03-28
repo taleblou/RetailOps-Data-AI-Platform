@@ -1,0 +1,37 @@
+name: shipment_delay_features
+description: Shipment delay features with operational context for delay risk scoring.
+entity:
+  - shipment_id
+source:
+  relation: features.shipment_delay_features
+  sql_file: modules/shipment_risk/features/shipment_delay_features.sql
+  timestamp_column: feature_ts
+feature_columns:
+  - order_hour
+  - order_weekday
+  - promised_lead_days
+  - warehouse_backlog_7d
+  - carrier_delay_rate_30d
+  - store_delay_rate_30d
+labels:
+  relation: predictions.shipment_delay_training_labels
+  timestamp_column: prediction_ts
+transformation: modular_sql
+materialization: table
+freshness:
+  warn_after_hours: 6
+  error_after_hours: 12
+null_handling:
+  strategy: fill_defaults
+  defaults:
+    promised_lead_days: 0
+    warehouse_backlog_7d: 0
+    carrier_delay_rate_30d: 0
+    store_delay_rate_30d: 0
+owner: shipment_risk
+training_serving_parity: true
+serving_join_keys:
+  - shipment_id
+leakage_prevention:
+  - feature_ts <= prediction_timestamp
+  - aggregate carrier history only from older shipments
