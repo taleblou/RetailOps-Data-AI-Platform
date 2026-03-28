@@ -1,0 +1,13 @@
+service:
+  platform: openmetadata
+sources:
+  - name: postgres_operational
+    type: postgresql
+  - name: dbt_transformations
+    type: dbt
+  - name: trino_query_layer
+    type: trino
+lineage:
+  enabled: true
+catalog:
+  owner_source: team-retail-data
