@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 
-SERVICE_NAME = "metadata"
+SERVICE_NAME = "phase20-metadata"
 
 
 def main() -> None:
