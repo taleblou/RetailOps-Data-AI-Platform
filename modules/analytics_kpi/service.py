@@ -333,3 +333,19 @@ def load_dashboard_artifact(
     if not artifact_path.exists():
         raise FileNotFoundError(f"Dashboard artifact not found: {artifact_path}")
     return json.loads(artifact_path.read_text(encoding="utf-8"))
+
+
+def load_transform_summary_from_upload(
+    *,
+    upload_id: str,
+    uploads_dir: Path = Path("data/uploads"),
+) -> dict[str, Any]:
+    metadata_path = uploads_dir / f"{upload_id}.json"
+    if not metadata_path.exists():
+        raise FileNotFoundError(f"Upload metadata not found: {metadata_path}")
+
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    transform_summary = metadata.get("transform_summary")
+    if not isinstance(transform_summary, dict):
+        raise ValueError(f"Transform summary not found in upload metadata: {metadata_path}")
+    return transform_summary
