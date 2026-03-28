@@ -1,0 +1,41 @@
+name: inventory_position_daily
+description: Inventory position snapshot per store and product used by stockout and reorder logic.
+entity:
+  - store_id
+  - product_id
+source:
+  relation: features.inventory_position_daily
+  sql_file: modules/stockout_intelligence/features/inventory_position_daily.sql
+  timestamp_column: snapshot_date
+feature_columns:
+  - on_hand_qty
+  - reserved_qty
+  - available_qty
+  - in_transit_qty
+  - days_of_cover_estimate
+  - is_out_of_stock
+labels:
+  relation: predictions.stockout_training_labels
+  timestamp_column: prediction_date
+transformation: modular_sql
+materialization: table
+freshness:
+  warn_after_hours: 12
+  error_after_hours: 24
+null_handling:
+  strategy: fill_defaults
+  defaults:
+    on_hand_qty: 0
+    reserved_qty: 0
+    available_qty: 0
+    in_transit_qty: 0
+    days_of_cover_estimate: 0
+    is_out_of_stock: false
+owner: stockout_intelligence
+training_serving_parity: true
+serving_join_keys:
+  - store_id
+  - product_id
+leakage_prevention:
+  - snapshot_date <= prediction_timestamp
+  - use latest snapshot before scoring time
