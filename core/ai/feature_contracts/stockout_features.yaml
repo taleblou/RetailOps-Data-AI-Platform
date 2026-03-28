@@ -1,0 +1,40 @@
+name: stockout_features
+description: Combined demand and inventory features that drive stockout probability scoring.
+entity:
+  - store_id
+  - product_id
+source:
+  relation: features.stockout_features
+  sql_file: modules/stockout_intelligence/features/stockout_features.sql
+  timestamp_column: feature_date
+feature_columns:
+  - available_qty
+  - inbound_qty
+  - units_sold_7d
+  - units_sold_28d
+  - demand_trend_7d_vs_28d
+  - days_of_cover_estimate
+  - recent_stockout_days_14d
+labels:
+  relation: predictions.stockout_training_labels
+  timestamp_column: prediction_date
+transformation: modular_sql
+materialization: table
+freshness:
+  warn_after_hours: 12
+  error_after_hours: 24
+null_handling:
+  strategy: fill_defaults
+  defaults:
+    inbound_qty: 0
+    units_sold_7d: 0
+    units_sold_28d: 0
+    recent_stockout_days_14d: 0
+owner: stockout_intelligence
+training_serving_parity: true
+serving_join_keys:
+  - store_id
+  - product_id
+leakage_prevention:
+  - feature_date <= prediction_timestamp
+  - historical demand windows must end before scoring timestamp
