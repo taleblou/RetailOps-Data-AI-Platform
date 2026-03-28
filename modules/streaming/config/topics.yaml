@@ -1,0 +1,13 @@
+topics:
+  - name: retailops.raw_cdc.public.orders
+    partitions: 6
+    retention_hours: 168
+    cleanup_policy: delete
+  - name: retailops.bronze.orders
+    partitions: 6
+    retention_hours: 720
+    cleanup_policy: compact,delete
+  - name: retailops.features.materialized.stockout
+    partitions: 3
+    retention_hours: 168
+    cleanup_policy: compact
