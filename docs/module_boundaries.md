@@ -57,8 +57,8 @@ Current scope:
 Purpose: starter location for transform orchestration.
 
 Current scope:
-- phase 6 placeholder for first transform run
-- future dbt or SQL model execution hooks
+- first transform orchestration for the easy CSV path
+- dbt or SQL model execution hooks for staged and mart data
 
 ### `core/monitoring`
 Purpose: monitoring service starter.
@@ -86,15 +86,49 @@ Purpose: KPI service and dashboard bootstrap assets.
 Consumes curated data. Must not own ingestion logic.
 
 ### `modules/forecasting`
-Purpose: forecast runners and model-serving starter code.
+Purpose: forecast runners, batch scoring jobs, and forecast-serving APIs.
 Consumes curated features or marts. Must not own raw ingestion.
 
-### `modules/shipment_risk`, `modules/stockout_intelligence`, `modules/reorder_engine`, `modules/returns_intelligence`
-Purpose: optional business modules.
-These extend analytics and ML capabilities. They must remain swappable.
+### `modules/shipment_risk`
+Purpose: shipment-delay scoring, explanation, and manual-review triggers for open orders.
+Consumes shipment feature views or uploaded shipment files. Must not own ingestion.
 
-### `modules/cdc`, `modules/streaming`, `modules/lakehouse`, `modules/metadata`, `modules/feature_store`, `modules/advanced_serving`, `modules/ml_registry`, `modules/dashboards`
-Purpose: advanced platform add-ons.
+### `modules/stockout_intelligence`
+Purpose: days-to-stockout, stockout risk scoring, and reorder urgency outputs.
+Consumes demand history plus inventory signals. Must not own raw ingestion.
+
+### `modules/reorder_engine`
+Purpose: convert forecast and stockout outputs into reorder date, reorder quantity, urgency, and rationale.
+Consumes forecast artifacts, stockout artifacts, and supply-side rules. Must not own raw ingestion.
+
+### `modules/returns_intelligence`
+Purpose: return-risk scoring with expected return cost and risky-product rollups.
+Consumes order-history signals such as category, discount, shipment delay, and prior return behaviour.
+Must stay optional and must not own raw ingestion.
+
+### `modules/cdc`
+Purpose: PostgreSQL CDC blueprint and Debezium connector planning.
+
+### `modules/streaming`
+Purpose: Redpanda topic planning, consumer groups, and stream processors.
+
+### `modules/lakehouse`
+Purpose: Iceberg-based bronze, silver, and gold lakehouse layout.
+
+### `modules/query_layer`
+Purpose: Trino federation catalogs and analytics query access.
+
+### `modules/metadata`
+Purpose: OpenMetadata ingestion, lineage, and catalog starter flows.
+
+### `modules/feature_store`
+Purpose: Feast repo, feature views, and online materialization planning.
+
+### `modules/advanced_serving`
+Purpose: BentoML service blueprints, separate runtime planning, and shadow deployment.
+
+### `modules/ml_registry`, `modules/dashboards`
+Purpose: supporting advanced platform add-ons.
 They are outside the minimum Lite workflow and must stay optional.
 
 ## Dependency Rules
