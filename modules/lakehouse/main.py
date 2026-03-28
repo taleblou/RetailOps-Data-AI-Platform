@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 
-SERVICE_NAME = "lakehouse"
+SERVICE_NAME = "phase20-lakehouse"
 
 
 def main() -> None:
