@@ -1,0 +1,12 @@
+object_storage:
+  type: minio
+  warehouse_bucket: retailops-lakehouse
+catalog:
+  type: iceberg-rest
+layers:
+  bronze:
+    description: immutable landing zone for raw CDC and batch events
+  silver:
+    description: cleaned retail entities and conformed history
+  gold:
+    description: analytics and AI-ready marts
