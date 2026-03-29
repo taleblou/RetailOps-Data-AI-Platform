@@ -11,6 +11,10 @@ class SourceType(StrEnum):
     CSV = "csv"
     SHOPIFY = "shopify"
     DATABASE = "database"
+    WOOCOMMERCE = "woocommerce"
+    ADOBE_COMMERCE = "adobe_commerce"
+    BIGCOMMERCE = "bigcommerce"
+    PRESTASHOP = "prestashop"
 
 
 class SourceStatus(StrEnum):
