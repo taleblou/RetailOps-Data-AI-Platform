@@ -2,7 +2,7 @@
 
 A modular, self-hosted retail data and AI platform for stores that want one package for ingestion, canonical modeling, KPI dashboards, forecasting, operational recommendations, and optional advanced modules such as CDC, lakehouse, metadata, feature services, and advanced serving.
 
-This repository is aligned to **phases 1 to 20** of the roadmap described in the project PDF.
+This repository is aligned to **phases 1 to 20** of the roadmap described in the project PDF and also includes phase 21 to 24 business extensions added during the completion passes.
 It includes the core platform, business modules, setup wizard, packaging layer, and a phase 20 Pro data-platform surface.
 
 ## Coverage summary
@@ -11,7 +11,7 @@ It includes the core platform, business modules, setup wizard, packaging layer, 
 2. **Phase 2** - modular monorepo skeleton and quality tooling
 3. **Phase 3** - Docker Compose architecture for core and add-on services
 4. **Phase 4** - canonical retail data model and SQL migrations
-5. **Phase 5** - connector framework for CSV, database, and Shopify-style sources
+5. **Phase 5** - connector framework for CSV, database, Shopify, WooCommerce, Adobe Commerce, BigCommerce, and PrestaShop sources
 6. **Phase 6** - easy CSV onboarding path with upload, preview, mapping, validation, import, transform, dashboard publish, and first forecast
 7. **Phase 7** - dbt Core transformations for staging and marts
 8. **Phase 8** - KPI analytics module and dashboard starter assets
@@ -88,6 +88,10 @@ It includes the core platform, business modules, setup wizard, packaging layer, 
 - `modules/connector_csv/`
 - `modules/connector_db/`
 - `modules/connector_shopify/`
+- `modules/connector_woocommerce/`
+- `modules/connector_adobe_commerce/`
+- `modules/connector_bigcommerce/`
+- `modules/connector_prestashop/`
 - `core/api/routes/sources.py`
 
 ### Phase 6
@@ -109,6 +113,27 @@ It includes the core platform, business modules, setup wizard, packaging layer, 
 ### Phases 8 to 18
 
 See the phase documentation and audits under `docs/`.
+
+### Additional business modules
+
+- `modules/promotion_pricing_intelligence/`
+- `modules/supplier_procurement_intelligence/`
+- `modules/customer_intelligence/`
+- `modules/payment_reconciliation/`
+- `modules/assortment_intelligence/`
+- `modules/basket_affinity_intelligence/`
+- `modules/profitability_intelligence/`
+- `modules/customer_cohort_intelligence/`
+- `modules/inventory_aging_intelligence/`
+- `modules/abc_xyz_intelligence/`
+- `modules/customer_churn_intelligence/`
+- `modules/sales_anomaly_intelligence/`
+- `modules/seasonality_intelligence/`
+- `modules/fulfillment_sla_intelligence/`
+- `docs/additional_connectors_and_modules.md`
+- `docs/further_business_modules.md`
+- `docs/final_business_expansion_phase23.md`
+- `docs/final_business_expansion_phase24.md`
 
 ### Phase 19
 
