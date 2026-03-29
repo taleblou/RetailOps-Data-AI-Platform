@@ -29,9 +29,13 @@ class ConnectorRegistry:
 
 
 def build_default_registry() -> ConnectorRegistry:
+    from modules.connector_adobe_commerce.connector import AdobeCommerceConnector
+    from modules.connector_bigcommerce.connector import BigCommerceConnector
     from modules.connector_csv.connector import CsvConnector
     from modules.connector_db.connector import DatabaseConnector
+    from modules.connector_prestashop.connector import PrestaShopConnector
     from modules.connector_shopify.connector import ShopifyConnector
+    from modules.connector_woocommerce.connector import WooCommerceConnector
 
     registry = ConnectorRegistry()
     registry.register(
@@ -53,6 +57,38 @@ def build_default_registry() -> ConnectorRegistry:
     registry.register(
         SourceType.SHOPIFY,
         lambda source, state_store, raw_loader: ShopifyConnector(
+            source,
+            state_store,
+            raw_loader,
+        ),
+    )
+    registry.register(
+        SourceType.WOOCOMMERCE,
+        lambda source, state_store, raw_loader: WooCommerceConnector(
+            source,
+            state_store,
+            raw_loader,
+        ),
+    )
+    registry.register(
+        SourceType.ADOBE_COMMERCE,
+        lambda source, state_store, raw_loader: AdobeCommerceConnector(
+            source,
+            state_store,
+            raw_loader,
+        ),
+    )
+    registry.register(
+        SourceType.BIGCOMMERCE,
+        lambda source, state_store, raw_loader: BigCommerceConnector(
+            source,
+            state_store,
+            raw_loader,
+        ),
+    )
+    registry.register(
+        SourceType.PRESTASHOP,
+        lambda source, state_store, raw_loader: PrestaShopConnector(
             source,
             state_store,
             raw_loader,
