@@ -27,3 +27,5 @@ The test suite passed after the phase 1 to 8 cleanup.
 - Shopify still needs real credentials for a production connector validation
 - Metabase dashboard JSON files are starter assets, not a full automatic importer
 - Pro modules beyond phase 8 remain intentionally lightweight placeholders
+
+- Added phase 23 business extensions for customer cohorts, inventory aging, and ABC XYZ classification.
