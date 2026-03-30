@@ -1,3 +1,29 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       config
+# File:         settings.py
+# Path:         config/settings.py
+#
+# Summary:      Defines runtime configuration for the settings layer.
+# Purpose:      Provides typed settings and configuration defaults for settings code paths.
+# Scope:        config
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: Settings
+#   - Key APIs: get_settings
+#   - Dependencies: functools, pydantic_settings
+#   - Constraints: Configuration values must remain consistent with repository
+#     environment and deployment defaults.
+#   - Compatibility: Python 3.11+ with repository configuration dependencies.
+
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
