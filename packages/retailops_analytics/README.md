@@ -1,11 +1,25 @@
-# retailops_analytics
+# Retailops Analytics
 
-This package wrapper is reserved for KPI analytics, dashboard helpers, and related exports.
+This directory contains supporting assets for the retailops analytics area of the repository.
+It keeps packaging metadata intentionally small so distribution boundaries remain clear and import cycles stay out of the export surface.
 
-## Intended scope
+## Directory contents
 
-It can later host reusable analytics models, query helpers, export helpers, and dashboard bootstrap logic now developed under `modules/analytics_kpi/` and `modules/dashboards/`.
+- `.python-version` — Local runtime version hint for development tooling.
+- `pyproject.toml` — Package build metadata and distribution settings.
+- `src/` — src implementation assets and supporting documentation.
 
-## Why it exists now
+## Interfaces and data contracts
 
-The package keeps the repository aligned with a modular future packaging strategy without forcing a premature split during the roadmap build-out.
+- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
+- Key APIs and entry points: no file-level callable surface is documented here.
+
+## Operational notes
+
+- Packaging guidance: keep package metadata, typed exports, and README claims consistent with the corresponding monorepo implementation.
+
+## Related areas
+
+- `packages/README.md` packaging workspace overview
+- `pyproject.toml` build metadata for the package
+- `src/` typed package source files
