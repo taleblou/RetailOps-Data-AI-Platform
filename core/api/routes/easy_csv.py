@@ -1,3 +1,30 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.api.routes
+# File:         easy_csv.py
+# Path:         core/api/routes/easy_csv.py
+#
+# Summary:      Defines public API routes and request handling for the API routes surface.
+# Purpose:      Exposes HTTP entry points for API routes workflows.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, run_first_transform, run_first_forecast,
+#     wizard_home, wizard_detail, wizard_upload, ...
+#   - Dependencies: __future__, csv, html, json, re, uuid, ...
+#   - Constraints: Public request and response behavior should remain
+#     backward compatible with documented API flows.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv
@@ -743,7 +770,7 @@ def _wizard_shell(title: str, body: str) -> HTMLResponse:
 def _render_home_page(message: str | None = None) -> HTMLResponse:
     flash = f"<div class='flash'>{html.escape(message)}</div>" if message else ""
     description = (
-        "Phase 6 starter path for upload, preview, mapping, validation, raw import, "
+        "Easy CSV onboarding starter path for upload, preview, mapping, validation, raw import, "
         "first transform, dashboard, and forecast."
     )
     body = (
@@ -897,6 +924,12 @@ def _render_upload_page(metadata: dict[str, Any], message: str | None = None) ->
         "<h2>7. Starter dashboard</h2>"
         f"{_render_dashboard_cards(metadata)}"
         f"{_link_paragraph(f'/easy-csv/{upload_id}/dashboard/view', 'Open dashboard view')}"
+        f"{
+            _link_paragraph(
+                f'/api/v1/dashboard-hub/{upload_id}/view',
+                'Open professional dashboard workspace',
+            )
+        }"
         "</div>"
         "<div class='panel'>"
         "<h2>8. Starter forecast</h2>"
