@@ -1,3 +1,29 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.ai.dataset_builders
+# File:         freshness.py
+# Path:         core/ai/dataset_builders/freshness.py
+#
+# Summary:      Implements freshness checks for the AI dataset builders workflow.
+# Purpose:      Assesses data recency and freshness guarantees for AI dataset builders artifacts.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: FreshnessResult
+#   - Key APIs: evaluate_feature_freshness, evaluate_feature_freshness_map
+#   - Dependencies: __future__, dataclasses, datetime, models
+#   - Constraints: Internal interfaces should remain aligned with adjacent
+#     modules and repository conventions.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 from dataclasses import dataclass
