@@ -1,3 +1,31 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.ai.dataset_builders
+# File:         builder.py
+# Path:         core/ai/dataset_builders/builder.py
+#
+# Summary:      Builds derived assets for the AI dataset builders workflow.
+# Purpose:      Constructs reusable datasets or artifacts for AI dataset builders
+#               processing.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: DatasetWindow
+#   - Key APIs: build_backtest_windows, build_point_in_time_dataset_sql
+#   - Dependencies: __future__, dataclasses, datetime, models
+#   - Constraints: Internal interfaces should remain aligned with adjacent
+#                  modules and repository conventions.
+#   - Compatibility: Python 3.11+ and repository-supported runtime
+#                    dependencies.
+
 from __future__ import annotations
 
 from dataclasses import dataclass
