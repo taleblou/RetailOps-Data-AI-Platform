@@ -1,36 +1,24 @@
 # Product Definition
 
-## Name
+## Product name
 RetailOps Data & AI Platform
 
-## What the product is
-A modular self-hosted package for retail teams that want to ingest store data, standardize it, build dashboards, and run starter AI workflows without depending on a managed cloud platform.
+## Product summary
+A modular self-hosted platform for retail data onboarding, canonical modeling, dashboards, operational intelligence, and governed AI workflows.
 
 ## Primary outcomes
-- ingest retail data from CSV, databases, and later APIs or CDC
-- convert source data into a shared canonical retail model
-- publish KPI-oriented retail outputs
-- create trusted transformed tables for downstream analytics and AI
-- run starter forecasting and future operational AI modules
-- monitor data and model quality over time
 
-## Core principles
-- core plus optional modules
-- self-hosted by default
-- raw first, then transform
-- API-first and wizard-friendly
-- phased growth from Lite to Pro
+- ingest retail data from CSV, databases, and commerce platforms
+- standardize source data into a shared retail model
+- publish KPI and dashboard outputs
+- generate operational forecasts and recommendations
+- monitor model quality and decision reliability
+- extend into platform-scale CDC, lakehouse, metadata, and feature services
 
-## Main users
-- small store using CSV files
-- medium store with database access
-- technical team that will later adopt CDC, metadata, lakehouse, and advanced serving
+## Product principles
 
-## Minimum useful system by phase 6
-- source registration and ingestion framework
-- canonical retail schemas and core tables
-- CSV onboarding wizard
-- validation and raw import
-- first transform run
-- first dashboard view
-- first forecast output
+- modular by default
+- source-first and transformation-led
+- API-first with guided onboarding
+- business-readable outputs
+- extension-ready architecture

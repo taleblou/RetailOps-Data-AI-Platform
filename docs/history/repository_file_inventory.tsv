@@ -1,0 +1,593 @@
+path	size_bytes	line_count	extension	notes
+.env.example	364	20	.example	
+.gitignore	558	44	[no_ext]	
+.pre-commit-config.yaml	230	11	.yaml	
+.python-version	5	1	[no_ext]	
+FINALIZATION_NOTES.md	1010	23	.md	
+LICENSE	11357	201	[no_ext]	
+Makefile	804	44	[no_ext]	
+README.md	3583	84	.md	readme
+compose/README.md	517	12	.md	readme
+compose/compose.advanced_serving.yaml	675	33	.yaml	
+compose/compose.analytics.yaml	580	29	.yaml	
+compose/compose.cdc.yaml	2026	85	.yaml	
+compose/compose.connectors.yaml	4933	184	.yaml	
+compose/compose.core.yaml	2634	114	.yaml	
+compose/compose.feature_store.yaml	869	44	.yaml	
+compose/compose.lakehouse.yaml	1471	65	.yaml	
+compose/compose.metadata.yaml	1520	63	.yaml	
+compose/compose.ml.yaml	3500	142	.yaml	
+compose/compose.monitoring.yaml	586	29	.yaml	
+compose/compose.query.yaml	942	42	.yaml	
+compose/compose.streaming.yaml	541	29	.yaml	
+config/README.md	1015	18	.md	readme
+config/__init__.py	22	1	.py	
+config/samples/lite.env	329	10	.env	
+config/samples/pro.env	833	18	.env	
+config/samples/standard.env	529	14	.env	
+config/settings.py	912	34	.py	
+core/README.md	1033	19	.md	readme
+core/__init__.py	22	1	.py	
+core/ai/__init__.py	74	1	.py	
+core/ai/dataset_builders/README.md	529	13	.md	readme
+core/ai/dataset_builders/__init__.py	725	19	.py	
+core/ai/dataset_builders/builder.py	3200	99	.py	
+core/ai/dataset_builders/contracts.py	4801	118	.py	
+core/ai/dataset_builders/freshness.py	2118	75	.py	
+core/ai/dataset_builders/models.py	769	33	.py	
+core/ai/feature_contracts/README.md	577	13	.md	readme
+core/ai/feature_contracts/__init__.py	61	1	.py	
+core/ai/feature_contracts/customer_return_features.yaml	1102	39	.yaml	
+core/ai/feature_contracts/inventory_position_daily.yaml	1074	41	.yaml	
+core/ai/feature_contracts/product_demand_daily.yaml	971	39	.yaml	
+core/ai/feature_contracts/shipment_delay_features.yaml	1016	37	.yaml	
+core/ai/feature_contracts/stockout_features.yaml	1057	40	.yaml	
+core/api/Dockerfile	322	10	[no_ext]	
+core/api/README.md	664	14	.md	readme
+core/api/__init__.py	22	1	.py	
+core/api/main.py	6200	129	.py	
+core/api/routes/__init__.py	22	1	.py	
+core/api/routes/easy_csv.py	42240	1166	.py	
+core/api/routes/monitoring.py	5090	117	.py	
+core/api/routes/pro_platform.py	2575	65	.py	
+core/api/routes/serving.py	11884	295	.py	
+core/api/routes/setup.py	23628	661	.py	
+core/api/routes/sources.py	5651	186	.py	
+core/api/schemas/__init__.py	35	1	.py	
+core/api/schemas/easy_csv.py	3082	122	.py	
+core/api/schemas/pro_platform.py	308	13	.py	
+core/api/schemas/setup.py	1884	69	.py	
+core/db/migrations/001_schemas.sql	215	6	.sql	
+core/db/migrations/002_core_tables.sql	5445	185	.sql	
+core/db/migrations/003_connector_framework.sql	1656	42	.sql	
+core/db/migrations/004_feature_platform.sql	3442	79	.sql	
+core/db/migrations/005_forecasting_module.sql	1339	34	.sql	
+core/db/migrations/006_shipment_risk_module.sql	1546	45	.sql	
+core/db/migrations/007_stockout_intelligence_module.sql	1090	27	.sql	
+core/db/migrations/008_reorder_engine_module.sql	897	22	.sql	
+core/db/migrations/009_returns_intelligence_module.sql	1463	38	.sql	
+core/db/migrations/010_ml_registry_lifecycle.sql	1909	49	.sql	
+core/db/migrations/011_model_serving_layer.sql	1115	31	.sql	
+core/db/migrations/012_monitoring_governance.sql	2292	56	.sql	
+core/db/migrations/013_platform_setup_wizard.sql	947	26	.sql	
+core/ingestion/README.md	641	15	.md	readme
+core/ingestion/__init__.py	22	1	.py	
+core/ingestion/base/__init__.py	22	1	.py	
+core/ingestion/base/api_connector.py	3035	85	.py	
+core/ingestion/base/connector.py	4483	137	.py	
+core/ingestion/base/mapper.py	3920	102	.py	
+core/ingestion/base/models.py	3276	133	.py	
+core/ingestion/base/raw_loader.py	528	22	.py	
+core/ingestion/base/registry.py	3061	97	.py	
+core/ingestion/base/repository.py	33353	937	.py	
+core/ingestion/base/state_store.py	1699	50	.py	
+core/ingestion/base/validator.py	4804	126	.py	
+core/monitoring/Dockerfile	271	9	[no_ext]	
+core/monitoring/README.md	636	14	.md	readme
+core/monitoring/__init__.py	0	0	.py	intentional_empty_marker
+core/monitoring/main.py	280	15	.py	
+core/monitoring/schemas.py	2475	97	.py	
+core/monitoring/service.py	36934	1028	.py	
+core/serving/README.md	485	12	.md	readme
+core/serving/__init__.py	350	15	.py	
+core/serving/schemas.py	1767	61	.py	
+core/serving/service.py	25443	677	.py	
+core/setup/README.md	596	15	.md	readme
+core/setup/__init__.py	35	1	.py	
+core/setup/service.py	30841	866	.py	
+core/transformations/.env.example	132	6	.example	
+core/transformations/.user.yml	41	1	.yml	
+core/transformations/README.md	666	14	.md	readme
+core/transformations/__init__.py	35	1	.py	
+core/transformations/dbt_project.yml	1083	54	.yml	
+core/transformations/macros/safe_divide.sql	223	7	.sql	
+core/transformations/models/base/_base__sources.yml	1108	31	.yml	
+core/transformations/models/base/base_inventory.sql	174	9	.sql	
+core/transformations/models/base/base_orders.sql	161	10	.sql	
+core/transformations/models/base/base_products.sql	148	9	.sql	
+core/transformations/models/base/base_shipments.sql	185	10	.sql	
+core/transformations/models/marts/core/dim_customer.sql	256	9	.sql	
+core/transformations/models/marts/core/dim_product.sql	162	9	.sql	
+core/transformations/models/marts/core/fct_daily_sales.sql	239	9	.sql	
+core/transformations/models/marts/core/fct_inventory_daily.sql	239	12	.sql	
+core/transformations/models/marts/core/fct_shipments.sql	534	20	.sql	
+core/transformations/models/marts/core/mart_store_kpis.sql	1512	48	.sql	
+core/transformations/models/marts/core/marts.yml	1481	65	.yml	
+core/transformations/models/marts/ops/README.md	376	13	.md	readme
+core/transformations/models/staging/staging.yml	1782	65	.yml	
+core/transformations/models/staging/stg_inventory.sql	410	10	.sql	
+core/transformations/models/staging/stg_orders.sql	499	12	.sql	
+core/transformations/models/staging/stg_products.sql	399	10	.sql	
+core/transformations/models/staging/stg_shipments.sql	477	11	.sql	
+core/transformations/profiles/.user.yml	41	1	.yml	
+core/transformations/profiles/profiles.yml	485	15	.yml	
+core/transformations/profiles.yml	263	13	.yml	
+core/transformations/service.py	8244	276	.py	
+core/worker/Dockerfile	267	9	[no_ext]	
+core/worker/README.md	436	12	.md	readme
+core/worker/__init__.py	22	1	.py	
+core/worker/main.py	193	13	.py	
+data/README.md	594	14	.md	readme
+data/artifacts/abc_xyz_intelligence/customer_inventory_upload_abc_xyz_intelligence.json	1639	63	.json	
+data/artifacts/assortment_intelligence/margin_and_assortment_upload_assortment_intelligence.json	1698	66	.json	
+data/artifacts/basket_affinity/margin_and_assortment_upload_basket_affinity_intelligence.json	856	31	.json	
+data/artifacts/business_review_reporting/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/customer_churn_intelligence/risk_retention_upload_customer_churn_intelligence.json	2296	75	.json	
+data/artifacts/customer_cohort_intelligence/customer_inventory_upload_customer_cohort_intelligence.json	1380	46	.json	
+data/artifacts/customer_intelligence/commercial_foundations_upload_customer_intelligence.json	1247	45	.json	
+data/artifacts/dashboard_hub/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/dashboards/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/forecasts/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/fulfillment_sla_intelligence/risk_retention_upload_fulfillment_sla_intelligence.json	3832	126	.json	
+data/artifacts/inventory_aging_intelligence/customer_inventory_upload_inventory_aging_intelligence.json	1719	63	.json	
+data/artifacts/model_registry/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/monitoring/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/payment_reconciliation/commercial_foundations_upload_payment_reconciliation.json	1703	62	.json	
+data/artifacts/platform_extensions/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/profitability_intelligence/margin_and_assortment_upload_profitability_intelligence.json	1819	72	.json	
+data/artifacts/promotion_pricing/commercial_foundations_upload_promotion_pricing.json	1704	66	.json	
+data/artifacts/reorder/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/returns_risk/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/sales_anomaly_intelligence/risk_retention_upload_sales_anomaly_intelligence.json	2721	106	.json	
+data/artifacts/seasonality_intelligence/risk_retention_upload_seasonality_intelligence.json	1590	55	.json	
+data/artifacts/serving/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/setup/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/shipment_risk/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/stockout_risk/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/artifacts/supplier_procurement/commercial_foundations_upload_supplier_procurement.json	1750	55	.json	
+data/artifacts/transforms/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+data/demo_csv/sample_inventory_snapshots_360.csv	15481	361	.csv	
+data/demo_csv/sample_orders_easy_csv_150.csv	7858	151	.csv	
+data/demo_csv/sample_products_120.csv	6403	121	.csv	
+data/demo_csv/sample_shipments_150.csv	9262	151	.csv	
+data/sample/orders.csv	270	4	.csv	
+data/uploads/.gitkeep	0	0	[no_ext]	intentional_empty_marker
+docs/README.md	753	15	.md	readme
+docs/additional_connectors_and_modules.md	1573	45	.md	
+docs/architecture/modular-solution-architecture.drawio	17414	141	.drawio	
+docs/architecture/modular-solution-architecture.drawio.pdf	149136		.pdf	
+docs/architecture/modular-solution-architecture.drawio.png	87024		.png	
+docs/architecture/platform_overview.md	1290	24	.md	
+docs/architecture/system_layers.md	1269	25	.md	
+docs/business/business_review_reporting.md	669	18	.md	
+docs/business/commercial_reporting.md	603	14	.md	
+docs/business/customer_and_inventory_intelligence.md	548	14	.md	
+docs/business/decision_intelligence_reporting.md	546	13	.md	
+docs/business/executive_scorecards.md	475	13	.md	
+docs/business/governance_reporting.md	434	12	.md	
+docs/business/portfolio_reporting.md	552	11	.md	
+docs/business/risk_and_retention_intelligence.md	421	12	.md	
+docs/business/working_capital_reporting.md	490	12	.md	
+docs/canonical_data_model.md	589	37	.md	
+docs/dashboard_workspace_completion_report.md	1337	32	.md	
+docs/further_business_modules.md	484	19	.md	
+docs/history/modularization_completion_report.md	1122	29	.md	
+docs/history/modularization_transition.md	574	14	.md	
+docs/history/platform_extensions_audit.md	535	14	.md	
+docs/history/platform_extensions_gap_report.md	651	13	.md	
+docs/history/release_packaging_audit.md	569	14	.md	
+docs/history/release_packaging_gap_report.md	635	13	.md	
+docs/history/repository_file_inventory.tsv	8226	149	.tsv	
+docs/history/repository_text_and_structure_audit.md	2386	69	.md	
+docs/module_boundaries.md	1258	28	.md	
+docs/modules/feature_platform.md	478	14	.md	
+docs/modules/forecasting_module.md	537	18	.md	
+docs/modules/ml_registry_and_lifecycle.md	474	14	.md	
+docs/modules/module_catalog.md	1127	53	.md	
+docs/modules/reorder_engine_module.md	489	17	.md	
+docs/modules/returns_intelligence_module.md	551	17	.md	
+docs/modules/shipment_risk_module.md	491	18	.md	
+docs/modules/stockout_intelligence_module.md	521	17	.md	
+docs/operations/release_and_operations.md	871	19	.md	
+docs/personas.md	1844	90	.md	
+docs/platform/model_serving_layer.md	474	13	.md	
+docs/platform/monitoring_and_governance.md	431	14	.md	
+docs/platform/platform_extensions.md	501	17	.md	
+docs/platform/platform_setup_wizard.md	410	14	.md	
+docs/platform/pro_data_platform.md	500	15	.md	
+docs/product_definition.md	762	24	.md	
+docs/professional_dashboard_workspace.md	1218	43	.md	
+docs/quickstart/lite.md	551	25	.md	
+docs/quickstart/pro.md	665	25	.md	
+docs/quickstart/standard.md	1404	60	.md	
+docs/release_notes_packaging.md	715	18	.md	
+docs/tiering.md	942	61	.md	
+modules/README.md	677	12	.md	readme
+modules/__init__.py	22	1	.py	
+modules/abc_xyz_intelligence/Dockerfile	213	7	[no_ext]	
+modules/abc_xyz_intelligence/README.md	527	15	.md	readme
+modules/abc_xyz_intelligence/__init__.py	35	1	.py	
+modules/abc_xyz_intelligence/main.py	249	15	.py	
+modules/abc_xyz_intelligence/router.py	1835	52	.py	
+modules/abc_xyz_intelligence/schemas.py	743	33	.py	
+modules/abc_xyz_intelligence/service.py	6835	196	.py	
+modules/advanced_serving/Dockerfile	280	9	[no_ext]	
+modules/advanced_serving/README.md	464	12	.md	readme
+modules/advanced_serving/__init__.py	173	6	.py	
+modules/advanced_serving/bentofile.yaml	197	9	.yaml	
+modules/advanced_serving/bentoml/service.py	476	18	.py	
+modules/advanced_serving/main.py	245	15	.py	
+modules/advanced_serving/router.py	929	25	.py	
+modules/advanced_serving/schemas.py	576	21	.py	
+modules/advanced_serving/service.py	1962	62	.py	
+modules/analytics_kpi/Dockerfile	277	9	[no_ext]	
+modules/analytics_kpi/README.md	4069	155	.md	readme
+modules/analytics_kpi/__init__.py	645	27	.py	
+modules/analytics_kpi/dbt_models/kpi_inventory_health.sql	357	10	.sql	
+modules/analytics_kpi/dbt_models/kpi_sales_daily.sql	254	10	.sql	
+modules/analytics_kpi/dbt_models/kpi_shipments.sql	400	10	.sql	
+modules/analytics_kpi/dbt_models/schema.yml	294	9	.yml	
+modules/analytics_kpi/export.py	1609	61	.py	
+modules/analytics_kpi/main.py	242	15	.py	
+modules/analytics_kpi/queries.py	1483	69	.py	
+modules/analytics_kpi/router.py	8231	227	.py	
+modules/analytics_kpi/schemas.py	2121	88	.py	
+modules/analytics_kpi/service.py	11077	351	.py	
+modules/assortment_intelligence/Dockerfile	216	7	[no_ext]	
+modules/assortment_intelligence/README.md	526	15	.md	readme
+modules/assortment_intelligence/__init__.py	35	1	.py	
+modules/assortment_intelligence/main.py	252	15	.py	
+modules/assortment_intelligence/router.py	1923	52	.py	
+modules/assortment_intelligence/schemas.py	724	32	.py	
+modules/assortment_intelligence/service.py	5225	149	.py	
+modules/basket_affinity_intelligence/Dockerfile	221	7	[no_ext]	
+modules/basket_affinity_intelligence/README.md	497	15	.md	readme
+modules/basket_affinity_intelligence/__init__.py	35	1	.py	
+modules/basket_affinity_intelligence/main.py	257	15	.py	
+modules/basket_affinity_intelligence/router.py	1982	54	.py	
+modules/basket_affinity_intelligence/schemas.py	674	29	.py	
+modules/basket_affinity_intelligence/service.py	4249	125	.py	
+modules/business_review_reporting/README.md	608	14	.md	readme
+modules/business_review_reporting/__init__.py	85	5	.py	
+modules/business_review_reporting/commercial_reporting_schemas.py	4962	181	.py	
+modules/business_review_reporting/commercial_reporting_service.py	41129	899	.py	
+modules/business_review_reporting/decision_intelligence_schemas.py	5670	216	.py	
+modules/business_review_reporting/decision_intelligence_service.py	59669	1478	.py	
+modules/business_review_reporting/executive_scorecard_schemas.py	5693	222	.py	
+modules/business_review_reporting/executive_scorecard_service.py	47478	981	.py	
+modules/business_review_reporting/governance_reporting_schemas.py	5272	204	.py	
+modules/business_review_reporting/governance_reporting_service.py	37678	892	.py	
+modules/business_review_reporting/portfolio_reporting_schemas.py	7805	300	.py	
+modules/business_review_reporting/portfolio_reporting_service.py	48767	1133	.py	
+modules/business_review_reporting/router.py	35374	932	.py	
+modules/business_review_reporting/schemas.py	5669	220	.py	
+modules/business_review_reporting/service.py	44766	1155	.py	
+modules/business_review_reporting/working_capital_reporting_schemas.py	4741	176	.py	
+modules/business_review_reporting/working_capital_reporting_service.py	32456	724	.py	
+modules/cdc/Dockerfile	267	9	[no_ext]	
+modules/cdc/README.md	448	12	.md	readme
+modules/cdc/__init__.py	147	6	.py	
+modules/cdc/config/cdc_profile.yaml	243	11	.yaml	
+modules/cdc/config/debezium-postgres.json	539	17	.json	
+modules/cdc/main.py	232	15	.py	
+modules/cdc/router.py	803	25	.py	
+modules/cdc/schemas.py	699	24	.py	
+modules/cdc/service.py	2793	78	.py	
+modules/common/README.md	367	11	.md	readme
+modules/common/__init__.py	35	1	.py	
+modules/common/upload_utils.py	3480	115	.py	
+modules/connector_adobe_commerce/Dockerfile	217	7	[no_ext]	
+modules/connector_adobe_commerce/README.md	495	14	.md	readme
+modules/connector_adobe_commerce/__init__.py	35	1	.py	
+modules/connector_adobe_commerce/connector.py	2548	64	.py	
+modules/connector_adobe_commerce/main.py	253	15	.py	
+modules/connector_adobe_commerce/schemas.py	321	10	.py	
+modules/connector_bigcommerce/Dockerfile	214	7	[no_ext]	
+modules/connector_bigcommerce/README.md	453	14	.md	readme
+modules/connector_bigcommerce/__init__.py	35	1	.py	
+modules/connector_bigcommerce/connector.py	1958	46	.py	
+modules/connector_bigcommerce/main.py	250	15	.py	
+modules/connector_bigcommerce/schemas.py	294	10	.py	
+modules/connector_csv/Dockerfile	277	9	[no_ext]	
+modules/connector_csv/README.md	623	14	.md	readme
+modules/connector_csv/__init__.py	22	1	.py	
+modules/connector_csv/connector.py	3176	85	.py	
+modules/connector_csv/main.py	242	15	.py	
+modules/connector_csv/schemas.py	509	10	.py	
+modules/connector_db/Dockerfile	276	9	[no_ext]	
+modules/connector_db/README.md	555	14	.md	readme
+modules/connector_db/__init__.py	22	1	.py	
+modules/connector_db/connector.py	4189	116	.py	
+modules/connector_db/main.py	241	15	.py	
+modules/connector_db/schemas.py	503	14	.py	
+modules/connector_prestashop/Dockerfile	213	7	[no_ext]	
+modules/connector_prestashop/README.md	467	14	.md	readme
+modules/connector_prestashop/__init__.py	35	1	.py	
+modules/connector_prestashop/connector.py	3324	83	.py	
+modules/connector_prestashop/main.py	249	15	.py	
+modules/connector_prestashop/schemas.py	227	9	.py	
+modules/connector_shopify/Dockerfile	281	9	[no_ext]	
+modules/connector_shopify/README.md	551	14	.md	readme
+modules/connector_shopify/__init__.py	22	1	.py	
+modules/connector_shopify/connector.py	4924	132	.py	
+modules/connector_shopify/main.py	246	15	.py	
+modules/connector_shopify/schemas.py	532	10	.py	
+modules/connector_woocommerce/Dockerfile	214	7	[no_ext]	
+modules/connector_woocommerce/README.md	298	17	.md	readme
+modules/connector_woocommerce/__init__.py	35	1	.py	
+modules/connector_woocommerce/connector.py	2249	50	.py	
+modules/connector_woocommerce/main.py	250	15	.py	
+modules/connector_woocommerce/schemas.py	330	12	.py	
+modules/customer_churn_intelligence/Dockerfile	220	7	[no_ext]	
+modules/customer_churn_intelligence/README.md	543	15	.md	readme
+modules/customer_churn_intelligence/__init__.py	35	1	.py	
+modules/customer_churn_intelligence/main.py	256	15	.py	
+modules/customer_churn_intelligence/router.py	2018	52	.py	
+modules/customer_churn_intelligence/schemas.py	823	33	.py	
+modules/customer_churn_intelligence/service.py	6548	182	.py	
+modules/customer_cohort_intelligence/Dockerfile	221	7	[no_ext]	
+modules/customer_cohort_intelligence/README.md	518	15	.md	readme
+modules/customer_cohort_intelligence/__init__.py	35	1	.py	
+modules/customer_cohort_intelligence/main.py	257	15	.py	
+modules/customer_cohort_intelligence/router.py	2002	52	.py	
+modules/customer_cohort_intelligence/schemas.py	828	32	.py	
+modules/customer_cohort_intelligence/service.py	5955	163	.py	
+modules/customer_intelligence/Dockerfile	214	7	[no_ext]	
+modules/customer_intelligence/README.md	499	15	.md	readme
+modules/customer_intelligence/__init__.py	35	1	.py	
+modules/customer_intelligence/main.py	250	15	.py	
+modules/customer_intelligence/router.py	2022	52	.py	
+modules/customer_intelligence/schemas.py	762	31	.py	
+modules/customer_intelligence/service.py	5565	150	.py	
+modules/dashboard_hub/README.md	993	35	.md	readme
+modules/dashboard_hub/__init__.py	405	17	.py	
+modules/dashboard_hub/router.py	3428	94	.py	
+modules/dashboard_hub/schemas.py	1375	42	.py	
+modules/dashboard_hub/service.py	35405	972	.py	
+modules/dashboards/README.md	424	12	.md	readme
+modules/dashboards/metabase/executive_overview.dashboard.json	1134	41	.json	
+modules/dashboards/metabase/inventory_dashboard.dashboard.json	887	31	.json	
+modules/dashboards/metabase/sales_dashboard.dashboard.json	828	31	.json	
+modules/dashboards/metabase/shipment_dashboard.dashboard.json	869	31	.json	
+modules/dashboards/sql/executive_overview.sql	357	8	.sql	
+modules/dashboards/sql/inventory_dashboard.sql	260	10	.sql	
+modules/dashboards/sql/sales_dashboard.sql	155	8	.sql	
+modules/dashboards/sql/shipment_dashboard.sql	171	9	.sql	
+modules/feature_store/Dockerfile	277	9	[no_ext]	
+modules/feature_store/README.md	441	12	.md	readme
+modules/feature_store/__init__.py	167	6	.py	
+modules/feature_store/main.py	242	15	.py	
+modules/feature_store/repo/feature_store.yaml	173	7	.yaml	
+modules/feature_store/repo/feature_views.py	956	33	.py	
+modules/feature_store/router.py	899	25	.py	
+modules/feature_store/schemas.py	604	24	.py	
+modules/feature_store/service.py	2149	66	.py	
+modules/forecasting/Dockerfile	275	9	[no_ext]	
+modules/forecasting/README.md	676	15	.md	readme
+modules/forecasting/__init__.py	0	0	.py	intentional_empty_marker
+modules/forecasting/dbt_models/forecast_training_base.sql	815	22	.sql	
+modules/forecasting/dbt_models/schema.yml	124	5	.yml	
+modules/forecasting/features/README.md	355	12	.md	readme
+modules/forecasting/features/product_demand_daily.sql	1402	51	.sql	
+modules/forecasting/main.py	240	15	.py	
+modules/forecasting/router.py	3325	88	.py	
+modules/forecasting/schemas.py	2025	73	.py	
+modules/forecasting/service.py	28126	809	.py	
+modules/fulfillment_sla_intelligence/Dockerfile	221	7	[no_ext]	
+modules/fulfillment_sla_intelligence/README.md	542	15	.md	readme
+modules/fulfillment_sla_intelligence/__init__.py	35	1	.py	
+modules/fulfillment_sla_intelligence/main.py	257	15	.py	
+modules/fulfillment_sla_intelligence/router.py	2013	52	.py	
+modules/fulfillment_sla_intelligence/schemas.py	793	33	.py	
+modules/fulfillment_sla_intelligence/service.py	6712	181	.py	
+modules/inventory_aging_intelligence/Dockerfile	221	7	[no_ext]	
+modules/inventory_aging_intelligence/README.md	505	15	.md	readme
+modules/inventory_aging_intelligence/__init__.py	35	1	.py	
+modules/inventory_aging_intelligence/main.py	257	15	.py	
+modules/inventory_aging_intelligence/router.py	1979	52	.py	
+modules/inventory_aging_intelligence/schemas.py	813	33	.py	
+modules/inventory_aging_intelligence/service.py	6930	186	.py	
+modules/lakehouse/Dockerfile	273	9	[no_ext]	
+modules/lakehouse/README.md	500	13	.md	readme
+modules/lakehouse/__init__.py	159	6	.py	
+modules/lakehouse/config/lakehouse_layout.yaml	314	12	.yaml	
+modules/lakehouse/jobs/bronze_to_silver.sql	186	12	.sql	
+modules/lakehouse/main.py	238	15	.py	
+modules/lakehouse/router.py	863	25	.py	
+modules/lakehouse/schemas.py	623	23	.py	
+modules/lakehouse/service.py	2530	74	.py	
+modules/metadata/Dockerfile	272	9	[no_ext]	
+modules/metadata/README.md	431	12	.md	readme
+modules/metadata/__init__.py	157	6	.py	
+modules/metadata/config/openmetadata_ingestion.yaml	250	13	.yaml	
+modules/metadata/main.py	237	15	.py	
+modules/metadata/router.py	853	25	.py	
+modules/metadata/schemas.py	511	21	.py	
+modules/metadata/service.py	2042	65	.py	
+modules/ml_registry/Dockerfile	275	9	[no_ext]	
+modules/ml_registry/README.md	605	15	.md	readme
+modules/ml_registry/__init__.py	475	21	.py	
+modules/ml_registry/main.py	240	15	.py	
+modules/ml_registry/router.py	3522	93	.py	
+modules/ml_registry/schemas.py	2454	79	.py	
+modules/ml_registry/service.py	37470	900	.py	
+modules/payment_reconciliation/Dockerfile	215	7	[no_ext]	
+modules/payment_reconciliation/README.md	541	15	.md	readme
+modules/payment_reconciliation/__init__.py	35	1	.py	
+modules/payment_reconciliation/main.py	251	15	.py	
+modules/payment_reconciliation/router.py	2026	52	.py	
+modules/payment_reconciliation/schemas.py	774	32	.py	
+modules/payment_reconciliation/service.py	5536	151	.py	
+modules/profitability_intelligence/Dockerfile	219	7	[no_ext]	
+modules/profitability_intelligence/README.md	526	15	.md	readme
+modules/profitability_intelligence/__init__.py	35	1	.py	
+modules/profitability_intelligence/main.py	255	15	.py	
+modules/profitability_intelligence/router.py	1977	52	.py	
+modules/profitability_intelligence/schemas.py	778	34	.py	
+modules/profitability_intelligence/service.py	5838	158	.py	
+modules/promotion_pricing_intelligence/Dockerfile	223	7	[no_ext]	
+modules/promotion_pricing_intelligence/README.md	530	15	.md	readme
+modules/promotion_pricing_intelligence/__init__.py	35	1	.py	
+modules/promotion_pricing_intelligence/main.py	259	15	.py	
+modules/promotion_pricing_intelligence/router.py	1942	52	.py	
+modules/promotion_pricing_intelligence/schemas.py	823	36	.py	
+modules/promotion_pricing_intelligence/service.py	5710	152	.py	
+modules/query_layer/Dockerfile	275	9	[no_ext]	
+modules/query_layer/README.md	444	12	.md	readme
+modules/query_layer/__init__.py	163	6	.py	
+modules/query_layer/config/catalogs/iceberg.properties	183	6	.properties	
+modules/query_layer/config/catalogs/postgres.properties	137	4	.properties	
+modules/query_layer/main.py	240	15	.py	
+modules/query_layer/router.py	879	25	.py	
+modules/query_layer/schemas.py	543	21	.py	
+modules/query_layer/service.py	2284	70	.py	
+modules/reorder_engine/Dockerfile	278	9	[no_ext]	
+modules/reorder_engine/README.md	589	15	.md	readme
+modules/reorder_engine/__init__.py	85	5	.py	
+modules/reorder_engine/main.py	243	15	.py	
+modules/reorder_engine/router.py	2988	74	.py	
+modules/reorder_engine/schemas.py	1282	50	.py	
+modules/reorder_engine/service.py	22073	630	.py	
+modules/returns_intelligence/Dockerfile	284	9	[no_ext]	
+modules/returns_intelligence/README.md	601	15	.md	readme
+modules/returns_intelligence/__init__.py	35	1	.py	
+modules/returns_intelligence/features/README.md	373	12	.md	readme
+modules/returns_intelligence/features/customer_return_features.sql	1708	42	.sql	
+modules/returns_intelligence/main.py	249	15	.py	
+modules/returns_intelligence/router.py	3470	92	.py	
+modules/returns_intelligence/schemas.py	1620	62	.py	
+modules/returns_intelligence/service.py	25709	752	.py	
+modules/sales_anomaly_intelligence/Dockerfile	219	7	[no_ext]	
+modules/sales_anomaly_intelligence/README.md	552	15	.md	readme
+modules/sales_anomaly_intelligence/__init__.py	35	1	.py	
+modules/sales_anomaly_intelligence/main.py	255	15	.py	
+modules/sales_anomaly_intelligence/router.py	1988	52	.py	
+modules/sales_anomaly_intelligence/schemas.py	762	32	.py	
+modules/sales_anomaly_intelligence/service.py	5164	147	.py	
+modules/seasonality_intelligence/Dockerfile	217	7	[no_ext]	
+modules/seasonality_intelligence/README.md	520	15	.md	readme
+modules/seasonality_intelligence/__init__.py	35	1	.py	
+modules/seasonality_intelligence/main.py	253	15	.py	
+modules/seasonality_intelligence/router.py	1915	52	.py	
+modules/seasonality_intelligence/schemas.py	745	31	.py	
+modules/seasonality_intelligence/service.py	5324	149	.py	
+modules/shipment_risk/Dockerfile	277	9	[no_ext]	
+modules/shipment_risk/README.md	577	15	.md	readme
+modules/shipment_risk/__init__.py	85	5	.py	
+modules/shipment_risk/dbt_models/schema.yml	120	5	.yml	
+modules/shipment_risk/dbt_models/shipment_risk_features.sql	921	38	.sql	
+modules/shipment_risk/features/README.md	354	12	.md	readme
+modules/shipment_risk/features/shipment_delay_features.sql	2666	75	.sql	
+modules/shipment_risk/main.py	242	15	.py	
+modules/shipment_risk/router.py	3076	88	.py	
+modules/shipment_risk/schemas.py	2066	76	.py	
+modules/shipment_risk/service.py	29591	845	.py	
+modules/stockout_intelligence/Dockerfile	285	9	[no_ext]	
+modules/stockout_intelligence/README.md	580	15	.md	readme
+modules/stockout_intelligence/__init__.py	85	5	.py	
+modules/stockout_intelligence/features/README.md	376	12	.md	readme
+modules/stockout_intelligence/features/inventory_position_daily.sql	948	41	.sql	
+modules/stockout_intelligence/features/stockout_features.sql	1515	54	.sql	
+modules/stockout_intelligence/main.py	250	15	.py	
+modules/stockout_intelligence/router.py	2319	64	.py	
+modules/stockout_intelligence/schemas.py	1084	43	.py	
+modules/stockout_intelligence/service.py	20678	627	.py	
+modules/streaming/Dockerfile	273	9	[no_ext]	
+modules/streaming/README.md	442	12	.md	readme
+modules/streaming/__init__.py	159	6	.py	
+modules/streaming/config/processors.yaml	443	9	.yaml	
+modules/streaming/config/topics.yaml	354	13	.yaml	
+modules/streaming/main.py	238	15	.py	
+modules/streaming/router.py	863	25	.py	
+modules/streaming/schemas.py	778	30	.py	
+modules/streaming/service.py	3021	88	.py	
+modules/supplier_procurement_intelligence/Dockerfile	226	7	[no_ext]	
+modules/supplier_procurement_intelligence/README.md	526	15	.md	readme
+modules/supplier_procurement_intelligence/__init__.py	35	1	.py	
+modules/supplier_procurement_intelligence/main.py	262	15	.py	
+modules/supplier_procurement_intelligence/router.py	2046	52	.py	
+modules/supplier_procurement_intelligence/schemas.py	892	35	.py	
+modules/supplier_procurement_intelligence/service.py	6633	172	.py	
+packages/README.md	869	17	.md	readme
+packages/retailops_analytics/.python-version	5	1	[no_ext]	
+packages/retailops_analytics/README.md	522	13	.md	readme
+packages/retailops_analytics/pyproject.toml	335	14	.toml	
+packages/retailops_analytics/src/retailops_analytics/__init__.py	65	2	.py	
+packages/retailops_analytics/src/retailops_analytics/py.typed	0	0	.typed	intentional_empty_marker
+packages/retailops_core/.python-version	5	1	[no_ext]	
+packages/retailops_core/README.md	492	13	.md	readme
+packages/retailops_core/pyproject.toml	330	14	.toml	
+packages/retailops_core/src/retailops_core/__init__.py	60	2	.py	
+packages/retailops_core/src/retailops_core/py.typed	0	0	.typed	intentional_empty_marker
+packages/retailops_forecasting/.python-version	5	1	[no_ext]	
+packages/retailops_forecasting/README.md	553	13	.md	readme
+packages/retailops_forecasting/pyproject.toml	337	14	.toml	
+packages/retailops_forecasting/src/retailops_forecasting/__init__.py	67	2	.py	
+packages/retailops_forecasting/src/retailops_forecasting/py.typed	0	0	.typed	intentional_empty_marker
+packages/retailops_ingestion/.python-version	5	1	[no_ext]	
+packages/retailops_ingestion/README.md	537	13	.md	readme
+packages/retailops_ingestion/pyproject.toml	335	14	.toml	
+packages/retailops_ingestion/src/retailops_ingestion/__init__.py	65	2	.py	
+packages/retailops_ingestion/src/retailops_ingestion/py.typed	0	0	.typed	intentional_empty_marker
+packages/retailops_monitoring/.python-version	5	1	[no_ext]	
+packages/retailops_monitoring/README.md	553	13	.md	readme
+packages/retailops_monitoring/pyproject.toml	336	14	.toml	
+packages/retailops_monitoring/src/retailops_monitoring/__init__.py	66	2	.py	
+packages/retailops_monitoring/src/retailops_monitoring/py.typed	0	0	.typed	intentional_empty_marker
+pyproject.toml	1056	48	.toml	
+scripts/README.md	863	18	.md	readme
+scripts/backup.sh	1336	55	.sh	
+scripts/common.sh	6704	241	.sh	
+scripts/generate_dashboard_workspace.py	1043	35	.py	
+scripts/health.sh	1400	54	.sh	
+scripts/install.sh	1077	54	.sh	
+scripts/load_demo_data.sh	3032	99	.sh	
+scripts/restore.sh	1267	58	.sh	
+scripts/upgrade.sh	1172	60	.sh	
+tests/README.md	683	13	.md	readme
+tests/ai/test_feature_platform.py	2296	68	.py	
+tests/analytics/test_kpi_router.py	3021	82	.py	
+tests/business/test_additional_business_modules.py	3248	77	.py	
+tests/business/test_business_review_reports.py	5784	136	.py	
+tests/business/test_commercial_reporting.py	8110	158	.py	
+tests/business/test_customer_and_inventory_modules.py	3875	104	.py	
+tests/business/test_decision_intelligence_reporting.py	8976	181	.py	
+tests/business/test_executive_scorecards.py	5630	152	.py	
+tests/business/test_governance_reporting.py	7959	162	.py	
+tests/business/test_margin_and_assortment_modules.py	3958	102	.py	
+tests/business/test_portfolio_reporting.py	11952	233	.py	
+tests/business/test_risk_and_retention_modules.py	4952	116	.py	
+tests/business/test_working_capital_reporting.py	7863	159	.py	
+tests/conftest.py	207	8	.py	
+tests/dashboard_hub/test_dashboard_hub.py	5017	127	.py	
+tests/forecasting/test_first_forecast_service.py	1045	35	.py	
+tests/forecasting/test_forecasting_batch.py	4902	132	.py	
+tests/ingestion/test_csv_connector.py	1391	43	.py	
+tests/ingestion/test_easy_csv_api.py	1565	52	.py	
+tests/ingestion/test_easy_csv_workflow.py	4066	104	.py	
+tests/ingestion/test_mapper.py	475	12	.py	
+tests/ingestion/test_platform_connectors.py	3142	95	.py	
+tests/ingestion/test_sources_api.py	1775	55	.py	
+tests/ingestion/test_validator.py	610	18	.py	
+tests/ml_registry/test_ml_registry.py	4015	106	.py	
+tests/monitoring/test_monitoring_governance.py	10014	236	.py	
+tests/packaging/test_release_packaging.py	1803	46	.py	
+tests/pro_platform/test_platform_extensions.py	4443	101	.py	
+tests/reorder_engine/test_reorder_engine.py	6282	162	.py	
+tests/returns_intelligence/test_returns_intelligence.py	5212	140	.py	
+tests/serving/test_model_serving.py	11116	255	.py	
+tests/setup/test_setup_wizard.py	3991	106	.py	
+tests/shipment_risk/test_shipment_risk.py	5280	140	.py	
+tests/stockout_intelligence/test_stockout_intelligence.py	4932	134	.py	
+tests/transformation/test_first_transform_service.py	916	31	.py	
+uv.lock	274309	1712	.lock	

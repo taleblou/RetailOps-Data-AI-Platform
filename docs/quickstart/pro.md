@@ -1,67 +1,89 @@
-# Quickstart - Pro profile
+# Pro Quickstart
 
-The Pro profile is the full phase 20 profile.
-It includes the standard stack plus CDC, streaming, lakehouse, query federation, metadata, feature store, and advanced serving overlays.
+Use this Pro profile when you need the core platform plus deployment-ready extension bundles.
 
-## Included modules
+## Includes
 
-- everything in Standard
-- CDC and Debezium planning surface
-- streaming overlay
-- lakehouse overlay
-- query-layer overlay
-- metadata overlay
-- feature-store overlay
-- advanced-serving overlay
+- core platform services
+- connector overlays for CSV, database, Shopify, WooCommerce, Adobe Commerce, BigCommerce, and PrestaShop
+- CDC and streaming bundles
+- lakehouse and query-layer bundles
+- metadata, feature-store, and advanced-serving bundles
 
-## Installation
+## 1. Prepare the environment
 
-```bash
-./scripts/install.sh --profile pro
-```
+1. Copy `.env.example` to `.env` if it does not already exist.
+2. Review ports, credentials, and object-store values.
+3. Optionally merge `config/samples/pro.env` into `.env`.
 
-## Upgrade
+## 2. Start the Pro stack
 
 ```bash
-./scripts/upgrade.sh --profile pro
+docker compose \
+  -f compose/compose.core.yaml \
+  -f compose/compose.connectors.yaml \
+  -f compose/compose.analytics.yaml \
+  -f compose/compose.ml.yaml \
+  -f compose/compose.monitoring.yaml \
+  -f compose/compose.cdc.yaml \
+  -f compose/compose.streaming.yaml \
+  -f compose/compose.lakehouse.yaml \
+  -f compose/compose.query.yaml \
+  -f compose/compose.metadata.yaml \
+  -f compose/compose.feature_store.yaml \
+  -f compose/compose.advanced_serving.yaml \
+  up -d
 ```
 
-## Backup
+Or use the packaging helper:
 
 ```bash
-./scripts/backup.sh --profile pro
+bash scripts/install.sh --profile pro
 ```
 
-## Restore
+## 3. Generate extension bundles
 
 ```bash
-./scripts/restore.sh --latest --profile pro
+python scripts/generate_pro_platform_bundle.py --artifact-dir data/artifacts/pro_platform --refresh
 ```
 
-## Health check
+This writes deployment bundles for:
+
+- `cdc/`
+- `streaming/`
+- `lakehouse/`
+- `query_layer/`
+- `metadata/`
+- `feature_store/`
+- `advanced_serving/`
+
+## 4. Run health checks
 
 ```bash
-./scripts/health.sh
+bash scripts/health.sh
+python scripts/validate_compose_profiles.py
 ```
 
-## Main phase 20 APIs
+You can also inspect the API readiness surface:
 
-- `/api/v1/pro/cdc/blueprint`
-- `/api/v1/pro/streaming/blueprint`
-- `/api/v1/pro/lakehouse/blueprint`
-- `/api/v1/pro/query-layer/blueprint`
-- `/api/v1/pro/metadata/blueprint`
-- `/api/v1/pro/feature-store/blueprint`
-- `/api/v1/pro/advanced-serving/blueprint`
-- `/api/v1/pro-platform/summary`
+- `GET /api/v1/pro-platform/summary`
+- `GET /api/v1/pro-platform/readiness`
 
-## Notes for technical teams
+## 5. Load demo data and verify core analytics
 
-- profile defaults live in `config/samples/pro.env`
-- the compose layers are selected automatically by the packaging scripts
-- the module config starters live under `modules/*/config`, `modules/*/repo`, and `modules/*/bentoml`
-- the phase 20 documentation lives in `docs/pro_data_platform_phase20.md`
+```bash
+bash scripts/load_demo_data.sh --upload-id demo-pro
+```
 
-## When to choose Pro
+Then verify:
 
-Choose Pro when the customer has a technical team and wants to extend the hosted-self product into a broader data platform with CDC, streaming, lakehouse analytics, metadata governance, feature serving, and separate model runtimes.
+- KPI overview routes
+- forecast summary routes
+- shipment-risk routes
+- stockout-risk routes
+- reorder recommendations
+- monitoring summary
+
+## Environment-specific items
+
+The repository now includes the control-plane logic, bundle generation, compose overlays, runbooks, and validation helpers. Production hostnames, secrets, storage classes, and cluster sizing still depend on the target installation.
