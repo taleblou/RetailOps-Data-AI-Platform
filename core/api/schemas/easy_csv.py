@@ -1,3 +1,32 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.api.schemas
+# File:         easy_csv.py
+# Path:         core/api/schemas/easy_csv.py
+#
+# Summary:      Provides implementation support for the API schemas workflow.
+# Purpose:      Supports the API schemas layer inside the modular repository
+#               architecture.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: EasyCsvPreviewResponse, EasyCsvMappingRequest,
+#                 EasyCsvMappingResponse, EasyCsvValidationIssue,
+#                 EasyCsvValidationResponse, EasyCsvImportResponse, ...
+#   - Key APIs: None; module-level constants and imports only.
+#   - Dependencies: __future__, typing, pydantic
+#   - Constraints: Internal interfaces should remain aligned with adjacent
+#                  modules and repository conventions.
+#   - Compatibility: Python 3.11+ with repository configuration dependencies.
+
 from __future__ import annotations
 
 from typing import Any
