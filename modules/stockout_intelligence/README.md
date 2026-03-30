@@ -1,37 +1,34 @@
-# stockout_intelligence
+# Stockout Intelligence Module
 
-Phase 12 upgrades this module from feature scaffolding into a runnable stockout-risk service.
+Supports the stockout intelligence layer inside the modular repository architecture. Exposes HTTP endpoints for stockout intelligence capabilities.
+It follows the repository module pattern of service logic, API surface, schemas, optional runtime entry points, and deployment assets when those concerns are applicable.
 
-## What it now does
+## Directory contents
 
-- computes days-to-stockout per SKU
-- estimates stockout probability
-- assigns a reorder urgency score
-- estimates expected lost sales value during supplier lead time
-- exposes SKU-level APIs for the latest stockout artifact
-- writes a reusable JSON artifact under `data/artifacts/stockout_risk/`
+- `main.py` — Provides implementation support for the stockout intelligence workflow.
+- `router.py` — Defines API routes for the stockout intelligence module.
+- `service.py` — Implements the stockout intelligence service layer and business logic.
+- `schemas.py` — Defines schemas for the stockout intelligence data contracts.
+- `__init__.py` — Defines the modules.stockout_intelligence package surface and package-level exports.
+- `Dockerfile` — Container build definition for this component.
+- `features/` — Reusable SQL or contract assets that feed scoring, training, or reporting workflows.
 
-## Expected input columns
+## Interfaces and data contracts
 
-The phase 12 service reads an order or inventory-style CSV for a given `upload_id`.
-Useful columns are:
+- Main types: StockoutRiskSkuResponse, StockoutRiskSummaryResponse, StockoutRiskSkuListResponse, StockoutArtifactNotFoundError, StockoutObservationRow, StockoutSkuPredictionArtifact, StockoutRiskSummaryArtifact, StockoutRiskArtifact, _ResolvedUpload.
+- Key APIs and entry points: main, router, get_stockout_risk_skus, get_stockout_risk_sku, run_stockout_risk_analysis, load_stockout_artifact, get_or_create_stockout_artifact, get_stockout_sku_predictions, get_stockout_sku_prediction.
 
-- `order_date`
-- `sku`
-- `quantity`
-- `store_code`
-- optional `available_qty` or `on_hand_qty`
-- optional `in_transit_qty`
-- optional `lead_time_days`
-- optional `unit_price`
+## Operational notes
 
-## API surface
+- Scope profile: internal (4), public API (1).
+- Status profile: stable (4), internal (1).
+- Important dependencies: __future__, router, time, pathlib, fastapi, schemas, service, pydantic, csv, json, uuid, dataclasses, datetime.
+- Constraints: Package exports should stay lightweight and avoid introducing import cycles. Internal interfaces should remain aligned with adjacent modules and repository conventions. Public request and response behavior should remain backward compatible with documented API flows.
+- Compatibility: Python 3.11+ and repository-supported runtime dependencies. Python 3.11+ with FastAPI-compatible runtime dependencies.
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
 
-- `GET /api/v1/stockout-risk/skus`
-- `GET /api/v1/stockout-risk/{sku}`
+## Related areas
 
-## Notes for this repository version
-
-This repository version keeps the phase 12 logic deterministic and self-contained.
-It uses recent demand, available inventory, inbound stock, and lead time to rank SKU risk.
-That keeps the project testable without external model files while still producing a concrete operational output.
+- `tests/stockout_intelligence/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references
