@@ -1,8 +1,37 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.api.routes
+# File:         setup.py
+# Path:         core/api/routes/setup.py
+#
+# Summary:      Defines public API routes and request handling for the API routes surface.
+# Purpose:      Exposes HTTP entry points for API routes workflows.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, create_session, get_session, set_store, set_source,
+#     test_connection, ...
+#   - Dependencies: __future__, html, json, typing, fastapi, fastapi.responses, ...
+#   - Constraints: Public request and response behavior should remain backward
+#     compatible with documented API flows.
+#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
 
 import html
 import json
-from typing import Annotated, Any
+from collections.abc import Callable
+from importlib import import_module
+from typing import Annotated, Any, cast
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -19,22 +48,68 @@ from core.ingestion.base.raw_loader import RawLoader
 from core.ingestion.base.registry import ConnectorRegistry
 from core.ingestion.base.repository import RepositoryProtocol
 from core.ingestion.base.state_store import StateStore
-from core.setup.service import (
-    DEFAULT_MODULES,
-    configure_phase18_source,
-    create_phase18_setup_session,
-    enable_phase18_modules,
-    get_phase18_setup_session,
-    publish_phase18_dashboards,
-    run_phase18_first_dbt,
-    run_phase18_first_import,
-    run_phase18_first_training,
-    save_phase18_mapping,
-    test_phase18_source_connection,
-    update_phase18_store,
-)
+from core.setup.service import DEFAULT_MODULES
 
 router = APIRouter(tags=["setup"])
+
+
+SetupCallable = Callable[..., dict[str, Any]]
+
+
+def _load_setup_callable(*names: str) -> SetupCallable:
+    module = import_module("core.setup.service")
+    for name in names:
+        candidate = getattr(module, name, None)
+        if callable(candidate):
+            return cast(SetupCallable, candidate)
+    joined_names = ", ".join(names)
+    raise RuntimeError(f"Expected one of these callables in core.setup.service: {joined_names}")
+
+
+CREATE_SETUP_SESSION = _load_setup_callable(
+    "create_setup_session",
+    "create_phase18_setup_session",
+)
+GET_SETUP_SESSION = _load_setup_callable(
+    "get_setup_session",
+    "get_phase18_setup_session",
+)
+UPDATE_SETUP_STORE = _load_setup_callable(
+    "update_setup_store",
+    "update_phase18_store",
+)
+CONFIGURE_SETUP_SOURCE = _load_setup_callable(
+    "configure_setup_source",
+    "configure_phase18_source",
+)
+TEST_SETUP_SOURCE_CONNECTION = _load_setup_callable(
+    "test_setup_source_connection",
+    "test_phase18_source_connection",
+)
+SAVE_SETUP_MAPPING = _load_setup_callable(
+    "save_setup_mapping",
+    "save_phase18_mapping",
+)
+RUN_SETUP_FIRST_IMPORT = _load_setup_callable(
+    "run_setup_first_import",
+    "run_phase18_first_import",
+)
+RUN_SETUP_FIRST_TRANSFORM = _load_setup_callable(
+    "run_setup_first_transform",
+    "run_phase18_first_transform",
+)
+ENABLE_SETUP_MODULES = _load_setup_callable(
+    "enable_setup_modules",
+    "enable_phase18_modules",
+)
+RUN_SETUP_FIRST_TRAINING = _load_setup_callable(
+    "run_setup_first_training",
+    "run_phase18_first_training",
+)
+PUBLISH_SETUP_DASHBOARDS = _load_setup_callable(
+    "publish_setup_dashboards",
+    "publish_phase18_dashboards",
+)
 
 
 def _repository(request: Request) -> RepositoryProtocol:
@@ -187,7 +262,7 @@ def _render_mapping_text(session: SetupSessionResponse) -> str:
     status_code=status.HTTP_201_CREATED,
 )
 def create_session(request: SetupSessionCreateRequest) -> dict[str, Any]:
-    return create_phase18_setup_session(
+    return CREATE_SETUP_SESSION(
         store_name=request.store_name,
         store_code=request.store_code,
         sample_mode=request.sample_mode,
@@ -197,14 +272,14 @@ def create_session(request: SetupSessionCreateRequest) -> dict[str, Any]:
 @router.get("/api/v1/setup/sessions/{session_id}", response_model=SetupSessionResponse)
 def get_session(session_id: str) -> dict[str, Any]:
     try:
-        return get_phase18_setup_session(session_id=session_id)
+        return GET_SETUP_SESSION(session_id=session_id)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
 
 @router.post("/api/v1/setup/sessions/{session_id}/store", response_model=SetupSessionResponse)
 def set_store(session_id: str, request: SetupStoreRequest) -> dict[str, Any]:
-    return update_phase18_store(
+    return UPDATE_SETUP_STORE(
         session_id=session_id,
         store_name=request.store_name,
         store_code=request.store_code,
@@ -216,7 +291,7 @@ def set_store(session_id: str, request: SetupStoreRequest) -> dict[str, Any]:
 @router.post("/api/v1/setup/sessions/{session_id}/source", response_model=SetupSessionResponse)
 def set_source(session_id: str, request: SetupSourceRequest) -> dict[str, Any]:
     try:
-        return configure_phase18_source(
+        return CONFIGURE_SETUP_SOURCE(
             session_id=session_id,
             source_type=request.source_type,
             source_name=request.source_name,
@@ -237,7 +312,7 @@ def test_connection(
     registry: RegistryDep,
 ) -> dict[str, Any]:
     try:
-        return test_phase18_source_connection(
+        return TEST_SETUP_SOURCE_CONNECTION(
             session_id=session_id,
             repository=repository,
             state_store=state_store,
@@ -251,7 +326,7 @@ def test_connection(
 @router.post("/api/v1/setup/sessions/{session_id}/mapping", response_model=SetupSessionResponse)
 def save_mapping(session_id: str, request: SetupMappingRequest) -> dict[str, Any]:
     try:
-        return save_phase18_mapping(session_id=session_id, mappings=request.mappings)
+        return SAVE_SETUP_MAPPING(session_id=session_id, mappings=request.mappings)
     except (FileNotFoundError, ValueError) as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
@@ -265,7 +340,7 @@ def run_import(
     registry: RegistryDep,
 ) -> dict[str, Any]:
     try:
-        return run_phase18_first_import(
+        return RUN_SETUP_FIRST_IMPORT(
             session_id=session_id,
             repository=repository,
             state_store=state_store,
@@ -279,7 +354,7 @@ def run_import(
 @router.post("/api/v1/setup/sessions/{session_id}/dbt-run", response_model=SetupSessionResponse)
 def run_dbt(session_id: str) -> dict[str, Any]:
     try:
-        return run_phase18_first_dbt(session_id=session_id)
+        return RUN_SETUP_FIRST_TRANSFORM(session_id=session_id)
     except (FileNotFoundError, ValueError) as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
@@ -288,13 +363,13 @@ def run_dbt(session_id: str) -> dict[str, Any]:
     "/api/v1/setup/sessions/{session_id}/enable-modules", response_model=SetupSessionResponse
 )
 def set_modules(session_id: str, request: SetupModulesRequest) -> dict[str, Any]:
-    return enable_phase18_modules(session_id=session_id, modules=request.modules)
+    return ENABLE_SETUP_MODULES(session_id=session_id, modules=request.modules)
 
 
 @router.post("/api/v1/setup/sessions/{session_id}/train", response_model=SetupSessionResponse)
 def run_training(session_id: str) -> dict[str, Any]:
     try:
-        return run_phase18_first_training(session_id=session_id)
+        return RUN_SETUP_FIRST_TRAINING(session_id=session_id)
     except (FileNotFoundError, ValueError) as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
@@ -304,7 +379,7 @@ def run_training(session_id: str) -> dict[str, Any]:
 )
 def run_dashboards(session_id: str) -> dict[str, Any]:
     try:
-        return publish_phase18_dashboards(session_id=session_id)
+        return PUBLISH_SETUP_DASHBOARDS(session_id=session_id)
     except (FileNotFoundError, ValueError) as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
@@ -313,7 +388,7 @@ def run_dashboards(session_id: str) -> dict[str, Any]:
 def setup_wizard_home(message: str | None = None) -> HTMLResponse:
     flash = f"<div class='flash'>{html.escape(message)}</div>" if message else ""
     body_parts = [
-        "<h1>RetailOps Phase 18 Setup Wizard</h1>",
+        "<h1>RetailOps Setup wizard Setup Wizard</h1>",
         (
             "<p class='muted'>This guided wizard covers create store, choose source, "
             "test connection, map fields, first import, first dbt run, enable "
@@ -333,7 +408,7 @@ def setup_wizard_home(message: str | None = None) -> HTMLResponse:
         "</form>",
         "</div>",
     ]
-    return _wizard_shell("RetailOps Phase 18 Setup Wizard", "".join(body_parts))
+    return _wizard_shell("RetailOps Setup wizard Setup Wizard", "".join(body_parts))
 
 
 @router.post("/setup/wizard/start")
@@ -342,7 +417,7 @@ def setup_wizard_start(
     store_code: Annotated[str, Form()],
     sample_mode: Annotated[str | None, Form()] = None,
 ) -> RedirectResponse:
-    session = create_phase18_setup_session(
+    session = CREATE_SETUP_SESSION(
         store_name=store_name,
         store_code=store_code,
         sample_mode=sample_mode is not None,
@@ -356,9 +431,7 @@ def setup_wizard_start(
 @router.get("/setup/sessions/{session_id}/wizard", response_class=HTMLResponse)
 def setup_wizard_detail(session_id: str, message: str | None = None) -> HTMLResponse:
     try:
-        session = SetupSessionResponse.model_validate(
-            get_phase18_setup_session(session_id=session_id)
-        )
+        session = SetupSessionResponse.model_validate(GET_SETUP_SESSION(session_id=session_id))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
@@ -385,7 +458,7 @@ def setup_wizard_detail(session_id: str, message: str | None = None) -> HTMLResp
     source_type_select = _select_source_type(source.get("type"))
 
     body_parts = [
-        f"<h1>RetailOps Phase 18 Setup Wizard · {escaped_session_id}</h1>",
+        f"<h1>RetailOps Setup wizard Setup Wizard · {escaped_session_id}</h1>",
         "<p class='muted'><a href='/setup/wizard'>Start another session</a></p>",
         flash,
         "<div class='grid'>",
@@ -474,7 +547,7 @@ def setup_wizard_detail(session_id: str, message: str | None = None) -> HTMLResp
         "</div>",
         "</div>",
     ]
-    return _wizard_shell("RetailOps Phase 18 Setup Wizard", "".join(body_parts))
+    return _wizard_shell("RetailOps Setup wizard Setup Wizard", "".join(body_parts))
 
 
 @router.post("/setup/sessions/{session_id}/wizard/store")
@@ -485,7 +558,7 @@ def wizard_store(
     currency: Annotated[str, Form()] = "EUR",
     timezone: Annotated[str, Form()] = "Europe/Helsinki",
 ) -> RedirectResponse:
-    update_phase18_store(
+    UPDATE_SETUP_STORE(
         session_id=session_id,
         store_name=store_name,
         store_code=store_code,
@@ -524,7 +597,7 @@ def wizard_source(
     if resource.strip():
         config["resource"] = resource.strip()
     try:
-        configure_phase18_source(
+        CONFIGURE_SETUP_SOURCE(
             session_id=session_id,
             source_type=source_type,
             source_name=source_name,
@@ -548,7 +621,7 @@ def wizard_test_connection(
     registry: RegistryDep,
 ) -> RedirectResponse:
     try:
-        test_phase18_source_connection(
+        TEST_SETUP_SOURCE_CONNECTION(
             session_id=session_id,
             repository=repository,
             state_store=state_store,
@@ -572,8 +645,9 @@ def wizard_mapping(
     try:
         payload = json.loads(mapping_json or "{}")
         mappings = payload if isinstance(payload, dict) else {}
-        save_phase18_mapping(
-            session_id=session_id, mappings={str(k): str(v) for k, v in mappings.items()}
+        SAVE_SETUP_MAPPING(
+            session_id=session_id,
+            mappings={str(k): str(v) for k, v in mappings.items()},
         )
         message = "Mapping saved."
     except Exception as exc:
@@ -593,7 +667,7 @@ def wizard_import(
     registry: RegistryDep,
 ) -> RedirectResponse:
     try:
-        run_phase18_first_import(
+        RUN_SETUP_FIRST_IMPORT(
             session_id=session_id,
             repository=repository,
             state_store=state_store,
@@ -612,7 +686,7 @@ def wizard_import(
 @router.post("/setup/sessions/{session_id}/wizard/dbt")
 def wizard_dbt(session_id: str) -> RedirectResponse:
     try:
-        run_phase18_first_dbt(session_id=session_id)
+        RUN_SETUP_FIRST_TRANSFORM(session_id=session_id)
         message = "First dbt step completed."
     except Exception as exc:
         message = str(exc)
@@ -628,7 +702,7 @@ def wizard_modules(
     modules_csv: Annotated[str, Form()] = ", ".join(DEFAULT_MODULES),
 ) -> RedirectResponse:
     selected = [item.strip() for item in modules_csv.split(",") if item.strip()]
-    enable_phase18_modules(session_id=session_id, modules=selected)
+    ENABLE_SETUP_MODULES(session_id=session_id, modules=selected)
     return RedirectResponse(
         url=f"/setup/sessions/{session_id}/wizard?message=Modules enabled.",
         status_code=status.HTTP_303_SEE_OTHER,
@@ -638,7 +712,7 @@ def wizard_modules(
 @router.post("/setup/sessions/{session_id}/wizard/train")
 def wizard_train(session_id: str) -> RedirectResponse:
     try:
-        run_phase18_first_training(session_id=session_id)
+        RUN_SETUP_FIRST_TRAINING(session_id=session_id)
         message = "First model training completed."
     except Exception as exc:
         message = str(exc)
@@ -651,7 +725,7 @@ def wizard_train(session_id: str) -> RedirectResponse:
 @router.post("/setup/sessions/{session_id}/wizard/dashboard")
 def wizard_dashboard(session_id: str) -> RedirectResponse:
     try:
-        publish_phase18_dashboards(session_id=session_id)
+        PUBLISH_SETUP_DASHBOARDS(session_id=session_id)
         message = "Dashboards published."
     except Exception as exc:
         message = str(exc)
