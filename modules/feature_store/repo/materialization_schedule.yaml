@@ -1,0 +1,9 @@
+jobs:
+  - name: materialize_stockout_features_hourly
+    cadence: hourly
+    entities:
+      - sku
+  - name: materialize_shipment_delay_features_every_15m
+    cadence: every_15_minutes
+    entities:
+      - shipment_id
