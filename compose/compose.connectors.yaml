@@ -61,10 +61,94 @@ services:
     networks:
       - retailops_net
 
+  connector_woocommerce:
+    build:
+      context: ..
+      dockerfile: modules/connector_woocommerce/Dockerfile
+    container_name: retailops-connector-woocommerce
+    env_file:
+      - ../.env
+    volumes:
+      - connector_woocommerce_data:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "uv run python -c 'import modules.connector_woocommerce.connector; print(\"connector-woocommerce-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+  connector_adobe_commerce:
+    build:
+      context: ..
+      dockerfile: modules/connector_adobe_commerce/Dockerfile
+    container_name: retailops-connector-adobe-commerce
+    env_file:
+      - ../.env
+    volumes:
+      - connector_adobe_commerce_data:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "uv run python -c 'import modules.connector_adobe_commerce.connector; print(\"connector-adobe-commerce-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+  connector_bigcommerce:
+    build:
+      context: ..
+      dockerfile: modules/connector_bigcommerce/Dockerfile
+    container_name: retailops-connector-bigcommerce
+    env_file:
+      - ../.env
+    volumes:
+      - connector_bigcommerce_data:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "uv run python -c 'import modules.connector_bigcommerce.connector; print(\"connector-bigcommerce-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+  connector_prestashop:
+    build:
+      context: ..
+      dockerfile: modules/connector_prestashop/Dockerfile
+    container_name: retailops-connector-prestashop
+    env_file:
+      - ../.env
+    volumes:
+      - connector_prestashop_data:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "uv run python -c 'import modules.connector_prestashop.connector; print(\"connector-prestashop-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
 volumes:
   connector_csv_data:
   connector_db_data:
   connector_shopify_data:
+  connector_woocommerce_data:
+  connector_adobe_commerce_data:
+  connector_bigcommerce_data:
+  connector_prestashop_data:
 
 networks:
   retailops_net:
