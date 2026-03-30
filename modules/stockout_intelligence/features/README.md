@@ -1,16 +1,23 @@
-# Stockout intelligence feature SQL assets
+# Features
 
-This folder contains the shared inventory and demand features that support stockout scoring and reorder decision support.
+This directory contains supporting assets for the features area of the repository.
 
-## Purpose
+## Directory contents
 
-The SQL layer prepares the operational context needed by later phases:
+- `inventory_position_daily.sql` — SQL asset used by transformations, migrations, feature definitions, or reporting flows.
+- `stockout_features.sql` — SQL asset used by transformations, migrations, feature definitions, or reporting flows.
 
-- inventory position by SKU and date
-- recent demand and stock-consumption patterns
-- inbound stock context
-- lead-time-aware demand pressure
+## Interfaces and data contracts
 
-## Relationship to later modules
+- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
+- Key APIs and entry points: no file-level callable surface is documented here.
 
-Phase 12 uses these assets for stockout scoring. Phase 13 can then reuse the same feature foundation when producing reorder recommendations.
+## Operational notes
+
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
+
+## Related areas
+
+- `tests/stockout_intelligence/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references
