@@ -1,3 +1,29 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.ai.dataset_builders
+# File:         models.py
+# Path:         core/ai/dataset_builders/models.py
+#
+# Summary:      Defines domain models for the AI dataset builders module.
+# Purpose:      Provides typed structures used by AI dataset builders processing and exchange flows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: FreshnessPolicy, FeatureContract
+#   - Key APIs: None; module-level constants and imports only.
+#   - Dependencies: __future__, dataclasses, pathlib, typing
+#   - Constraints: File-system paths and serialized artifact formats
+#     must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 from dataclasses import dataclass
