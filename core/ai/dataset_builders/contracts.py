@@ -1,10 +1,40 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.ai.dataset_builders
+# File:         contracts.py
+# Path:         core/ai/dataset_builders/contracts.py
+#
+# Summary:      Defines contracts and validation rules for the AI dataset builders layer.
+# Purpose:      Captures the structural rules that AI dataset builders
+#               producers and consumers must follow.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: load_feature_contract, load_feature_contracts
+#   - Dependencies: __future__, importlib, pathlib, models, yaml
+#   - Constraints: File-system paths and serialized artifact formats
+#                  must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime
+#                    dependencies.
+
 from __future__ import annotations
 
+from importlib import import_module
 from pathlib import Path
-
-import yaml  # type: ignore[import-untyped]
+from typing import Any, cast
 
 from .models import FeatureContract, FreshnessPolicy
+
+yaml = cast(Any, import_module("yaml"))
 
 DEFAULT_CONTRACTS_DIR = Path(__file__).resolve().parent.parent / "feature_contracts"
 
@@ -59,7 +89,7 @@ def _require_int(
 
 def load_feature_contract(path: str | Path) -> FeatureContract:
     contract_path = Path(path)
-    raw = yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+    raw = cast(object, yaml.safe_load(contract_path.read_text(encoding="utf-8")))
     data = _require_mapping(raw, path=contract_path)
     source = _require_mapping(data.get("source"), path=contract_path)
     freshness = _require_mapping(data.get("freshness"), path=contract_path)
@@ -110,7 +140,9 @@ def load_feature_contract(path: str | Path) -> FeatureContract:
     )
 
 
-def load_feature_contracts(directory: str | Path = DEFAULT_CONTRACTS_DIR) -> list[FeatureContract]:
+def load_feature_contracts(
+    directory: str | Path = DEFAULT_CONTRACTS_DIR,
+) -> list[FeatureContract]:
     contracts_dir = Path(directory)
     contracts: list[FeatureContract] = []
     for path in sorted(contracts_dir.glob("*.yaml")):
