@@ -1,19 +1,31 @@
 {
   "dashboard_name": "Shipment Dashboard",
-  "phase": 8,
   "collection": "RetailOps Starter Dashboards",
   "description": "Shipment SLA dashboard for on-time rate, delayed shipments, and average delay days.",
   "source_tables": [
     "mart.fct_shipments"
   ],
   "cards": [
-    {"title": "Shipment SLA Summary", "visualization": "scalar", "sql_file": "../sql/shipment_dashboard.sql"},
-    {"title": "Delayed Shipments", "visualization": "table", "sql_file": "../sql/shipment_dashboard.sql"},
-    {"title": "On-Time Rate by Day", "visualization": "line", "sql_file": "../sql/shipment_dashboard.sql"}
+    {
+      "title": "Shipment SLA Summary",
+      "visualization": "scalar",
+      "sql_file": "../sql/shipment_dashboard.sql"
+    },
+    {
+      "title": "Delayed Shipments",
+      "visualization": "table",
+      "sql_file": "../sql/shipment_dashboard.sql"
+    },
+    {
+      "title": "On-Time Rate by Day",
+      "visualization": "line",
+      "sql_file": "../sql/shipment_dashboard.sql"
+    }
   ],
   "layout_notes": [
     "Use the first row for SLA cards.",
     "Place delayed shipments table underneath.",
     "Include promised_date and delivered_date filters."
-  ]
+  ],
+  "dashboard_family": "starter-kpi"
 }
