@@ -1,22 +1,18 @@
-# Operational marts folder
+# Ops
 
-This folder is reserved for dbt marts that support operational workflows rather than executive reporting.
-Examples include setup-session summaries, data-quality trend tables, import-run state, override activity,
-and other service-level marts that help the platform explain what happened during ingestion or model usage.
 
-## Why this folder exists
+## Directory contents
 
-Phase 7 builds the modular dbt foundation first. The executive KPI marts live under the analytics module,
-while this folder keeps space for cross-cutting operational marts that may be shared by setup, monitoring,
-and future orchestration work.
 
-## Expected kinds of models
+## Interfaces and data contracts
 
-- setup wizard progress marts
-- import and transform run summaries
-- data-quality event summaries
-- override and feedback activity marts
-- service-health support marts for internal dashboards
+- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
+- Key APIs and entry points: no file-level callable surface is documented here.
 
-The folder is intentionally light today, but it is not a placeholder. It is a documented reserved location
-for operational marts that belong in the core transformation layer.
+## Operational notes
+
+- Maintenance guidance: changes here can affect multiple modules, so update downstream tests and docs in the same change set.
+
+## Related areas
+
+- `README.md` repository-level overview and navigation entry point
