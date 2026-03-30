@@ -1,11 +1,25 @@
-# retailops_ingestion
+# Retailops Ingestion
 
-This package wrapper is reserved for connector and ingestion capabilities.
+This directory contains supporting assets for the retailops ingestion area of the repository.
+It keeps packaging metadata intentionally small so distribution boundaries remain clear and import cycles stay out of the export surface.
 
-## Intended scope
+## Directory contents
 
-It can later host the base connector framework, source-specific adapters, raw-load helpers, and sync-state utilities that currently live under `core/ingestion/` and the connector modules.
+- `.python-version` — Local runtime version hint for development tooling.
+- `pyproject.toml` — Package build metadata and distribution settings.
+- `src/` — src implementation assets and supporting documentation.
 
-## Why it exists now
+## Interfaces and data contracts
 
-Keeping the wrapper in place makes the monorepo package-ready from early phases, even while the implementation is still developed in the main repository tree.
+- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
+- Key APIs and entry points: no file-level callable surface is documented here.
+
+## Operational notes
+
+- Packaging guidance: keep package metadata, typed exports, and README claims consistent with the corresponding monorepo implementation.
+
+## Related areas
+
+- `packages/README.md` packaging workspace overview
+- `pyproject.toml` build metadata for the package
+- `src/` typed package source files
