@@ -1,3 +1,31 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.api.routes
+# File:         monitoring.py
+# Path:         core/api/routes/monitoring.py
+#
+# Summary:      Defines public API routes and request handling for the API routes surface.
+# Purpose:      Exposes HTTP entry points for API routes workflows.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, run_monitoring_checks, get_monitoring_summary,
+#     post_manual_override, get_override_summary_endpoint
+#   - Dependencies: __future__, pathlib, fastapi, core.monitoring.schemas,
+#     core.monitoring.service
+#   - Constraints: Public request and response behavior should remain backward
+#     compatible with documented API flows.
+#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -11,9 +39,13 @@ from core.monitoring.schemas import (
     MonitoringOverrideSummaryResponse,
 )
 from core.monitoring.service import (
-    get_or_create_phase17_monitoring_artifact,
-    get_phase17_override_summary,
-    log_phase17_manual_override,
+    get_or_create_phase17_monitoring_artifact as get_or_create_monitoring_artifact,
+)
+from core.monitoring.service import (
+    get_phase17_override_summary as fetch_override_summary,
+)
+from core.monitoring.service import (
+    log_phase17_manual_override as record_manual_override,
 )
 
 router = APIRouter(prefix="/api/v1/monitoring", tags=["monitoring"])
@@ -33,7 +65,7 @@ async def run_monitoring_checks(
     refresh: bool = Query(default=False),
 ) -> MonitoringArtifactResponse:
     try:
-        payload = get_or_create_phase17_monitoring_artifact(
+        payload = get_or_create_monitoring_artifact(
             upload_id=upload_id,
             uploads_dir=Path(uploads_dir),
             forecast_artifact_dir=Path(forecast_artifact_dir),
@@ -64,7 +96,7 @@ async def get_monitoring_summary(
     refresh: bool = Query(default=False),
 ) -> MonitoringArtifactResponse:
     try:
-        payload = get_or_create_phase17_monitoring_artifact(
+        payload = get_or_create_monitoring_artifact(
             upload_id=upload_id,
             uploads_dir=Path(uploads_dir),
             forecast_artifact_dir=Path(forecast_artifact_dir),
@@ -82,11 +114,11 @@ async def get_monitoring_summary(
 
 
 @router.post("/overrides", response_model=MonitoringOverrideEntryResponse)
-async def log_manual_override(
+async def post_manual_override(
     payload: MonitoringOverrideRequest,
 ) -> MonitoringOverrideEntryResponse:
     try:
-        result = log_phase17_manual_override(
+        result = record_manual_override(
             upload_id=payload.upload_id,
             prediction_type=payload.prediction_type,
             entity_id=payload.entity_id,
@@ -103,12 +135,12 @@ async def log_manual_override(
 
 
 @router.get("/overrides", response_model=MonitoringOverrideSummaryResponse)
-async def get_override_summary(
+async def get_override_summary_endpoint(
     upload_id: str = Query(...),
     override_dir: str = Query(default="data/artifacts/monitoring/overrides"),
 ) -> MonitoringOverrideSummaryResponse:
     try:
-        payload = get_phase17_override_summary(
+        payload = fetch_override_summary(
             upload_id=upload_id,
             override_dir=Path(override_dir),
         )
