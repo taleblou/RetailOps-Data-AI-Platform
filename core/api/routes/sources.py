@@ -1,3 +1,32 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.api.routes
+# File:         sources.py
+# Path:         core/api/routes/sources.py
+#
+# Summary:      Defines public API routes and request handling for the API routes surface.
+# Purpose:      Exposes HTTP entry points for API routes workflows.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, create_source, test_source, import_source,
+#     get_source_status, get_source_errors, ...
+#   - Dependencies: __future__, typing, fastapi,
+#     core.ingestion.base.connector, core.ingestion.base.models,
+#     core.ingestion.base.raw_loader, ...
+#   - Constraints: Public request and response behavior should remain
+#     backward compatible with documented API flows.
+#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
 
 from typing import Annotated
