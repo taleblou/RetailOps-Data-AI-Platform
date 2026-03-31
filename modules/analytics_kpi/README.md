@@ -1,155 +1,36 @@
-# analytics_kpi
+# Analytics KPI Module
 
-Starter KPI analytics module for the RetailOps project.
+Supports the analytics kpi layer inside the modular repository architecture. Exposes HTTP endpoints for analytics kpi capabilities.
+It follows the repository module pattern of service logic, API surface, schemas, optional runtime entry points, and deployment assets when those concerns are applicable.
 
-This package is designed to fit the current module shape you already have:
+## Directory contents
 
-- `main.py` can stay as the lightweight service heartbeat entrypoint.
-- `service.py` keeps the existing dashboard artifact publishing behavior and adds KPI builders.
-- `router.py` exposes file-based KPI endpoints that work with the `transform_summary` payload produced by earlier pipeline steps.
+- `main.py` — Provides implementation support for the analytics kpi workflow.
+- `router.py` — Defines API routes for the analytics kpi module.
+- `service.py` — Implements the analytics kpi service layer and business logic.
+- `schemas.py` — Defines schemas for the analytics kpi data contracts.
+- `export.py` — Provides implementation support for the analytics kpi workflow.
+- `queries.py` — Provides implementation support for the analytics kpi workflow.
+- `__init__.py` — Defines the modules.analytics_kpi package surface and package-level exports.
+- `Dockerfile` — Container build definition for this component.
+- `dbt_models/` — dbt models and marts that prepare canonical inputs for this module.
 
-## Files
+## Interfaces and data contracts
 
-```text
-modules/analytics_kpi/
-├── __init__.py
-├── router.py
-├── service.py
-├── schemas.py
-├── queries.py
-├── export.py
-└── README.md
-```
+- Main types: DashboardCardResponse, DashboardArtifactResponse, DailySalesPoint, RevenueByCategoryPoint, InventoryHealthItem, ShipmentItem, DashboardCardArtifact, DashboardArtifact, SalesDailyItem, CategoryRevenueItem, ShipmentSummary.
+- Key APIs and entry points: rows_to_csv_text, csv_response, json_download_response, main, get_first_scalar, get_first_sequence, router, get_overview_by_upload, get_sales_daily_by_upload, get_revenue_by_category_by_upload, get_inventory_health_by_upload, get_shipments_by_upload.
 
-## What this module does
+## Operational notes
 
-It turns a `transform_summary` JSON payload into:
+- Scope profile: internal (6), public API (1).
+- Status profile: stable (6), internal (1).
+- Important dependencies: __future__, router, service, csv, io, json, collections.abc, typing, time, pathlib, fastapi, export, schemas, pydantic.
+- Constraints: Package exports should stay lightweight and avoid introducing import cycles. File-system paths and serialized artifact formats must remain stable for downstream consumers. Internal interfaces should remain aligned with adjacent modules and repository conventions.
+- Compatibility: Python 3.11+ and repository-supported runtime dependencies. Python 3.11+ with FastAPI-compatible runtime dependencies.
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
 
-- overview KPI cards
-- daily sales rows
-- revenue by category rows
-- inventory health rows
-- shipment SLA summary
-- a stored dashboard artifact JSON file
-- CSV or JSON exports for downstream UI use
+## Related areas
 
-## Expected input
-
-The router accepts a body shaped like this:
-
-```json
-{
-  "total_orders": 42,
-  "total_quantity": 128,
-  "total_revenue": 3599.5,
-  "daily_sales": [
-    {"sales_date": "2026-03-20", "revenue": 1000, "order_count": 10},
-    {"sales_date": "2026-03-21", "revenue": 2599.5, "order_count": 32}
-  ],
-  "revenue_by_category": [
-    {"category": "Shoes", "revenue": 2100, "order_count": 18},
-    {"category": "Bags", "revenue": 1499.5, "order_count": 24}
-  ],
-  "inventory_health": [
-    {"sku": "SKU-001", "on_hand": 5, "days_of_cover": 3, "low_stock": true},
-    {"sku": "SKU-002", "on_hand": 80, "days_of_cover": 25, "low_stock": false}
-  ],
-  "shipments": [
-    {
-      "shipment_id": "SHP-1",
-      "promised_date": "2026-03-22",
-      "delivered_date": "2026-03-21",
-      "delayed": false,
-      "delay_days": 0
-    },
-    {
-      "shipment_id": "SHP-2",
-      "promised_date": "2026-03-22",
-      "delivered_date": "2026-03-24",
-      "delayed": true,
-      "delay_days": 2
-    }
-  ]
-}
-```
-
-The service also accepts a few fallback key names such as `category_sales`, `inventory`, `shipment_rows`, and `gross_revenue`.
-
-## API endpoints
-
-All routes are mounted under `/api/v1/kpis`.
-
-- `GET /overview?upload_id=<id>`
-- `GET /sales-daily?upload_id=<id>&format=json|csv`
-- `GET /revenue-by-category?upload_id=<id>&format=json|csv`
-- `GET /inventory-health?upload_id=<id>&format=json|csv`
-- `GET /shipments?upload_id=<id>`
-- `POST /overview`
-- `POST /sales-daily?format=json|csv`
-- `POST /revenue-by-category?format=json|csv`
-- `POST /inventory-health?format=json|csv`
-- `POST /shipments`
-- `POST /dashboard/publish`
-- `GET /dashboard/artifact/{upload_id}/{dashboard_id}`
-- `POST /dashboard/export/cards?format=json|csv`
-
-## How to register the router
-
-In your API app:
-
-```python
-from modules.analytics_kpi import router as analytics_kpi_router
-
-app.include_router(analytics_kpi_router)
-```
-
-## Local run with uv
-
-```bash
-uv sync
-uv run uvicorn core.api.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-## Example curl
-
-### Overview
-
-```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/kpis/overview" \
-  -H "Content-Type: application/json" \
-  -d @sample_transform_summary.json
-```
-
-### Daily sales CSV
-
-```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/kpis/sales-daily?format=csv" \
-  -H "Content-Type: application/json" \
-  -d @sample_transform_summary.json \
-  -o sales_daily.csv
-```
-
-### Publish dashboard artifact
-
-```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/kpis/dashboard/publish" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "upload_id": "upl_001",
-    "filename": "orders.csv",
-    "artifact_dir": "artifacts/analytics_kpi",
-    "transform_summary": {
-      "total_orders": 42,
-      "total_quantity": 128,
-      "total_revenue": 3599.5,
-      "daily_sales": [
-        {"sales_date": "2026-03-20", "revenue": 1000, "order_count": 10}
-      ]
-    }
-  }'
-```
-
-## Notes
-
-- This package is file-based and summary-based, so it works immediately with the current lightweight `analytics_kpi` service.
-- If you later move to PostgreSQL and mart tables, you can keep the router and replace only the service/query layer.
+- `tests/analytics_kpi/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references
