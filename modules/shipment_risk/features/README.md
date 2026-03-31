@@ -1,19 +1,22 @@
-# Shipment risk feature SQL assets
+# Features
 
-This folder holds the feature layer used by the shipment-delay model.
+This directory contains supporting assets for the features area of the repository.
 
-## Purpose
+## Directory contents
 
-The SQL here separates reusable model features from the online scoring API. That keeps training and serving aligned and makes it easier to test the phase 11 logic independently.
+- `shipment_delay_features.sql` — SQL asset used by transformations, migrations, feature definitions, or reporting flows.
 
-## Feature themes
+## Interfaces and data contracts
 
-- promised versus actual delivery timing
-- warehouse backlog signals
-- carrier history and regional delay trends
-- order timing features such as hour, weekday, and holiday effects
-- inventory lag context for orders at risk
+- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
+- Key APIs and entry points: no file-level callable surface is documented here.
 
-## Why this matters
+## Operational notes
 
-The roadmap asks for a real operational risk module, not just a score endpoint. These shared feature assets support that requirement.
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
+
+## Related areas
+
+- `tests/shipment_risk/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references

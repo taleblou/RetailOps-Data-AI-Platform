@@ -1,25 +1,35 @@
 # Shipment Risk Module
 
-This module now covers the roadmap through phase 11.
+Supports the shipment risk layer inside the modular repository architecture. Exposes HTTP endpoints for shipment risk capabilities.
+It follows the repository module pattern of service logic, API surface, schemas, optional runtime entry points, and deployment assets when those concerns are applicable.
 
-## Scope
+## Directory contents
 
-- feature contract and feature SQL from phase 9
-- phase 11 shipment-delay scoring for open orders
-- evaluation metrics for ROC-AUC, PR-AUC, calibration, precision, and recall
-- probability, risk band, explanation factors, and recommended action per shipment
-- manual-review trigger for risky orders
-- FastAPI endpoints:
-  - `GET /api/v1/shipment-risk/open-orders`
-  - `GET /api/v1/shipment-risk/open-orders/{shipment_id}`
-  - `POST /api/v1/predict/shipment-delay`
-  - `POST /api/v1/shipment-risk/manual-review`
+- `main.py` — Provides implementation support for the shipment risk workflow.
+- `router.py` — Defines API routes for the shipment risk module.
+- `service.py` — Implements the shipment risk service layer and business logic.
+- `schemas.py` — Defines schemas for the shipment risk data contracts.
+- `__init__.py` — Defines the modules.shipment_risk package surface and package-level exports.
+- `Dockerfile` — Container build definition for this component.
+- `dbt_models/` — dbt models and marts that prepare canonical inputs for this module.
+- `features/` — Reusable SQL or contract assets that feed scoring, training, or reporting workflows.
 
-## Main files
+## Interfaces and data contracts
 
-- `modules/shipment_risk/service.py`
-- `modules/shipment_risk/router.py`
-- `modules/shipment_risk/schemas.py`
-- `modules/shipment_risk/dbt_models/shipment_risk_features.sql`
-- `modules/shipment_risk/features/shipment_delay_features.sql`
-- `core/db/migrations/006_shipment_risk_phase11.sql`
+- Main types: ShipmentRiskMetricsResponse, ShipmentRiskPredictionResponse, ShipmentRiskSummaryResponse, ShipmentRiskOpenOrdersResponse, ShipmentDelayPredictRequest, ManualReviewDecisionResponse, ShipmentRiskArtifactNotFoundError, ShipmentRow, ShipmentContext, ShipmentRiskMetricsArtifact, ShipmentRiskPredictionArtifact, ShipmentRiskSummaryArtifact.
+- Key APIs and entry points: main, router, get_shipment_risk_open_orders, get_shipment_risk_for_shipment, post_predict_shipment_delay, post_manual_review_decision, run_shipment_risk_analysis, get_or_create_shipment_risk_artifact, get_open_order_predictions, get_open_order_prediction, predict_shipment_delay, build_manual_review_decision.
+
+## Operational notes
+
+- Scope profile: internal (4), public API (1).
+- Status profile: stable (4), internal (1).
+- Important dependencies: __future__, router, time, pathlib, fastapi, schemas, service, pydantic, csv, json, uuid, dataclasses, datetime.
+- Constraints: Package exports should stay lightweight and avoid introducing import cycles. Internal interfaces should remain aligned with adjacent modules and repository conventions. Public request and response behavior should remain backward compatible with documented API flows.
+- Compatibility: Python 3.11+ and repository-supported runtime dependencies. Python 3.11+ with FastAPI-compatible runtime dependencies.
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
+
+## Related areas
+
+- `tests/shipment_risk/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references

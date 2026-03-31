@@ -1,19 +1,22 @@
-# Returns intelligence feature SQL assets
+# Features
 
-This folder contains the return-risk feature layer reserved in phase 9 and used by the dedicated phase 14 module.
+This directory contains supporting assets for the features area of the repository.
 
-## Purpose
+## Directory contents
 
-The assets here define a stable feature contract for return modelling before the scoring service is enabled.
+- `customer_return_features.sql` — SQL asset used by transformations, migrations, feature definitions, or reporting flows.
 
-## Feature themes
+## Interfaces and data contracts
 
-- customer return behaviour
-- SKU and category return history
-- promotion and discount context
-- shipment delay influence on returns
-- expected return-cost signals
+- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
+- Key APIs and entry points: no file-level callable surface is documented here.
 
-## Design note
+## Operational notes
 
-Keeping these features separate from the API and scoring service makes the return-risk module easier to extend, test, and later migrate to a fuller feature-store workflow.
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
+
+## Related areas
+
+- `tests/returns_intelligence/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references
