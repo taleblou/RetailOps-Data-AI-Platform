@@ -1,0 +1,13 @@
+routes:
+  - source_table: public.products
+    destination_topic: retailops.raw_cdc.public.products
+    storage_target: bronze_products
+  - source_table: public.orders
+    destination_topic: retailops.raw_cdc.public.orders
+    storage_target: bronze_orders
+  - source_table: public.order_items
+    destination_topic: retailops.raw_cdc.public.order_items
+    storage_target: bronze_order_items
+  - source_table: public.inventory_snapshots
+    destination_topic: retailops.raw_cdc.public.inventory_snapshots
+    storage_target: bronze_inventory_snapshots
