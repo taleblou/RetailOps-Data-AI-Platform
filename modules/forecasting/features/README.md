@@ -1,18 +1,22 @@
-# Forecasting feature SQL assets
+# Features
 
-This folder contains the phase 9 and phase 10 feature SQL used by the forecasting module.
+This directory contains supporting assets for the features area of the repository.
 
-## Purpose
+## Directory contents
 
-These assets define the daily demand feature layer that feeds training, backtesting, and batch scoring. Keeping them in a dedicated folder makes the feature logic reusable across dbt, SQL jobs, and later orchestration.
+- `product_demand_daily.sql` — SQL asset used by transformations, migrations, feature definitions, or reporting flows.
 
-## Typical contents
+## Interfaces and data contracts
 
-- entity-level daily demand aggregates
-- lag and rolling-window features
-- inventory-aware demand context where available
-- stable relations that can be reused by dataset builders
+- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
+- Key APIs and entry points: no file-level callable surface is documented here.
 
-## Usage note
+## Operational notes
 
-The repository keeps these queries lightweight and portable so the same feature contract can support both the simple self-hosted path and more advanced phase 20 extensions later.
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
+
+## Related areas
+
+- `tests/forecasting/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references
