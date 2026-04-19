@@ -62,52 +62,10 @@ services:
     networks:
       - retailops_net
 
-  mlflow:
-    image: ghcr.io/mlflow/mlflow:v2.22.1
-    container_name: retailops-mlflow
-    env_file:
-      - ../.env
-    ports:
-      - "${MLFLOW_PORT:-5000}:5000"
-    command: >
-      mlflow server
-      --host 0.0.0.0
-      --port 5000
-    volumes:
-      - mlflow_data:/mlflow
-    healthcheck:
-      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:5000\")'"]
-      interval: 20s
-      timeout: 10s
-      retries: 10
-    networks:
-      - retailops_net
-
-  metabase:
-    image: metabase/metabase:latest
-    container_name: retailops-metabase
-    env_file:
-      - ../.env
-    ports:
-      - "${METABASE_PORT:-3000}:3000"
-    volumes:
-      - metabase_data:/metabase-data
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3000/api/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 15
-    networks:
-      - retailops_net
 
 volumes:
   postgres_data:
   worker_data:
-  mlflow_data:
-  metabase_data:
 
 networks:
   retailops_net:

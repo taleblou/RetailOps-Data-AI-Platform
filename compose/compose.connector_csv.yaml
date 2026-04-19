@@ -1,0 +1,27 @@
+services:
+  connector_csv:
+    build:
+      context: ..
+      dockerfile: modules/connector_csv/Dockerfile
+    container_name: retailops-connector-csv
+    env_file:
+      - ../.env
+    volumes:
+      - connector_csv_data:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "uv run python -c 'import modules.connector_csv.connector; print(\"connector-csv-ok\")'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - retailops_net
+
+volumes:
+  connector_csv_data:
+
+networks:
+  retailops_net:
+    driver: bridge

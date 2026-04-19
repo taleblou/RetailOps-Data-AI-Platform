@@ -5,12 +5,12 @@ services:
     ports:
       - "${TRINO_PORT:-8088}:8080"
     volumes:
-      - ../modules/query_layer/config/catalogs:/etc/trino/catalog:ro
+      - ../modules/query_layer/config/catalogs/postgres.properties:/etc/trino/catalog/postgres.properties:ro
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080/v1/info || exit 1"]
+      test: ["CMD-SHELL", "trino --execute \"SELECT 1\" >/dev/null 2>&1 || exit 1"]
       interval: 20s
       timeout: 10s
       retries: 10
