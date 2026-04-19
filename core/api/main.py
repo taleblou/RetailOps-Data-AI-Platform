@@ -1,36 +1,88 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.api
+# File:         main.py
+# Path:         core/api/main.py
+#
+# Summary:      Builds the public API surface for the API application.
+# Purpose:      Provides the main application entry point and composes routers for API flows.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: app, build_repository, create_app
+#   - Dependencies: __future__, importlib, fastapi, config.settings,
+#     core.ingestion.base.registry, core.ingestion.base.repository
+#   - Constraints: Public request and response behavior should remain backward
+#     compatible with documented API flows.
+#   - Compatibility: Python 3.12+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
+
+from importlib import import_module
+from typing import Any
 
 from fastapi import FastAPI
 
 from config.settings import get_settings
-from core.api.routes.easy_csv import router as easy_csv_router
-from core.api.routes.monitoring import router as monitoring_router
-from core.api.routes.pro_platform import router as pro_platform_router
-from core.api.routes.serving import router as serving_router
-from core.api.routes.setup import router as setup_router
-from core.api.routes.sources import router as sources_router
 from core.ingestion.base.raw_loader import RawLoader
 from core.ingestion.base.registry import build_default_registry
-from core.ingestion.base.repository import (
-    MemoryRepository,
-    RepositoryProtocol,
-    SqlRepository,
-)
+from core.ingestion.base.repository import MemoryRepository, RepositoryProtocol, SqlRepository
 from core.ingestion.base.state_store import StateStore
-from modules.advanced_serving.router import router as advanced_serving_router
-from modules.analytics_kpi import router as analytics_kpi_router
-from modules.cdc.router import router as cdc_router
-from modules.feature_store.router import router as feature_store_router
-from modules.forecasting.router import router as forecasting_router
-from modules.lakehouse.router import router as lakehouse_router
-from modules.metadata.router import router as metadata_router
-from modules.ml_registry.router import router as ml_registry_router
-from modules.query_layer.router import router as query_layer_router
-from modules.reorder_engine.router import router as reorder_engine_router
-from modules.returns_intelligence.router import router as returns_intelligence_router
-from modules.shipment_risk.router import router as shipment_risk_router
-from modules.stockout_intelligence.router import router as stockout_intelligence_router
-from modules.streaming.router import router as streaming_router
+
+OPTIONAL_ROUTER_DEPENDENCIES: dict[str, frozenset[str]] = {
+    "modules.business_review_reporting.router:router": frozenset({"pypdf", "reportlab"}),
+    "modules.feature_store.router:router": frozenset({"feast"}),
+    "modules.advanced_serving.router:router": frozenset({"bentoml"}),
+}
+
+
+ROUTER_PATHS: tuple[str, ...] = (
+    "core.api.routes.sources:router",
+    "core.api.routes.easy_csv:router",
+    "modules.analytics_kpi.router:router",
+    "modules.customer_cohort_intelligence.router:router",
+    "modules.customer_churn_intelligence.router:router",
+    "modules.dashboard_hub.router:router",
+    "modules.promotion_pricing_intelligence.router:router",
+    "modules.supplier_procurement_intelligence.router:router",
+    "modules.customer_intelligence.router:router",
+    "modules.assortment_intelligence.router:router",
+    "modules.basket_affinity_intelligence.router:router",
+    "modules.business_review_reporting.router:router",
+    "modules.payment_reconciliation.router:router",
+    "modules.inventory_aging_intelligence.router:router",
+    "modules.sales_anomaly_intelligence.router:router",
+    "modules.profitability_intelligence.router:router",
+    "modules.seasonality_intelligence.router:router",
+    "modules.abc_xyz_intelligence.router:router",
+    "modules.fulfillment_sla_intelligence.router:router",
+    "modules.forecasting.router:router",
+    "modules.shipment_risk.router:router",
+    "modules.stockout_intelligence.router:router",
+    "modules.reorder_engine.router:router",
+    "modules.returns_intelligence.router:router",
+    "modules.ml_registry.router:router",
+    "core.api.routes.serving:router",
+    "core.api.routes.monitoring:router",
+    "core.api.routes.setup:router",
+    "modules.cdc.router:router",
+    "modules.streaming.router:router",
+    "modules.lakehouse.router:router",
+    "modules.query_layer.router:router",
+    "modules.metadata.router:router",
+    "modules.feature_store.router:router",
+    "modules.advanced_serving.router:router",
+    "core.api.routes.pro_platform:router",
+)
 
 
 def build_repository() -> RepositoryProtocol:
@@ -49,51 +101,56 @@ def build_repository() -> RepositoryProtocol:
     return repository
 
 
+def _load_router(path: str) -> Any | None:
+    module_path, attribute_name = path.split(":", 1)
+    try:
+        module = import_module(module_path)
+    except ModuleNotFoundError as exc:
+        optional_dependencies = OPTIONAL_ROUTER_DEPENDENCIES.get(path)
+        missing_module = (exc.name or "").split(".", 1)[0]
+        if optional_dependencies and missing_module in optional_dependencies:
+            return None
+        raise
+    return getattr(module, attribute_name)
+
+
 def create_app(repository: RepositoryProtocol | None = None) -> FastAPI:
+    get_settings.cache_clear()
+    settings = get_settings()
     repo = repository or build_repository()
     app = FastAPI(
         title="RetailOps Data & AI Platform API",
         version="0.1.0",
         description=(
-            "Phases 5 to 15 API for connectors, easy CSV onboarding, KPI analytics, "
-            "forecasting, shipment risk, stockout intelligence, reorder recommendations, "
-            "returns intelligence, ML registry lifecycle controls, a phase 16 serving "
-            "layer with batch jobs and explain endpoints, and a phase 17 monitoring "
-            "layer for governance, drift checks, and manual override logging, "
-            "plus a phase 18 setup wizard for onboarding, stateful progress, "
-            "retry-aware steps, and sample-data startup, and a phase 20 Pro "
-            "data-platform layer for CDC, streaming, lakehouse, query federation, "
-            "metadata, feature-store, and advanced-serving blueprints."
+            "Modular API for connectors, easy CSV onboarding, trusted transformations, "
+            "KPI analytics, operational intelligence, model lifecycle controls, setup "
+            "automation, business review reporting, and optional platform-extension "
+            "services such as CDC, streaming, lakehouse, metadata, feature-store, "
+            "query-layer, and advanced-serving deployment bundles."
         ),
     )
     app.state.repository = repo
     app.state.state_store = StateStore(repo)
     app.state.raw_loader = RawLoader(repo)
-    app.state.registry = build_default_registry()
-    app.include_router(sources_router)
-    app.include_router(easy_csv_router)
-    app.include_router(analytics_kpi_router)
-    app.include_router(forecasting_router)
-    app.include_router(shipment_risk_router)
-    app.include_router(stockout_intelligence_router)
-    app.include_router(reorder_engine_router)
-    app.include_router(returns_intelligence_router)
-    app.include_router(ml_registry_router)
-    app.include_router(serving_router)
-    app.include_router(monitoring_router)
-    app.include_router(setup_router)
-    app.include_router(cdc_router)
-    app.include_router(streaming_router)
-    app.include_router(lakehouse_router)
-    app.include_router(query_layer_router)
-    app.include_router(metadata_router)
-    app.include_router(feature_store_router)
-    app.include_router(advanced_serving_router)
-    app.include_router(pro_platform_router)
+    app.state.registry = build_default_registry(settings.enabled_connector_values)
+    skipped_optional_routers: list[str] = []
+    for router_path in ROUTER_PATHS:
+        router = _load_router(router_path)
+        if router is None:
+            skipped_optional_routers.append(router_path)
+            continue
+        app.include_router(router)
+    app.state.skipped_optional_routers = skipped_optional_routers
 
     @app.get("/health", tags=["health"])
     def health() -> dict[str, str]:
-        return {"status": "ok"}
+        return {
+            "status": "ok",
+            "profile": settings.app_profile,
+            "enabled_connectors": ",".join(settings.enabled_connector_values),
+            "enabled_optional_extras": ",".join(settings.enabled_optional_extra_values) or "none",
+            "skipped_optional_routers": ",".join(app.state.skipped_optional_routers) or "none",
+        }
 
     return app
 

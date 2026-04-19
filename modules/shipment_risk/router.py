@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.shipment_risk
+# File:         router.py
+# Path:         modules/shipment_risk/router.py
+#
+# Summary:      Defines API routes for the shipment risk module.
+# Purpose:      Exposes HTTP endpoints for shipment risk capabilities.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, get_shipment_risk_open_orders, get_shipment_risk_for_shipment, post_predict_shipment_delay, post_manual_review_decision
+#   - Dependencies: __future__, pathlib, fastapi, schemas, service
+#   - Constraints: Public request and response behavior should remain backward compatible with documented API flows.
+#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
 
 from pathlib import Path

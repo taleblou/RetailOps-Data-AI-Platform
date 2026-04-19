@@ -1,21 +1,25 @@
 # Package Workspaces
 
-The `packages/` directory contains lightweight packaging workspaces for selectively distributing repository capabilities as typed Python packages.
+The `packages/` directory contains thin packaging workspaces that describe selective distribution surfaces for the repository.
 
-## Packages
+## Available workspaces
 
-- `retailops_core/` shared platform metadata and package surface for core capabilities.
-- `retailops_ingestion/` package surface for ingestion-oriented capabilities.
-- `retailops_forecasting/` package surface for forecasting-oriented capabilities.
-- `retailops_monitoring/` package surface for observability and governance capabilities.
-- `retailops_analytics/` package surface for analytics and reporting capabilities.
+- `retailops_core/` shared platform package surface
+- `retailops_ingestion/` connector and ingestion package surface
+- `retailops_forecasting/` forecasting package surface
+- `retailops_monitoring/` monitoring and governance package surface
+- `retailops_analytics/` analytics and reporting package surface
 
 ## Design intent
 
-These workspaces are intentionally thin. They describe distribution boundaries and typed exports without duplicating the full monorepo implementation.
+These workspaces stay intentionally small. They expose package metadata and typed markers without duplicating the full monorepo implementation.
 
-## Maintenance notes
+## How to use them
 
-- Keep package metadata and README descriptions aligned with the corresponding monorepo modules.
-- Avoid placing heavy runtime logic in the package entry points.
-- Keep typed export markers and `pyproject.toml` metadata synchronized.
+Use the package workspaces when you want a narrower distribution boundary than the full repository, or when you need typed package metadata for downstream tooling.
+
+## Maintenance rules
+
+- Keep package README text aligned with the monorepo capability it represents.
+- Keep `pyproject.toml`, `README.md`, and `src/*/__init__.py` metadata synchronized.
+- Avoid adding heavy runtime logic to the package surface.

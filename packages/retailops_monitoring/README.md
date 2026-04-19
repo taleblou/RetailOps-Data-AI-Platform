@@ -1,11 +1,19 @@
-# retailops_monitoring
+# RetailOps Monitoring
 
-This package wrapper is reserved for monitoring, governance, and quality-check utilities.
+This workspace defines the monitoring, override, and governance package surface.
 
-## Intended scope
+## What is here
 
-It can later contain shared data-quality checks, drift reporting, alert-policy helpers, and override-log abstractions that are currently implemented in the main repository tree.
+- `pyproject.toml` package metadata
+- `src/` typed package source files
+- local tool version markers where needed
 
-## Why it exists now
+## Design intent
 
-The roadmap expects a modular product. This wrapper preserves that packaging direction without requiring the monitoring code to be published separately yet.
+The workspace keeps the published surface lightweight. It should describe the capability boundary without duplicating monorepo runtime logic.
+
+## Maintenance rules
+
+- Keep this README aligned with `packages/README.md` and the matching monorepo modules.
+- Keep package metadata and typed exports synchronized.
+- Avoid introducing heavy runtime-only dependencies in this workspace.

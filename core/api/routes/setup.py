@@ -19,23 +19,24 @@
 # Notes:
 #   - Main types: None.
 #   - Key APIs: router, create_session, get_session, set_store, set_source,
-#     test_connection, ...
-#   - Dependencies: __future__, html, json, typing, fastapi, fastapi.responses, ...
+#     test_connection, get_source_types
+#   - Dependencies: __future__, html, json, typing, fastapi,
+#     fastapi.responses, config.settings, core.api.schemas.setup,
+#     core.ingestion.base.registry, core.setup.service
 #   - Constraints: Public request and response behavior should remain backward
 #     compatible with documented API flows.
-#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+#   - Compatibility: Python 3.12+ with FastAPI-compatible runtime dependencies.
 
 from __future__ import annotations
 
 import html
 import json
-from collections.abc import Callable
-from importlib import import_module
-from typing import Annotated, Any, cast
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 
+from config.settings import get_settings
 from core.api.schemas.setup import (
     SetupMappingRequest,
     SetupModulesRequest,
@@ -45,71 +46,37 @@ from core.api.schemas.setup import (
     SetupStoreRequest,
 )
 from core.ingestion.base.raw_loader import RawLoader
-from core.ingestion.base.registry import ConnectorRegistry
+from core.ingestion.base.registry import ConnectorRegistry, ConnectorSpec, get_connector_specs
 from core.ingestion.base.repository import RepositoryProtocol
 from core.ingestion.base.state_store import StateStore
-from core.setup.service import DEFAULT_MODULES
+from core.setup.service import (
+    DEFAULT_MODULES,
+    configure_setup_source,
+    create_setup_session,
+    enable_setup_modules,
+    get_setup_session,
+    publish_setup_dashboards,
+    run_setup_first_import,
+    run_setup_first_training,
+    run_setup_first_transform,
+    save_setup_mapping,
+    test_setup_source_connection,
+    update_setup_store,
+)
 
 router = APIRouter(tags=["setup"])
 
-
-SetupCallable = Callable[..., dict[str, Any]]
-
-
-def _load_setup_callable(*names: str) -> SetupCallable:
-    module = import_module("core.setup.service")
-    for name in names:
-        candidate = getattr(module, name, None)
-        if callable(candidate):
-            return cast(SetupCallable, candidate)
-    joined_names = ", ".join(names)
-    raise RuntimeError(f"Expected one of these callables in core.setup.service: {joined_names}")
-
-
-CREATE_SETUP_SESSION = _load_setup_callable(
-    "create_setup_session",
-    "create_phase18_setup_session",
-)
-GET_SETUP_SESSION = _load_setup_callable(
-    "get_setup_session",
-    "get_phase18_setup_session",
-)
-UPDATE_SETUP_STORE = _load_setup_callable(
-    "update_setup_store",
-    "update_phase18_store",
-)
-CONFIGURE_SETUP_SOURCE = _load_setup_callable(
-    "configure_setup_source",
-    "configure_phase18_source",
-)
-TEST_SETUP_SOURCE_CONNECTION = _load_setup_callable(
-    "test_setup_source_connection",
-    "test_phase18_source_connection",
-)
-SAVE_SETUP_MAPPING = _load_setup_callable(
-    "save_setup_mapping",
-    "save_phase18_mapping",
-)
-RUN_SETUP_FIRST_IMPORT = _load_setup_callable(
-    "run_setup_first_import",
-    "run_phase18_first_import",
-)
-RUN_SETUP_FIRST_TRANSFORM = _load_setup_callable(
-    "run_setup_first_transform",
-    "run_phase18_first_transform",
-)
-ENABLE_SETUP_MODULES = _load_setup_callable(
-    "enable_setup_modules",
-    "enable_phase18_modules",
-)
-RUN_SETUP_FIRST_TRAINING = _load_setup_callable(
-    "run_setup_first_training",
-    "run_phase18_first_training",
-)
-PUBLISH_SETUP_DASHBOARDS = _load_setup_callable(
-    "publish_setup_dashboards",
-    "publish_phase18_dashboards",
-)
+CREATE_SETUP_SESSION = create_setup_session
+GET_SETUP_SESSION = get_setup_session
+UPDATE_SETUP_STORE = update_setup_store
+CONFIGURE_SETUP_SOURCE = configure_setup_source
+TEST_SETUP_SOURCE_CONNECTION = test_setup_source_connection
+SAVE_SETUP_MAPPING = save_setup_mapping
+RUN_SETUP_FIRST_IMPORT = run_setup_first_import
+RUN_SETUP_FIRST_TRANSFORM = run_setup_first_transform
+ENABLE_SETUP_MODULES = enable_setup_modules
+RUN_SETUP_FIRST_TRAINING = run_setup_first_training
+PUBLISH_SETUP_DASHBOARDS = publish_setup_dashboards
 
 
 def _repository(request: Request) -> RepositoryProtocol:
@@ -175,6 +142,28 @@ WIZARD_CSS = "\n".join(
 )
 
 
+def _enabled_connector_specs() -> list[ConnectorSpec]:
+    return get_connector_specs(get_settings().enabled_connector_values)
+
+
+def _enabled_source_types() -> set[str]:
+    return {item.source_value for item in _enabled_connector_specs()}
+
+
+def _ensure_source_type_enabled(source_type: str) -> str:
+    normalized = str(source_type).strip().lower()
+    if normalized not in _enabled_source_types():
+        enabled = ", ".join(item.label for item in _enabled_connector_specs())
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                f"Source type '{normalized}' is not enabled in this installation. "
+                f"Enabled connectors: {enabled}."
+            ),
+        )
+    return normalized
+
+
 def _wizard_shell(title: str, body: str) -> HTMLResponse:
     return HTMLResponse(
         "<!DOCTYPE html>"
@@ -202,18 +191,32 @@ def _input_field(label: str, name: str, value: Any) -> str:
 
 def _select_source_type(current_value: Any) -> str:
     current = str(current_value or "csv")
-    options = [
-        ("csv", "CSV"),
-        ("database", "Database"),
-        ("shopify", "Shopify"),
-    ]
-    rendered_options = []
-    for value, label in options:
-        selected = " selected" if value == current else ""
-        rendered_options.append(f"<option value='{value}'{selected}>{html.escape(label)}</option>")
+    rendered_options: list[str] = []
+    for spec in _enabled_connector_specs():
+        selected = " selected" if spec.source_value == current else ""
+        rendered_options.append(
+            f"<option value='{spec.source_value}'{selected}>{html.escape(spec.label)}</option>"
+        )
     return (
         f"<label>Source type<select name='source_type'>{''.join(rendered_options)}</select></label>"
     )
+
+
+def _render_source_configuration_fields(source_type: Any, source_config: dict[str, Any]) -> str:
+    current = str(source_type or "csv")
+    for spec in _enabled_connector_specs():
+        if spec.source_value != current:
+            continue
+        fields = [
+            _input_field(field.label, field.name, source_config.get(field.name) or field.default)
+            for field in spec.wizard_fields
+        ]
+        fields.append(
+            "<p class='muted'>Only the fields required by the selected connector are used. "
+            "You can switch connectors without installing the other connector services.</p>"
+        )
+        return "".join(fields)
+    return "<p class='muted'>No source fields are available for this connector selection.</p>"
 
 
 def _post_button_form(action: str, button_label: str) -> str:
@@ -256,6 +259,21 @@ def _render_mapping_text(session: SetupSessionResponse) -> str:
     return json.dumps(session.mapping, ensure_ascii=False, indent=2)
 
 
+@router.get("/api/v1/setup/source-types")
+def get_source_types() -> list[dict[str, Any]]:
+    return [
+        {
+            "source_type": spec.source_value,
+            "label": spec.label,
+            "fields": [
+                {"name": field.name, "label": field.label, "default": field.default}
+                for field in spec.wizard_fields
+            ],
+        }
+        for spec in _enabled_connector_specs()
+    ]
+
+
 @router.post(
     "/api/v1/setup/sessions",
     response_model=SetupSessionResponse,
@@ -290,10 +308,11 @@ def set_store(session_id: str, request: SetupStoreRequest) -> dict[str, Any]:
 
 @router.post("/api/v1/setup/sessions/{session_id}/source", response_model=SetupSessionResponse)
 def set_source(session_id: str, request: SetupSourceRequest) -> dict[str, Any]:
+    _ensure_source_type_enabled(request.source_type.value)
     try:
         return CONFIGURE_SETUP_SOURCE(
             session_id=session_id,
-            source_type=request.source_type,
+            source_type=request.source_type.value,
             source_name=request.source_name,
             config=request.config,
         )
@@ -492,32 +511,7 @@ def setup_wizard_detail(session_id: str, message: str | None = None) -> HTMLResp
         f"<form method='post' action='{source_form_action}'>",
         source_type_select,
         _input_field("Source name", "source_name", source.get("name")),
-        _input_field("CSV file path", "file_path", source_config.get("file_path")),
-        _input_field(
-            "Database URL",
-            "database_url",
-            source_config.get("database_url"),
-        ),
-        _input_field(
-            "Query",
-            "query",
-            source_config.get("query") or "select 1 as id",
-        ),
-        _input_field(
-            "Shopify store URL",
-            "store_url",
-            source_config.get("store_url"),
-        ),
-        _input_field(
-            "Shopify access token",
-            "access_token",
-            source_config.get("access_token"),
-        ),
-        _input_field(
-            "Shopify resource",
-            "resource",
-            source_config.get("resource") or "orders",
-        ),
+        _render_source_configuration_fields(source.get("type"), source_config),
         "<p><button type='submit'>Save source</button></p>",
         "</form>",
         _post_button_form(test_form_action, "Test connection"),
@@ -577,29 +571,48 @@ def wizard_source(
     source_type: Annotated[str, Form()],
     source_name: Annotated[str, Form()],
     file_path: Annotated[str, Form()] = "",
+    delimiter: Annotated[str, Form()] = ",",
+    encoding: Annotated[str, Form()] = "utf-8",
     database_url: Annotated[str, Form()] = "",
     query: Annotated[str, Form()] = "",
     store_url: Annotated[str, Form()] = "",
     access_token: Annotated[str, Form()] = "",
+    api_version: Annotated[str, Form()] = "",
     resource: Annotated[str, Form()] = "orders",
+    consumer_key: Annotated[str, Form()] = "",
+    consumer_secret: Annotated[str, Form()] = "",
+    base_url: Annotated[str, Form()] = "",
+    store_code: Annotated[str, Form()] = "default",
+    api_root: Annotated[str, Form()] = "https://api.bigcommerce.com/stores",
+    store_hash: Annotated[str, Form()] = "",
+    api_key: Annotated[str, Form()] = "",
 ) -> RedirectResponse:
     config: dict[str, Any] = {}
-    if file_path.strip():
-        config["file_path"] = file_path.strip()
-    if database_url.strip():
-        config["database_url"] = database_url.strip()
-    if query.strip():
-        config["query"] = query.strip()
-    if store_url.strip():
-        config["store_url"] = store_url.strip()
-    if access_token.strip():
-        config["access_token"] = access_token.strip()
-    if resource.strip():
-        config["resource"] = resource.strip()
+    normalized_type = _ensure_source_type_enabled(source_type)
+    for key, value in {
+        "file_path": file_path,
+        "delimiter": delimiter,
+        "encoding": encoding,
+        "database_url": database_url,
+        "query": query,
+        "store_url": store_url,
+        "access_token": access_token,
+        "api_version": api_version,
+        "resource": resource,
+        "consumer_key": consumer_key,
+        "consumer_secret": consumer_secret,
+        "base_url": base_url,
+        "store_code": store_code,
+        "api_root": api_root,
+        "store_hash": store_hash,
+        "api_key": api_key,
+    }.items():
+        if str(value).strip():
+            config[key] = str(value).strip()
     try:
         CONFIGURE_SETUP_SOURCE(
             session_id=session_id,
-            source_type=source_type,
+            source_type=normalized_type,
             source_name=source_name,
             config=config,
         )

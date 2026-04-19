@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       tests.ingestion
+# File:         test_easy_csv_api.py
+# Path:         tests/ingestion/test_easy_csv_api.py
+#
+# Summary:      Contains automated tests for the ingestion workflows and behaviors.
+# Purpose:      Validates ingestion behavior and protects the repository against regressions.
+# Scope:        test
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: test_easy_csv_upload_and_preview
+#   - Dependencies: pathlib, fastapi.testclient, core.api.main, core.ingestion.base.repository
+#   - Constraints: Assumes repository fixtures, deterministic sample data, and isolated test execution.
+#   - Compatibility: Python 3.11+ with pytest and repository test dependencies.
+
 from pathlib import Path
 
 from fastapi.testclient import TestClient

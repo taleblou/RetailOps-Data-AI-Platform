@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.forecasting
+# File:         router.py
+# Path:         modules/forecasting/router.py
+#
+# Summary:      Defines API routes for the forecasting module.
+# Purpose:      Exposes HTTP endpoints for forecasting capabilities.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, get_forecast_summary, get_forecast_product
+#   - Dependencies: __future__, pathlib, fastapi, schemas, service
+#   - Constraints: Public request and response behavior should remain backward compatible with documented API flows.
+#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -7,7 +32,7 @@ from fastapi import APIRouter, HTTPException, Query
 from .schemas import ForecastProductResponse, ForecastSummaryResponse
 from .service import (
     ForecastArtifactNotFoundError,
-    get_or_create_phase10_batch_artifact,
+    get_or_create_batch_forecast_artifact,
     get_product_forecast,
 )
 
@@ -22,7 +47,7 @@ async def get_forecast_summary(
     refresh: bool = Query(default=False),
 ) -> ForecastSummaryResponse:
     try:
-        artifact = get_or_create_phase10_batch_artifact(
+        artifact = get_or_create_batch_forecast_artifact(
             upload_id=upload_id,
             uploads_dir=Path(uploads_dir),
             artifact_dir=Path(artifact_dir),

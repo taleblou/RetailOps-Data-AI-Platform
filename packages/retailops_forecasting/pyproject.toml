@@ -1,7 +1,7 @@
 [project]
 name = "retailops-forecasting"
 version = "0.1.0"
-description = "Add your description here"
+description = "Forecasting distribution workspace for RetailOps operational planning services."
 readme = "README.md"
 authors = [
     { name = "Morteza Taleblou", email = "morteza_taleblou@yahoo.com" }

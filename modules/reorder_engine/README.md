@@ -1,35 +1,33 @@
-# reorder_engine
+# Reorder Engine Module
 
-Phase 13 upgrades this module from a placeholder into a runnable reorder recommendation engine.
+Supports the reorder engine layer inside the modular repository architecture. Exposes HTTP endpoints for reorder engine capabilities.
+It follows the repository module pattern of service logic, API surface, schemas, optional runtime entry points, and deployment assets when those concerns are applicable.
 
-## What it now does
+## Directory contents
 
-- pulls demand forecast signals from phase 10
-- pulls stockout risk signals from phase 12
-- combines current inventory, inbound stock, lead time, MOQ, and service target
-- produces reorder date, reorder quantity, urgency, and rationale per SKU
-- exposes list and detail APIs for the latest reorder artifact
-- writes a reusable JSON artifact under `data/artifacts/reorder/`
+- `main.py` — Provides implementation support for the reorder engine workflow.
+- `router.py` — Defines API routes for the reorder engine module.
+- `service.py` — Implements the reorder engine service layer and business logic.
+- `schemas.py` — Defines schemas for the reorder engine data contracts.
+- `__init__.py` — Defines the modules.reorder_engine package surface and package-level exports.
+- `Dockerfile` — Container build definition for this component.
 
-## Expected input columns
+## Interfaces and data contracts
 
-The phase 13 service reads the uploaded CSV for a given `upload_id`.
-Useful columns are:
+- Main types: ReorderRecommendationResponse, ReorderSummaryResponse, ReorderRecommendationListResponse, ReorderArtifactNotFoundError, ReorderRecommendationArtifact, ReorderSummaryArtifact, ReorderArtifact, _SupplyOverride.
+- Key APIs and entry points: main, router, list_reorder_recommendations, get_reorder_sku, run_reorder_engine, load_reorder_artifact, get_or_create_reorder_artifact, get_reorder_recommendations, get_reorder_recommendation.
 
-- `sku`
-- `store_code`
-- optional `lead_time_days`
-- optional `supplier_moq` or `moq`
-- optional `service_level_target`
-- optional inventory columns already used by phase 12
+## Operational notes
 
-## API surface
+- Scope profile: internal (4), public API (1).
+- Status profile: stable (4), internal (1).
+- Important dependencies: __future__, router, time, pathlib, fastapi, schemas, service, pydantic, csv, json, math, uuid, dataclasses.
+- Constraints: Package exports should stay lightweight and avoid introducing import cycles. Internal interfaces should remain aligned with adjacent modules and repository conventions. Public request and response behavior should remain backward compatible with documented API flows.
+- Compatibility: Python 3.11+ and repository-supported runtime dependencies. Python 3.11+ with FastAPI-compatible runtime dependencies.
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
 
-- `GET /api/v1/reorder/recommendations`
-- `GET /api/v1/reorder/{sku}`
+## Related areas
 
-## Notes for this repository version
-
-This repository version keeps the phase 13 logic deterministic and self-contained.
-It uses a hybrid rules plus model-output approach, not a heavy optimization solver.
-That keeps the module practical, testable, and aligned to the roadmap PDF.
+- `tests/reorder_engine/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references

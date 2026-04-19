@@ -1,0 +1,13 @@
+services:
+  - name: forecasting-runtime
+    model_alias: champion
+    deployment_mode: primary
+    endpoint: /predict/forecast
+  - name: shipment-risk-runtime
+    model_alias: challenger
+    deployment_mode: shadow
+    endpoint: /predict/shipment-delay
+  - name: return-risk-runtime
+    model_alias: challenger
+    deployment_mode: shadow
+    endpoint: /predict/return-risk

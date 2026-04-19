@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.feature_store.repo
+# File:         feature_views.py
+# Path:         modules/feature_store/repo/feature_views.py
+#
+# Summary:      Provides implementation support for the feature store repo workflow.
+# Purpose:      Supports the feature store repo layer inside the modular repository architecture.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: None; module-level constants and imports only.
+#   - Dependencies: __future__, datetime, feast, feast.types
+#   - Constraints: Internal interfaces should remain aligned with adjacent modules and repository conventions.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 from datetime import timedelta

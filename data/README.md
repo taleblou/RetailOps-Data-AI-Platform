@@ -1,17 +1,18 @@
 # Data Directory
 
-The `data/` directory is the repository-local home for sample uploads, generated artifacts, and other runtime file outputs used by demos, smoke tests, and module workflows.
+The `data/` directory is the repository-local home for uploads, generated artifacts, sample inputs, and runtime bundle outputs.
 
 ## Typical contents
 
-- sample CSV or source files for onboarding and test flows
-- upload roots consumed by setup and ingestion workflows
-- generated artifacts written by forecasting, monitoring, serving, and other modules
-- temporary workspace outputs used during local execution
+- onboarding uploads consumed by source and setup workflows
+- generated dashboard artifacts
+- forecasting, shipment-risk, stockout, reorder, returns, serving, and monitoring outputs
+- setup-session state
+- Pro platform bundle outputs for CDC, streaming, lakehouse, metadata, query layer, feature store, and advanced serving
+- small sample assets used by demos and smoke tests
 
-## Maintenance notes
+## Rules
 
-- Keep committed sample data small and representative.
-- Pro platform sample outputs are generated on demand instead of shipping stale machine-local bundle snapshots.
-- Do not commit environment-specific secrets or machine-local runtime state.
-- Keep artifact folder names aligned with the paths documented in module services and README files.
+- Keep committed sample files small and representative.
+- Do not commit machine-local secrets or transient runtime state.
+- Keep artifact folder names aligned with service code and documentation.

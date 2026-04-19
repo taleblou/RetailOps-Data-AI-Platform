@@ -1,0 +1,10 @@
+services:
+  - name: postgres_operational
+    kind: database
+    connection_ref: POSTGRES_DSN
+  - name: dbt_transformations
+    kind: transformation
+    connection_ref: DBT_PROJECT_DIR
+  - name: trino_query_layer
+    kind: query_engine
+    connection_ref: TRINO_DSN

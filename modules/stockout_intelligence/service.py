@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.stockout_intelligence
+# File:         service.py
+# Path:         modules/stockout_intelligence/service.py
+#
+# Summary:      Implements the stockout intelligence service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for stockout intelligence workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: StockoutArtifactNotFoundError, StockoutObservationRow, StockoutSkuPredictionArtifact, StockoutRiskSummaryArtifact, StockoutRiskArtifact, _ResolvedUpload, ...
+#   - Key APIs: run_stockout_risk_analysis, load_stockout_artifact, get_or_create_stockout_artifact, get_stockout_sku_predictions, get_stockout_sku_prediction
+#   - Dependencies: __future__, csv, json, uuid, dataclasses, datetime, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv
@@ -8,13 +33,13 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-PHASE12_MODEL_VERSION = "phase12-stockout-intelligence-v1"
-PHASE12_ARTIFACT_SUFFIX = "phase12"
+STOCKOUT_MODEL_VERSION = "stockout-intelligence-v1"
+STOCKOUT_ARTIFACT_SUFFIX = "stockout"
 DEFAULT_LEAD_TIME_DAYS = 7.0
 
 
 class StockoutArtifactNotFoundError(FileNotFoundError):
-    """Raised when a phase 12 stockout artifact or SKU row cannot be located."""
+    """Raised when a stockout intelligence stockout artifact or SKU row cannot be located."""
 
 
 @dataclass(slots=True)
@@ -472,7 +497,7 @@ def _build_prediction(series: _SkuDemandSeries) -> StockoutSkuPredictionArtifact
         risk_band=risk_band,
         recommended_action=_recommended_action(risk_band),
         feature_timestamp=feature_timestamp,
-        model_version=PHASE12_MODEL_VERSION,
+        model_version=STOCKOUT_MODEL_VERSION,
         explanation_summary=explanation_summary,
     )
 
@@ -503,7 +528,7 @@ def _build_summary(predictions: list[StockoutSkuPredictionArtifact]) -> Stockout
     )
 
 
-def run_phase12_stockout_risk(
+def run_stockout_risk_analysis(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -522,12 +547,12 @@ def run_phase12_stockout_risk(
     )
     generated_at = datetime.now(UTC).replace(microsecond=0).isoformat()
     stockout_run_id = f"stk12_{uuid.uuid4().hex[:12]}"
-    artifact_path = artifact_dir / f"{upload_id}_{PHASE12_ARTIFACT_SUFFIX}_{stockout_run_id}.json"
+    artifact_path = artifact_dir / f"{upload_id}_{STOCKOUT_ARTIFACT_SUFFIX}_{stockout_run_id}.json"
     artifact = StockoutRiskArtifact(
         stockout_run_id=stockout_run_id,
         upload_id=upload_id,
         generated_at=generated_at,
-        model_version=PHASE12_MODEL_VERSION,
+        model_version=STOCKOUT_MODEL_VERSION,
         summary=_build_summary(predictions),
         skus=predictions,
         artifact_path=str(artifact_path),
@@ -546,19 +571,19 @@ def _load_json_artifact(path: Path) -> dict[str, Any]:
     return payload
 
 
-def load_phase12_stockout_artifact(*, upload_id: str, artifact_dir: Path) -> dict[str, Any]:
-    pattern = f"{upload_id}_{PHASE12_ARTIFACT_SUFFIX}_*.json"
+def load_stockout_artifact(*, upload_id: str, artifact_dir: Path) -> dict[str, Any]:
+    pattern = f"{upload_id}_{STOCKOUT_ARTIFACT_SUFFIX}_*.json"
     matches = sorted(
         artifact_dir.glob(pattern), key=lambda item: item.stat().st_mtime, reverse=True
     )
     if not matches:
         raise StockoutArtifactNotFoundError(
-            f"No phase 12 stockout artifact exists for upload_id={upload_id}."
+            f"No stockout intelligence stockout artifact exists for upload_id={upload_id}."
         )
     return _load_json_artifact(matches[0])
 
 
-def get_or_create_phase12_stockout_artifact(
+def get_or_create_stockout_artifact(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -567,10 +592,10 @@ def get_or_create_phase12_stockout_artifact(
 ) -> dict[str, Any]:
     if not refresh:
         try:
-            return load_phase12_stockout_artifact(upload_id=upload_id, artifact_dir=artifact_dir)
+            return load_stockout_artifact(upload_id=upload_id, artifact_dir=artifact_dir)
         except StockoutArtifactNotFoundError:
             pass
-    artifact = run_phase12_stockout_risk(
+    artifact = run_stockout_risk_analysis(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -587,7 +612,7 @@ def get_stockout_sku_predictions(
     limit: int = 50,
     store_code: str | None = None,
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase12_stockout_artifact(
+    artifact = get_or_create_stockout_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,

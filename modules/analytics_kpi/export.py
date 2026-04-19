@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.analytics_kpi
+# File:         export.py
+# Path:         modules/analytics_kpi/export.py
+#
+# Summary:      Provides implementation support for the analytics kpi workflow.
+# Purpose:      Supports the analytics kpi layer inside the modular repository architecture.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: rows_to_csv_text, csv_response, json_download_response
+#   - Dependencies: __future__, csv, io, json, collections.abc, typing, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv

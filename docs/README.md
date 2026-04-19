@@ -1,26 +1,53 @@
 # Documentation Index
 
-The `docs/` directory organizes long-form repository documentation by stable platform concern.
+The `docs/` directory contains the long-form reference set for the RetailOps platform.
 
 ## Documentation groups
 
-- `architecture/` system-layer references and diagrams.
-- `modules/` long-form documentation for key platform modules.
-- `platform/` serving, monitoring, setup, and extension references.
-- `business/` reporting packs and business-facing intelligence guides.
-- `operations/` release and operational guidance.
-- `history/` modularization records, audits, and repository transition notes.
-- `quickstart/` deployment-profile walkthroughs.
+### Architecture
 
-## Reading order
+- `architecture/platform_overview.md`
+- `architecture/system_layers.md`
+- supporting architecture diagrams under `architecture/`
 
-1. Start with `architecture/platform_overview.md` and `architecture/system_layers.md`.
-2. Use `module_boundaries.md` and `modules/module_catalog.md` to understand capability ownership.
-3. Read `platform/` and `business/` documents for surface-specific details.
-4. Use `history/` only when you need repository evolution context.
+### Modules
 
-## Maintenance notes
+- `module_boundaries.md`
+- `modules/module_catalog.md`
+- capability-specific module notes under `modules/`
 
-- Keep document names and wording aligned with module names, API paths, artifact directories, and README terminology.
-- Prefer adding new docs under the relevant capability group instead of creating mixed-purpose top-level files.
-- Preserve `history/` as historical context, not as the main source of current operating guidance.
+### Platform
+
+- setup wizard, serving, monitoring, and platform-extension references under `platform/`
+
+### Business
+
+- executive, governance, portfolio, commercial, and working-capital reporting guides under `business/`
+
+### Operations
+
+- release, operations, and deployment guidance under `operations/`
+
+### Quickstart
+
+- `quickstart/lite.md`
+- `quickstart/standard.md`
+- `quickstart/pro.md`
+
+### History
+
+- modularization and packaging audits under `history/`
+
+## Recommended reading order
+
+1. `architecture/platform_overview.md`
+2. `architecture/system_layers.md`
+3. `module_boundaries.md`
+4. `modules/module_catalog.md`
+5. the relevant `platform/`, `business/`, or `operations/` document for the capability you are touching
+
+## Documentation rules
+
+- Keep docs aligned with the repository structure that actually exists.
+- Keep quickstarts aligned with install script flags and profile behavior.
+- Preserve `history/` as audit context, not as the primary operating guide.

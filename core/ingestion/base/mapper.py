@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.ingestion.base
+# File:         mapper.py
+# Path:         core/ingestion/base/mapper.py
+#
+# Summary:      Maps source structures used by the ingestion base workflow.
+# Purpose:      Normalizes source fields and structures for ingestion base processing.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: ColumnMapper
+#   - Key APIs: None; module-level constants and imports only.
+#   - Dependencies: __future__, typing, core.ingestion.base.models
+#   - Constraints: Internal interfaces should remain aligned with adjacent modules and repository conventions.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 from typing import Any

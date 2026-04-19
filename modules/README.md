@@ -1,45 +1,54 @@
 # Module Library
 
-The `modules/` directory contains the bounded capabilities that sit on top of the shared `core/` platform.
+The `modules/` directory contains the bounded capabilities built on top of the shared `core/` platform.
 
-## Module families
+## Connector modules
 
-### Connector modules
+- `connector_csv/` CSV upload and file-based ingestion
+- `connector_db/` relational-database discovery and extraction
+- `connector_shopify/` Shopify source integration
+- `connector_woocommerce/` WooCommerce source integration
+- `connector_adobe_commerce/` Adobe Commerce source integration
+- `connector_bigcommerce/` BigCommerce source integration
+- `connector_prestashop/` PrestaShop source integration
 
-- `connector_csv/`
-- `connector_db/`
-- `connector_shopify/`
-- `connector_adobe_commerce/`
-- `connector_bigcommerce/`
-- `connector_prestashop/`
-- `connector_woocommerce/`
+These modules plug into the shared ingestion registry. The active installation only enables the connectors selected through `ENABLED_CONNECTORS` and the matching compose overlays.
 
-These adapters plug into the shared ingestion base layer and expose source-specific extraction or discovery behavior.
+## Operational intelligence modules
 
-### Operational intelligence modules
+- `forecasting/` demand and sales forecasting surfaces
+- `shipment_risk/` order and shipment risk scoring
+- `stockout_intelligence/` stockout-risk detection and prioritization
+- `reorder_engine/` reorder recommendation logic
+- `returns_intelligence/` return-probability and reason analysis
 
-- `forecasting/`
-- `shipment_risk/`
-- `stockout_intelligence/`
-- `reorder_engine/`
-- `returns_intelligence/`
-
-These modules turn curated retail data into operational recommendations, scores, forecasts, and explanations.
-
-### Commercial and planning modules
-
-This family includes assortment, profitability, payment reconciliation, seasonality, cohorts, churn, supplier procurement, customer intelligence, sales anomaly detection, inventory aging, and related intelligence packs.
-
-### Reporting and dashboard modules
+## Commercial, planning, and customer intelligence modules
 
 - `analytics_kpi/`
-- `dashboard_hub/`
-- `dashboards/`
-- `business_review_reporting/`
+- `profitability_intelligence/`
+- `payment_reconciliation/`
+- `assortment_intelligence/`
+- `basket_affinity_intelligence/`
+- `customer_intelligence/`
+- `customer_cohort_intelligence/`
+- `customer_churn_intelligence/`
+- `promotion_pricing_intelligence/`
+- `inventory_aging_intelligence/`
+- `sales_anomaly_intelligence/`
+- `seasonality_intelligence/`
+- `supplier_procurement_intelligence/`
+- `fulfillment_sla_intelligence/`
+- `abc_xyz_intelligence/`
 
-These modules build dashboard artifacts, KPI APIs, business review packs, and executive-facing outputs.
+These modules turn curated retail data into decision support, KPI packs, and explanation-oriented outputs.
 
-### Platform extension modules
+## Reporting and dashboard modules
+
+- `dashboard_hub/` aggregated dashboard workspace generation
+- `dashboards/` dashboard assets and API-facing dashboard utilities
+- `business_review_reporting/` executive, governance, portfolio, and decision-intelligence reporting
+
+## Platform extension modules
 
 - `cdc/`
 - `streaming/`
@@ -48,21 +57,27 @@ These modules build dashboard artifacts, KPI APIs, business review packs, and ex
 - `feature_store/`
 - `query_layer/`
 - `advanced_serving/`
+- `ml_registry/`
 
-These modules extend the base platform with optional data-platform or serving capabilities.
+These modules extend the base platform with optional data-platform, registry, and deployment surfaces.
 
-## Common structure
+## Shared helpers
 
-Most modules follow a familiar layout:
+- `common/` reusable module utilities
 
-- `service.py` for business logic and artifact generation.
-- `router.py` for API endpoints when the module has an HTTP surface.
-- `schemas.py` for request or response contracts.
-- `main.py` for lightweight entry-point wiring when needed.
-- `Dockerfile` and related runtime assets for deployable components.
+## Common layout
 
-## Maintenance notes
+Most modules use a familiar structure:
 
-- Keep module README files aligned with the file headers in the same directory.
-- Keep shared parsing or upload behavior in `modules/common/` when reused across modules.
-- Update the related tests and long-form docs whenever a module contract changes.
+- `service.py` for business logic or artifact generation
+- `router.py` for HTTP endpoints when a module has an API surface
+- `schemas.py` for request and response contracts
+- `main.py` for lightweight service entry points when a module ships a dedicated container
+- `Dockerfile` when the module is deployed as a separate service
+- `README.md` for module-local operating guidance
+
+## Maintenance rules
+
+- Keep module README files aligned with routes, settings, and artifact paths.
+- Keep optional platform modules isolated so they can be enabled without forcing unrelated dependencies.
+- Update the matching tests and long-form docs when a module contract changes.

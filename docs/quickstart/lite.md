@@ -1,25 +1,33 @@
 # Lite Quickstart
 
-Use the Lite profile for CSV onboarding, transformations, dashboards, and starter analytics.
+Use the Lite profile for CSV onboarding, trusted transformations, dashboards, and starter analytics.
 
 ## Included capabilities
 
-- source management and connector framework
-- easy CSV onboarding
-- transformations and marts
-- KPI APIs and dashboard assets
-- setup and health scripts
+- core platform services
+- analytics and dashboard surfaces
+- selected connector overlays only
+- reporting extra by default
 
 ## Install
 
 ```bash
-./scripts/install.sh --profile lite
+./scripts/install.sh --profile lite --connectors csv
+```
+
+This writes `ENABLED_CONNECTORS=csv` and `ENABLED_OPTIONAL_EXTRAS=reporting` into `.env` unless you override them.
+
+## Optional override
+
+```bash
+./scripts/install.sh --profile lite --connectors csv --extras none
 ```
 
 ## Validate
 
 ```bash
 ./scripts/health.sh
+python scripts/validate_compose_profiles.py
 ```
 
-Lite is the best starting point for demos, local validation, or teams that want trusted reporting foundations before adding model-driven intelligence.
+Lite is the best starting point for demos, local validation, or teams that want trusted reporting foundations before adding operational AI modules.

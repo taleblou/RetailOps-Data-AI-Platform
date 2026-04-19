@@ -27,7 +27,7 @@
 #     modules.shipment_risk.schemas, ...
 #   - Constraints: Public request and response behavior should remain
 #     backward compatible with documented API flows.
-#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime
+#   - Compatibility: Python 3.12+ with FastAPI-compatible runtime
 #     dependencies.
 
 from __future__ import annotations
@@ -65,20 +65,10 @@ router = APIRouter(prefix="/api/v1/serving", tags=["serving-layer"])
 
 def _load_batch_artifact_callable() -> Callable[..., Any]:
     module = import_module("core.serving.service")
-    candidate_names = (
-        "get_or_create_batch_serving_artifact",
-        "get_or_create_phase16_batch_artifact",
-        "get_or_create_phase11_artifact",
-        "get_or_create_phase10_batch_artifact",
-    )
-    for name in candidate_names:
-        candidate = getattr(module, name, None)
-        if callable(candidate):
-            return cast(Callable[..., Any], candidate)
-    names = ", ".join(candidate_names)
-    raise RuntimeError(
-        f"Expected one of the batch serving artifact callables in 'core.serving.service': {names}."
-    )
+    candidate = getattr(module, "get_or_create_batch_serving_artifact", None)
+    if callable(candidate):
+        return cast(Callable[..., Any], candidate)
+    raise RuntimeError("Expected 'get_or_create_batch_serving_artifact' in 'core.serving.service'.")
 
 
 get_or_create_batch_serving_artifact = _load_batch_artifact_callable()

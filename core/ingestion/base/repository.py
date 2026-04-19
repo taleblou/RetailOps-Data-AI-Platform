@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.ingestion.base
+# File:         repository.py
+# Path:         core/ingestion/base/repository.py
+#
+# Summary:      Implements repository access patterns for the ingestion base layer.
+# Purpose:      Provides persistence abstractions used by ingestion base workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: RepositoryProtocol, MemoryRepository, SqlRepository
+#   - Key APIs: now_utc
+#   - Dependencies: __future__, json, sqlite3, collections.abc, contextlib, datetime, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import json

@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.returns_intelligence
+# File:         service.py
+# Path:         modules/returns_intelligence/service.py
+#
+# Summary:      Implements the returns intelligence service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for returns intelligence workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: ReturnRiskArtifactNotFoundError, ReturnRiskPredictionArtifact, ReturnRiskProductArtifact, ReturnRiskSummaryArtifact, ReturnRiskArtifact, _ResolvedUpload, ...
+#   - Key APIs: run_returns_intelligence, load_returns_artifact, get_or_create_returns_artifact, get_return_risk_scores, get_return_risk_order, get_return_risk_products, ...
+#   - Dependencies: __future__, csv, json, uuid, collections, dataclasses, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv
@@ -9,8 +34,8 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-PHASE14_MODEL_VERSION = "phase14-returns-intelligence-v1"
-PHASE14_ARTIFACT_SUFFIX = "phase14"
+RETURNS_MODEL_VERSION = "returns-intelligence-v1"
+RETURNS_ARTIFACT_SUFFIX = "returns"
 DEFAULT_RETURN_WINDOW_DAYS = 30
 BASELINE_RETURN_RATE = 0.08
 CATEGORY_RISK_WEIGHTS = {
@@ -27,7 +52,7 @@ TRUTHY_VALUES = {"1", "true", "yes", "y", "returned"}
 
 
 class ReturnRiskArtifactNotFoundError(FileNotFoundError):
-    """Raised when a phase 14 returns artifact or order row cannot be located."""
+    """Raised when a returns intelligence returns artifact or order row cannot be located."""
 
 
 @dataclass(slots=True)
@@ -473,7 +498,7 @@ def _build_product_rollup(
     return risky_products
 
 
-def run_phase14_returns_intelligence(
+def run_returns_intelligence(
     *, upload_id: str, uploads_dir: Path, artifact_dir: Path
 ) -> ReturnRiskArtifact:
     order_rows = _load_order_rows(upload_id, uploads_dir)
@@ -569,7 +594,7 @@ def run_phase14_returns_intelligence(
                 recommended_action=_recommended_action(risk_band, return_cost_band),
                 label_return_within_days=DEFAULT_RETURN_WINDOW_DAYS,
                 feature_timestamp=feature_timestamp,
-                model_version=PHASE14_MODEL_VERSION,
+                model_version=RETURNS_MODEL_VERSION,
                 explanation_summary=explanation_summary,
             )
         )
@@ -600,11 +625,11 @@ def run_phase14_returns_intelligence(
         return_risk_run_id=f"rr_{uuid.uuid4().hex[:12]}",
         upload_id=upload_id,
         generated_at=generated_at,
-        model_version=PHASE14_MODEL_VERSION,
+        model_version=RETURNS_MODEL_VERSION,
         summary=summary,
         scores=scores,
         risky_products=risky_products,
-        artifact_path=str(artifact_dir / f"{upload_id}_{PHASE14_ARTIFACT_SUFFIX}.json"),
+        artifact_path=str(artifact_dir / f"{upload_id}_{RETURNS_ARTIFACT_SUFFIX}.json"),
     )
 
     artifact_dir.mkdir(parents=True, exist_ok=True)
@@ -616,29 +641,27 @@ def run_phase14_returns_intelligence(
     return artifact
 
 
-def load_phase14_returns_artifact(*, upload_id: str, artifact_dir: Path) -> dict[str, Any]:
-    artifact_path = artifact_dir / f"{upload_id}_{PHASE14_ARTIFACT_SUFFIX}.json"
+def load_returns_artifact(*, upload_id: str, artifact_dir: Path) -> dict[str, Any]:
+    artifact_path = artifact_dir / f"{upload_id}_{RETURNS_ARTIFACT_SUFFIX}.json"
     if not artifact_path.exists():
         raise ReturnRiskArtifactNotFoundError(
-            f"No phase 14 returns artifact exists for upload_id={upload_id}."
+            f"No returns intelligence returns artifact exists for upload_id={upload_id}."
         )
     return json.loads(artifact_path.read_text(encoding="utf-8"))
 
 
-def get_or_create_phase14_returns_artifact(
-    *, refresh: bool = False, **kwargs: Any
-) -> dict[str, Any]:
+def get_or_create_returns_artifact(*, refresh: bool = False, **kwargs: Any) -> dict[str, Any]:
     upload_id = _resolve_upload_id((), kwargs)
     artifact_dir = _resolve_path(kwargs.get("artifact_dir"), default="data/artifacts/returns_risk")
     uploads_dir = _resolve_path(kwargs.get("uploads_dir"), default="data/uploads")
 
     if not refresh:
         try:
-            return load_phase14_returns_artifact(upload_id=upload_id, artifact_dir=artifact_dir)
+            return load_returns_artifact(upload_id=upload_id, artifact_dir=artifact_dir)
         except ReturnRiskArtifactNotFoundError:
             pass
 
-    artifact = run_phase14_returns_intelligence(
+    artifact = run_returns_intelligence(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -656,7 +679,7 @@ def get_return_risk_scores(
     store_code: str | None = None,
     risk_band: str | None = None,
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase14_returns_artifact(
+    artifact = get_or_create_returns_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -665,7 +688,9 @@ def get_return_risk_scores(
     scores = artifact.get("scores")
     risky_products = artifact.get("risky_products")
     if not isinstance(scores, list) or not isinstance(risky_products, list):
-        raise ValueError("Phase 14 returns artifact is missing scores or risky_products.")
+        raise ValueError(
+            "Returns intelligence returns artifact is missing scores or risky_products."
+        )
 
     filtered_scores = [item for item in scores if isinstance(item, dict)]
     filtered_products = [item for item in risky_products if isinstance(item, dict)]
@@ -698,7 +723,7 @@ def get_return_risk_order(
     artifact_dir: Path,
     refresh: bool = False,
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase14_returns_artifact(
+    artifact = get_or_create_returns_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -706,12 +731,12 @@ def get_return_risk_order(
     )
     scores = artifact.get("scores")
     if not isinstance(scores, list):
-        raise ValueError("Phase 14 returns artifact is missing the scores list.")
+        raise ValueError("Returns intelligence returns artifact is missing the scores list.")
     for item in scores:
         if isinstance(item, dict) and _to_text(item.get("order_id")) == order_id:
             return item
     raise ReturnRiskArtifactNotFoundError(
-        f"No phase 14 return-risk score exists for order_id={order_id}."
+        f"No returns intelligence return-risk score exists for order_id={order_id}."
     )
 
 
@@ -725,7 +750,7 @@ def get_return_risk_products(
     store_code: str | None = None,
     min_probability: float = 0.0,
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase14_returns_artifact(
+    artifact = get_or_create_returns_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -733,7 +758,9 @@ def get_return_risk_products(
     )
     risky_products = artifact.get("risky_products")
     if not isinstance(risky_products, list):
-        raise ValueError("Phase 14 returns artifact is missing the risky_products list.")
+        raise ValueError(
+            "Returns intelligence returns artifact is missing the risky_products list."
+        )
 
     filtered_products = [item for item in risky_products if isinstance(item, dict)]
     if store_code:

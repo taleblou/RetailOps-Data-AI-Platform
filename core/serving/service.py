@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.serving
+# File:         service.py
+# Path:         core/serving/service.py
+#
+# Summary:      Implements the serving service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for serving workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: ServingArtifactNotFoundError
+#   - Key APIs: run_batch_serving, get_or_create_batch_serving_artifact, get_forecast_serving_response, get_forecast_explain_response, get_shipment_open_order_serving_response, get_shipment_open_order_explain_response, ...
+#   - Dependencies: __future__, json, uuid, datetime, pathlib, typing, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import json
@@ -6,19 +31,19 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from modules.forecasting.service import get_or_create_phase10_batch_artifact
+from modules.forecasting.service import get_or_create_batch_forecast_artifact
 from modules.reorder_engine.service import get_reorder_recommendations
 from modules.shipment_risk.service import (
     get_open_order_predictions,
-    get_or_create_phase11_artifact,
+    get_or_create_shipment_risk_artifact,
     predict_shipment_delay,
 )
 from modules.stockout_intelligence.service import (
-    get_or_create_phase12_stockout_artifact,
+    get_or_create_stockout_artifact,
     get_stockout_sku_predictions,
 )
 
-PHASE16_ARTIFACT_SUFFIX = "phase16_serving_bundle"
+SERVING_ARTIFACT_SUFFIX = "serving_bundle"
 STANDARD_RESPONSE_FIELDS = [
     "prediction",
     "confidence",
@@ -64,7 +89,7 @@ def _save_json(payload: dict[str, Any], path: Path) -> None:
 
 
 def _latest_artifact_path(upload_id: str, artifact_dir: Path) -> Path | None:
-    pattern = f"{upload_id}_{PHASE16_ARTIFACT_SUFFIX}_*.json"
+    pattern = f"{upload_id}_{SERVING_ARTIFACT_SUFFIX}_*.json"
     matches = sorted(
         artifact_dir.glob(pattern), key=lambda item: item.stat().st_mtime, reverse=True
     )
@@ -93,7 +118,7 @@ def _build_batch_job(
     }
 
 
-def run_phase16_batch_serving(
+def run_batch_serving(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -103,19 +128,19 @@ def run_phase16_batch_serving(
     artifact_dir: Path,
     refresh: bool = False,
 ) -> dict[str, Any]:
-    forecast_artifact = get_or_create_phase10_batch_artifact(
+    forecast_artifact = get_or_create_batch_forecast_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=forecast_artifact_dir,
         refresh=refresh,
     )
-    shipment_artifact = get_or_create_phase11_artifact(
+    shipment_artifact = get_or_create_shipment_risk_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=shipment_artifact_dir,
         refresh=refresh,
     )
-    stockout_artifact = get_or_create_phase12_stockout_artifact(
+    stockout_artifact = get_or_create_stockout_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=stockout_artifact_dir,
@@ -123,7 +148,7 @@ def run_phase16_batch_serving(
     )
 
     generated_at = _utc_now_iso()
-    serving_run_id = f"phase16-serving-{uuid.uuid4().hex[:12]}"
+    serving_run_id = f"serving-serving-{uuid.uuid4().hex[:12]}"
     jobs = [
         _build_batch_job(
             job_name="nightly_forecast",
@@ -161,13 +186,13 @@ def run_phase16_batch_serving(
         "standard_response_fields": STANDARD_RESPONSE_FIELDS,
     }
     artifact_suffix = generated_at.replace(":", "").replace("+00:00", "Z")
-    artifact_path = artifact_dir / f"{upload_id}_{PHASE16_ARTIFACT_SUFFIX}_{artifact_suffix}.json"
+    artifact_path = artifact_dir / f"{upload_id}_{SERVING_ARTIFACT_SUFFIX}_{artifact_suffix}.json"
     payload["artifact_path"] = str(artifact_path)
     _save_json(payload, artifact_path)
     return payload
 
 
-def get_or_create_phase16_batch_artifact(
+def get_or_create_batch_serving_artifact(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -182,7 +207,7 @@ def get_or_create_phase16_batch_artifact(
         existing = _latest_artifact_path(upload_id=upload_id, artifact_dir=artifact_dir)
         if existing is not None:
             return _load_json(existing)
-    return run_phase16_batch_serving(
+    return run_batch_serving(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         forecast_artifact_dir=forecast_artifact_dir,
@@ -223,7 +248,7 @@ def _base_response(
 def _find_forecast_product(
     *, upload_id: str, uploads_dir: Path, artifact_dir: Path, refresh: bool
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase10_batch_artifact(
+    artifact = get_or_create_batch_forecast_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,

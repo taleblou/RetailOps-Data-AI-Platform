@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.setup
+# File:         service.py
+# Path:         core/setup/service.py
+#
+# Summary:      Implements the setup service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for setup workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: create_setup_session, get_setup_session, update_setup_store, configure_setup_source, test_setup_source_connection, save_setup_mapping, ...
+#   - Dependencies: __future__, csv, json, uuid, datetime, pathlib, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv
@@ -15,19 +40,19 @@ from core.ingestion.base.repository import RepositoryProtocol
 from core.ingestion.base.state_store import StateStore
 from core.transformations.service import run_first_transform
 from modules.analytics_kpi.service import publish_first_dashboard
-from modules.forecasting.service import get_or_create_phase10_batch_artifact, run_first_forecast
-from modules.ml_registry.service import run_phase15_model_registry
+from modules.forecasting.service import get_or_create_batch_forecast_artifact, run_first_forecast
+from modules.ml_registry.service import run_model_registry
 
-PHASE18_SETUP_DIR = Path("data/artifacts/setup")
-PHASE18_SESSION_DIR = PHASE18_SETUP_DIR / "sessions"
-PHASE18_UPLOAD_DIR = Path("data/uploads")
-PHASE18_TRANSFORM_DIR = Path("data/artifacts/transforms")
-PHASE18_DASHBOARD_DIR = Path("data/artifacts/dashboards")
-PHASE18_FORECAST_DIR = Path("data/artifacts/forecasts")
-PHASE18_MODEL_REGISTRY_DIR = Path("data/artifacts/model_registry")
+SETUP_ARTIFACT_DIR = Path("data/artifacts/setup")
+SETUP_SESSION_DIR = SETUP_ARTIFACT_DIR / "sessions"
+SETUP_UPLOAD_DIR = Path("data/uploads")
+SETUP_TRANSFORM_DIR = Path("data/artifacts/transforms")
+SETUP_DASHBOARD_DIR = Path("data/artifacts/dashboards")
+SETUP_FORECAST_DIR = Path("data/artifacts/forecasts")
+SETUP_MODEL_REGISTRY_DIR = Path("data/artifacts/model_registry")
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-PHASE18_DEMO_DIR = PROJECT_ROOT / "data/demo_csv"
-PHASE18_DEMO_SOURCE = PHASE18_DEMO_DIR / "sample_orders_easy_csv_150.csv"
+SETUP_DEMO_DIR = PROJECT_ROOT / "data/demo_csv"
+SETUP_DEMO_SOURCE = SETUP_DEMO_DIR / "sample_orders_easy_csv_150.csv"
 SUPPORTED_DELIMITERS = ",;\t|"
 REQUIRED_FIELDS = ["order_id", "order_date", "sku", "quantity"]
 TYPE_HINTS = {
@@ -99,12 +124,12 @@ def _initial_steps() -> dict[str, dict[str, Any]]:
 
 def _ensure_dirs(
     *,
-    setup_dir: Path = PHASE18_SETUP_DIR,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
-    transform_dir: Path = PHASE18_TRANSFORM_DIR,
-    dashboard_dir: Path = PHASE18_DASHBOARD_DIR,
-    forecast_dir: Path = PHASE18_FORECAST_DIR,
-    model_registry_dir: Path = PHASE18_MODEL_REGISTRY_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
+    transform_dir: Path = SETUP_TRANSFORM_DIR,
+    dashboard_dir: Path = SETUP_DASHBOARD_DIR,
+    forecast_dir: Path = SETUP_FORECAST_DIR,
+    model_registry_dir: Path = SETUP_MODEL_REGISTRY_DIR,
 ) -> None:
     (setup_dir / "sessions").mkdir(parents=True, exist_ok=True)
     uploads_dir.mkdir(parents=True, exist_ok=True)
@@ -189,26 +214,26 @@ def _session_response(session: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
-def _load_session(session_id: str, setup_dir: Path = PHASE18_SETUP_DIR) -> dict[str, Any]:
+def _load_session(session_id: str, setup_dir: Path = SETUP_ARTIFACT_DIR) -> dict[str, Any]:
     path = _session_path(session_id, setup_dir)
     if not path.exists():
         raise FileNotFoundError(f"Setup session was not found: {session_id}")
     return _read_json(path)
 
 
-def _save_session(session: dict[str, Any], setup_dir: Path = PHASE18_SETUP_DIR) -> dict[str, Any]:
+def _save_session(session: dict[str, Any], setup_dir: Path = SETUP_ARTIFACT_DIR) -> dict[str, Any]:
     _ensure_dirs(setup_dir=setup_dir)
     _write_json(_session_path(str(session["session_id"]), setup_dir), session)
     return session
 
 
 def _build_sample_orders_csv(target_path: Path) -> None:
-    if not PHASE18_DEMO_SOURCE.exists():
+    if not SETUP_DEMO_SOURCE.exists():
         raise FileNotFoundError(
             "The sample data mode needs data/demo_csv/sample_orders_easy_csv_150.csv."
         )
     target_path.parent.mkdir(parents=True, exist_ok=True)
-    with PHASE18_DEMO_SOURCE.open("r", encoding="utf-8", newline="") as source_handle:
+    with SETUP_DEMO_SOURCE.open("r", encoding="utf-8", newline="") as source_handle:
         reader = csv.DictReader(source_handle)
         fieldnames = [
             "Order ID",
@@ -260,8 +285,8 @@ def _read_csv_preview(file_path: Path, *, encoding: str = "utf-8") -> tuple[str,
 def _ensure_upload_metadata(
     session: dict[str, Any],
     *,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
-    setup_dir: Path = PHASE18_SETUP_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
 ) -> dict[str, Any]:
     _ensure_dirs(setup_dir=setup_dir, uploads_dir=uploads_dir)
     session_id = str(session["session_id"])
@@ -270,7 +295,7 @@ def _ensure_upload_metadata(
     config = dict(source.get("config") or {})
 
     if bool(session.get("sample_mode")) and source.get("type") == SourceType.CSV.value:
-        sample_name = _safe_filename(f"{session_id}_sample_orders_phase18.csv")
+        sample_name = _safe_filename(f"{session_id}_sample_orders_setup.csv")
         sample_path = uploads_dir / sample_name
         if not sample_path.exists():
             _build_sample_orders_csv(sample_path)
@@ -339,12 +364,12 @@ def _create_or_get_source(
     return created
 
 
-def create_phase18_setup_session(
+def create_setup_session(
     *,
     store_name: str | None = None,
     store_code: str | None = None,
     sample_mode: bool = False,
-    setup_dir: Path = PHASE18_SETUP_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
 ) -> dict[str, Any]:
     _ensure_dirs(setup_dir=setup_dir)
     session_id = f"setup_{uuid.uuid4().hex[:12]}"
@@ -393,22 +418,22 @@ def create_phase18_setup_session(
     return _session_response(session)
 
 
-def get_phase18_setup_session(
+def get_setup_session(
     *,
     session_id: str,
-    setup_dir: Path = PHASE18_SETUP_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
 ) -> dict[str, Any]:
     return _session_response(_load_session(session_id, setup_dir))
 
 
-def update_phase18_store(
+def update_setup_store(
     *,
     session_id: str,
     store_name: str,
     store_code: str,
     currency: str = "EUR",
     timezone: str = "Europe/Helsinki",
-    setup_dir: Path = PHASE18_SETUP_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     session["store"] = {
@@ -427,13 +452,13 @@ def update_phase18_store(
     return _session_response(session)
 
 
-def configure_phase18_source(
+def configure_setup_source(
     *,
     session_id: str,
     source_type: str,
     source_name: str | None = None,
     config: dict[str, Any] | None = None,
-    setup_dir: Path = PHASE18_SETUP_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     normalized_type = SourceType(str(source_type).strip().lower()).value
@@ -465,15 +490,15 @@ def configure_phase18_source(
     return _session_response(session)
 
 
-def test_phase18_source_connection(
+def test_setup_source_connection(
     *,
     session_id: str,
     repository: RepositoryProtocol,
     state_store: StateStore,
     raw_loader: RawLoader,
     registry: ConnectorRegistry,
-    setup_dir: Path = PHASE18_SETUP_DIR,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     if (session.get("source") or {}).get("type") == SourceType.CSV.value:
@@ -513,12 +538,12 @@ def test_phase18_source_connection(
     return _session_response(session)
 
 
-def save_phase18_mapping(
+def save_setup_mapping(
     *,
     session_id: str,
     mappings: dict[str, str] | None = None,
-    setup_dir: Path = PHASE18_SETUP_DIR,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     metadata = _ensure_upload_metadata(session, uploads_dir=uploads_dir, setup_dir=setup_dir)
@@ -554,15 +579,15 @@ def save_phase18_mapping(
     return _session_response(session)
 
 
-def run_phase18_first_import(
+def run_setup_first_import(
     *,
     session_id: str,
     repository: RepositoryProtocol,
     state_store: StateStore,
     raw_loader: RawLoader,
     registry: ConnectorRegistry,
-    setup_dir: Path = PHASE18_SETUP_DIR,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     metadata = _ensure_upload_metadata(session, uploads_dir=uploads_dir, setup_dir=setup_dir)
@@ -633,12 +658,12 @@ def run_phase18_first_import(
     return _session_response(session)
 
 
-def run_phase18_first_dbt(
+def run_setup_first_transform(
     *,
     session_id: str,
-    setup_dir: Path = PHASE18_SETUP_DIR,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
-    transform_dir: Path = PHASE18_TRANSFORM_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
+    transform_dir: Path = SETUP_TRANSFORM_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     metadata = _ensure_upload_metadata(session, uploads_dir=uploads_dir, setup_dir=setup_dir)
@@ -665,11 +690,11 @@ def run_phase18_first_dbt(
     return _session_response(session)
 
 
-def enable_phase18_modules(
+def enable_setup_modules(
     *,
     session_id: str,
     modules: list[str] | None = None,
-    setup_dir: Path = PHASE18_SETUP_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     selected_modules = [item.strip() for item in (modules or DEFAULT_MODULES) if item.strip()]
@@ -684,13 +709,13 @@ def enable_phase18_modules(
     return _session_response(session)
 
 
-def run_phase18_first_training(
+def run_setup_first_training(
     *,
     session_id: str,
-    setup_dir: Path = PHASE18_SETUP_DIR,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
-    forecast_dir: Path = PHASE18_FORECAST_DIR,
-    model_registry_dir: Path = PHASE18_MODEL_REGISTRY_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
+    forecast_dir: Path = SETUP_FORECAST_DIR,
+    model_registry_dir: Path = SETUP_MODEL_REGISTRY_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     metadata = _ensure_upload_metadata(session, uploads_dir=uploads_dir, setup_dir=setup_dir)
@@ -700,16 +725,16 @@ def run_phase18_first_training(
 
     training_summary: dict[str, Any]
     try:
-        batch_artifact = get_or_create_phase10_batch_artifact(
+        batch_artifact = get_or_create_batch_forecast_artifact(
             upload_id=session_id,
             uploads_dir=uploads_dir,
             artifact_dir=forecast_dir,
             refresh=True,
         )
         training_summary = {
-            "training_mode": "phase10_batch_forecast",
+            "training_mode": "forecasting_batch_forecast",
             "artifact_path": str(batch_artifact.get("artifact_path") or ""),
-            "model_version": str(batch_artifact.get("model_version") or "phase10-baseline-v1"),
+            "model_version": str(batch_artifact.get("model_version") or "forecasting-baseline-v1"),
             "active_products": int(
                 (batch_artifact.get("summary") or {}).get("active_products") or 0
             ),
@@ -729,7 +754,7 @@ def run_phase18_first_training(
         }
         artifact_path = starter.artifact_path
 
-    registry_summary = run_phase15_model_registry(
+    registry_summary = run_model_registry(
         artifact_dir=model_registry_dir,
         refresh=False,
     ).to_dict()
@@ -752,12 +777,12 @@ def run_phase18_first_training(
     return _session_response(session)
 
 
-def publish_phase18_dashboards(
+def publish_setup_dashboards(
     *,
     session_id: str,
-    setup_dir: Path = PHASE18_SETUP_DIR,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
-    dashboard_dir: Path = PHASE18_DASHBOARD_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
+    dashboard_dir: Path = SETUP_DASHBOARD_DIR,
 ) -> dict[str, Any]:
     session = _load_session(session_id, setup_dir)
     metadata = _ensure_upload_metadata(session, uploads_dir=uploads_dir, setup_dir=setup_dir)
@@ -786,7 +811,7 @@ def publish_phase18_dashboards(
     return _session_response(session)
 
 
-def run_phase18_sample_setup(
+def run_sample_setup(
     *,
     repository: RepositoryProtocol,
     state_store: StateStore,
@@ -794,28 +819,28 @@ def run_phase18_sample_setup(
     registry: ConnectorRegistry,
     store_name: str = "RetailOps Demo Store",
     store_code: str = "DEMO-01",
-    setup_dir: Path = PHASE18_SETUP_DIR,
-    uploads_dir: Path = PHASE18_UPLOAD_DIR,
-    transform_dir: Path = PHASE18_TRANSFORM_DIR,
-    forecast_dir: Path = PHASE18_FORECAST_DIR,
-    dashboard_dir: Path = PHASE18_DASHBOARD_DIR,
-    model_registry_dir: Path = PHASE18_MODEL_REGISTRY_DIR,
+    setup_dir: Path = SETUP_ARTIFACT_DIR,
+    uploads_dir: Path = SETUP_UPLOAD_DIR,
+    transform_dir: Path = SETUP_TRANSFORM_DIR,
+    forecast_dir: Path = SETUP_FORECAST_DIR,
+    dashboard_dir: Path = SETUP_DASHBOARD_DIR,
+    model_registry_dir: Path = SETUP_MODEL_REGISTRY_DIR,
 ) -> dict[str, Any]:
-    session = create_phase18_setup_session(
+    session = create_setup_session(
         store_name=store_name,
         store_code=store_code,
         sample_mode=True,
         setup_dir=setup_dir,
     )
     session_id = str(session["session_id"])
-    configure_phase18_source(
+    configure_setup_source(
         session_id=session_id,
         source_type=SourceType.CSV.value,
-        source_name="Phase 18 sample CSV",
+        source_name="Setup wizard sample CSV",
         config={},
         setup_dir=setup_dir,
     )
-    test_phase18_source_connection(
+    test_setup_source_connection(
         session_id=session_id,
         repository=repository,
         state_store=state_store,
@@ -824,13 +849,13 @@ def run_phase18_sample_setup(
         setup_dir=setup_dir,
         uploads_dir=uploads_dir,
     )
-    save_phase18_mapping(
+    save_setup_mapping(
         session_id=session_id,
         mappings=None,
         setup_dir=setup_dir,
         uploads_dir=uploads_dir,
     )
-    run_phase18_first_import(
+    run_setup_first_import(
         session_id=session_id,
         repository=repository,
         state_store=state_store,
@@ -839,25 +864,25 @@ def run_phase18_sample_setup(
         setup_dir=setup_dir,
         uploads_dir=uploads_dir,
     )
-    run_phase18_first_dbt(
+    run_setup_first_transform(
         session_id=session_id,
         setup_dir=setup_dir,
         uploads_dir=uploads_dir,
         transform_dir=transform_dir,
     )
-    enable_phase18_modules(
+    enable_setup_modules(
         session_id=session_id,
         modules=DEFAULT_MODULES,
         setup_dir=setup_dir,
     )
-    run_phase18_first_training(
+    run_setup_first_training(
         session_id=session_id,
         setup_dir=setup_dir,
         uploads_dir=uploads_dir,
         forecast_dir=forecast_dir,
         model_registry_dir=model_registry_dir,
     )
-    final_session = publish_phase18_dashboards(
+    final_session = publish_setup_dashboards(
         session_id=session_id,
         setup_dir=setup_dir,
         uploads_dir=uploads_dir,

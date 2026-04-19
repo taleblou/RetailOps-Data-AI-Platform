@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.connector_csv
+# File:         connector.py
+# Path:         modules/connector_csv/connector.py
+#
+# Summary:      Implements adapter logic for the connector csv integration surface.
+# Purpose:      Standardizes external-system interaction for the connector csv workflow.
+# Scope:        adapter
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: CsvConnector
+#   - Key APIs: None; module-level constants and imports only.
+#   - Dependencies: __future__, csv, pathlib, typing, core.ingestion.base.connector, core.ingestion.base.models, ...
+#   - Constraints: External-system assumptions must remain aligned with connector contracts and mapping rules.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv

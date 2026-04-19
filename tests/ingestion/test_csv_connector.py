@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       tests.ingestion
+# File:         test_csv_connector.py
+# Path:         tests/ingestion/test_csv_connector.py
+#
+# Summary:      Contains automated tests for the ingestion workflows and behaviors.
+# Purpose:      Validates ingestion behavior and protects the repository against regressions.
+# Scope:        test
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: build_source, test_csv_connector_discovers_schema_and_extracts_rows
+#   - Dependencies: datetime, pathlib, core.ingestion.base.models, core.ingestion.base.raw_loader, core.ingestion.base.repository, core.ingestion.base.state_store, ...
+#   - Constraints: Assumes repository fixtures, deterministic sample data, and isolated test execution.
+#   - Compatibility: Python 3.11+ with pytest and repository test dependencies.
+
 from datetime import UTC, datetime
 from pathlib import Path
 

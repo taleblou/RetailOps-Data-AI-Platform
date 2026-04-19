@@ -1,20 +1,29 @@
 # Configuration
 
-The `config/` directory holds typed settings and sample environment profiles for the modular RetailOps runtime.
+The `config/` directory holds typed runtime settings and profile-oriented environment samples.
 
 ## Main files
 
-- `settings.py` defines the repository-wide settings object and cached settings loader.
-- `__init__.py` exposes the configuration package surface.
-- `samples/` contains profile-oriented environment examples such as `lite`, `standard`, and `pro`.
+- `settings.py` typed settings loader used by the API and shared services
+- `samples/lite.env` starter profile sample
+- `samples/standard.env` operational AI profile sample
+- `samples/pro.env` full platform-extension profile sample
 
-## Responsibilities
+## Important configuration keys
 
-- Centralize runtime configuration defaults.
-- Keep environment-variable names stable across API, worker, and module runtimes.
-- Provide profile samples that match the compose overlays and operational scripts.
+- `APP_PROFILE` active runtime profile
+- `ENABLED_CONNECTORS` comma-separated connector list used by install scripts and the runtime registry
+- `ENABLED_OPTIONAL_EXTRAS` comma-separated optional dependency list used by install and upgrade scripts
+- `COMPOSE_FILES` resolved overlay list for the active installation
+- PostgreSQL, MinIO, Redis, Redpanda, MLflow, Metabase, and metadata-service connection settings
+- `PRO_PLATFORM_ARTIFACT_DIR` output root for extension bundles
 
-## Maintenance notes
+## Design intent
 
-- When a new runtime option is added, update `settings.py`, the relevant sample env file, and any affected compose or script documentation.
-- Keep configuration names consistent with actual artifact directories, ports, and service names used elsewhere in the repository.
+Configuration should describe what the current installation can actually run. The selected connectors, compose overlays, and optional extras should tell the same story.
+
+## Maintenance rules
+
+- When a new runtime option is added, update `settings.py`, `.env.example`, and the relevant profile sample.
+- Keep environment-variable names aligned with actual routes, services, and artifact paths.
+- Prefer opinionated samples instead of dumping every possible setting into every profile.

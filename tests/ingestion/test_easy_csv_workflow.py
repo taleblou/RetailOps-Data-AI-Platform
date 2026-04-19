@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       tests.ingestion
+# File:         test_easy_csv_workflow.py
+# Path:         tests/ingestion/test_easy_csv_workflow.py
+#
+# Summary:      Contains automated tests for the ingestion workflows and behaviors.
+# Purpose:      Validates ingestion behavior and protects the repository against regressions.
+# Scope:        test
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: test_easy_csv_json_workflow, test_easy_csv_wizard_html_flow
+#   - Dependencies: pathlib, fastapi.testclient, core.api.main, core.ingestion.base.repository
+#   - Constraints: Assumes repository fixtures, deterministic sample data, and isolated test execution.
+#   - Compatibility: Python 3.11+ with pytest and repository test dependencies.
+
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -6,7 +31,7 @@ from core.api.main import create_app
 from core.ingestion.base.repository import MemoryRepository
 
 
-def test_easy_csv_phase6_json_workflow(tmp_path: Path, monkeypatch) -> None:
+def test_easy_csv_json_workflow(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.chdir(tmp_path)
 
     repository = MemoryRepository()

@@ -1,232 +1,155 @@
 # RetailOps Data & AI Platform
 
-A modular, self-hosted retail data and AI platform for stores that want one package for ingestion, canonical modeling, KPI dashboards, forecasting, operational recommendations, and optional advanced modules such as CDC, lakehouse, metadata, feature services, and advanced serving.
+RetailOps is a modular retail data and AI platform for source onboarding, trusted transformations, KPI analytics, operational intelligence, business reporting, and optional data-platform extensions.
 
-This repository is aligned to **phases 1 to 20** of the roadmap described in the project PDF and also includes phase 21 to 24 business extensions added during the completion passes.
-It includes the core platform, business modules, setup wizard, packaging layer, and a phase 20 Pro data-platform surface.
+The repository is organized around stable capability boundaries. Core platform code lives under `core/`. Business and connector capabilities live under `modules/`. Environment assembly lives under `compose/`, `config/`, and `scripts/`.
 
-## Coverage summary
+## What the platform includes
 
-1. **Phase 1** - product definition, personas, tiering, and module boundaries
-2. **Phase 2** - modular monorepo skeleton and quality tooling
-3. **Phase 3** - Docker Compose architecture for core and add-on services
-4. **Phase 4** - canonical retail data model and SQL migrations
-5. **Phase 5** - connector framework for CSV, database, Shopify, WooCommerce, Adobe Commerce, BigCommerce, and PrestaShop sources
-6. **Phase 6** - easy CSV onboarding path with upload, preview, mapping, validation, import, transform, dashboard publish, and first forecast
-7. **Phase 7** - dbt Core transformations for staging and marts
-8. **Phase 8** - KPI analytics module and dashboard starter assets
-9. **Phase 9** - feature contracts, dataset builders, and feature tables
-10. **Phase 10** - forecasting module with interval outputs and backtest helpers
-11. **Phase 11** - shipment-risk module with explanations and manual review
-12. **Phase 12** - stockout intelligence
-13. **Phase 13** - reorder engine
-14. **Phase 14** - returns intelligence
-15. **Phase 15** - ML registry lifecycle and promotion gates
-16. **Phase 16** - serving layer with standard response envelopes and explain endpoints
-17. **Phase 17** - monitoring, drift checks, alerts, and override logging
-18. **Phase 18** - onboarding and setup wizard
-19. **Phase 19** - packaging, release, quickstarts, and operational scripts
-20. **Phase 20** - CDC, streaming, lakehouse, query-layer, metadata, feature-store, and advanced-serving blueprints
+### Core platform
 
-## Repository structure
+- FastAPI application composition and route registration
+- source management, connector registration, raw loading, and sync-state persistence
+- setup wizard flows for onboarding, first import, first transform, and first training
+- monitoring, override logging, serving metadata, and worker orchestration
+- dbt-oriented transformation assets and shared runtime services
 
-- `core/` - shared platform capabilities used by all modules
-- `modules/` - connector, analytics, AI, registry, operations, and Pro platform modules
-- `compose/` - composable Docker stacks for core and optional overlays
-- `config/` - runtime settings and sample profile env files
-- `data/` - demo CSVs, uploads, and generated artifacts
-- `docs/` - product, architecture, audits, gap reports, quickstarts, and phase docs
-- `scripts/` - install, upgrade, backup, restore, demo-data, and health commands
-- `tests/` - phase-aligned tests for ingestion, analytics, AI, serving, monitoring, setup, packaging, and phase 20 Pro modules
-- `packages/` - starter package wrappers for future package split work
+### Connector modules
 
-## Phase-to-file highlights
+- CSV
+- database
+- Shopify
+- WooCommerce
+- Adobe Commerce
+- BigCommerce
+- PrestaShop
 
-### Phase 1
+The installer and registry now treat connectors as first-class modular units. Users choose the connector overlays they want instead of installing or starting every connector service.
 
-- `docs/product_definition.md`
-- `docs/personas.md`
-- `docs/tiering.md`
-- `docs/module_boundaries.md`
-- `docs/architecture_overview.md`
-- `docs/architecture/phase-1-solution-architecture.drawio`
+### Operational intelligence modules
 
-### Phase 2
+- forecasting
+- shipment risk
+- stockout intelligence
+- reorder engine
+- returns intelligence
 
-- `pyproject.toml`
-- `README.md`
-- `.env.example`
-- `.gitignore`
-- `.pre-commit-config.yaml`
-- `Makefile`
+### Commercial, planning, and reporting modules
 
-### Phase 3
+- analytics KPI
+- dashboard hub and dashboards
+- business review reporting
+- profitability intelligence
+- payment reconciliation
+- assortment intelligence
+- basket affinity intelligence
+- customer intelligence
+- customer cohort intelligence
+- customer churn intelligence
+- sales anomaly intelligence
+- seasonality intelligence
+- inventory aging intelligence
+- promotion pricing intelligence
+- supplier procurement intelligence
+- fulfillment SLA intelligence
+- ABC/XYZ intelligence
 
-- `compose/compose.core.yaml`
-- `compose/compose.connectors.yaml`
-- `compose/compose.analytics.yaml`
-- `compose/compose.ml.yaml`
-- `compose/compose.monitoring.yaml`
-- `compose/compose.cdc.yaml`
-- `compose/compose.streaming.yaml`
-- `compose/compose.lakehouse.yaml`
-- `compose/compose.query.yaml`
-- `compose/compose.metadata.yaml`
-- `compose/compose.feature_store.yaml`
-- `compose/compose.advanced_serving.yaml`
+### Optional platform extensions
 
-### Phase 4
+- CDC
+- streaming
+- lakehouse
+- metadata and lineage
+- feature store
+- query layer
+- advanced serving
 
-- `core/db/migrations/001_schemas.sql`
-- `core/db/migrations/002_core_tables.sql`
-- `core/db/migrations/003_connector_framework.sql`
-- `docs/canonical_data_model.md`
+## Repository map
 
-### Phase 5
+- `core/` shared platform layers used across modules
+- `modules/` bounded connectors, intelligence services, dashboards, and platform extensions
+- `compose/` Docker Compose overlays split by capability slice
+- `config/` typed settings and profile-oriented environment samples
+- `scripts/` install, upgrade, health, backup, restore, validation, and bundle-generation helpers
+- `docs/` architecture, module, business, platform, operations, history, and quickstart documentation
+- `tests/` regression coverage grouped by capability family
+- `packages/` thin packaging workspaces for selective distribution
+- `data/` sample inputs, upload roots, and generated artifact locations
 
-- `core/ingestion/base/`
-- `modules/connector_csv/`
-- `modules/connector_db/`
-- `modules/connector_shopify/`
-- `modules/connector_woocommerce/`
-- `modules/connector_adobe_commerce/`
-- `modules/connector_bigcommerce/`
-- `modules/connector_prestashop/`
-- `core/api/routes/sources.py`
-
-### Phase 6
-
-- `core/api/routes/easy_csv.py`
-- `core/api/schemas/easy_csv.py`
-- `core/transformations/service.py`
-- `modules/analytics_kpi/service.py`
-- `modules/forecasting/service.py`
-
-### Phase 7
-
-- `core/transformations/dbt_project.yml`
-- `core/transformations/models/`
-- `modules/analytics_kpi/dbt_models/`
-- `modules/forecasting/dbt_models/`
-- `modules/shipment_risk/dbt_models/`
-
-### Phases 8 to 18
-
-See the phase documentation and audits under `docs/`.
-
-### Additional business modules
-
-- `modules/promotion_pricing_intelligence/`
-- `modules/supplier_procurement_intelligence/`
-- `modules/customer_intelligence/`
-- `modules/payment_reconciliation/`
-- `modules/assortment_intelligence/`
-- `modules/basket_affinity_intelligence/`
-- `modules/profitability_intelligence/`
-- `modules/customer_cohort_intelligence/`
-- `modules/inventory_aging_intelligence/`
-- `modules/abc_xyz_intelligence/`
-- `modules/customer_churn_intelligence/`
-- `modules/sales_anomaly_intelligence/`
-- `modules/seasonality_intelligence/`
-- `modules/fulfillment_sla_intelligence/`
-- `docs/additional_connectors_and_modules.md`
-- `docs/further_business_modules.md`
-- `docs/final_business_expansion_phase23.md`
-- `docs/final_business_expansion_phase24.md`
-
-### Phase 19
-
-- `scripts/install.sh`
-- `scripts/upgrade.sh`
-- `scripts/backup.sh`
-- `scripts/restore.sh`
-- `scripts/load_demo_data.sh`
-- `scripts/health.sh`
-- `docs/quickstart/lite.md`
-- `docs/quickstart/standard.md`
-- `docs/quickstart/pro.md`
-- `config/samples/lite.env`
-- `config/samples/standard.env`
-- `config/samples/pro.env`
-- `docs/release_notes_phase19.md`
-
-### Phase 20
-
-- `docs/pro_data_platform_phase20.md`
-- `docs/phase_1_to_20_gap_report.md`
-- `docs/phase_1_to_20_audit.md`
-- `core/api/routes/pro_platform.py`
-- `core/api/schemas/pro_platform.py`
-- `modules/cdc/`
-- `modules/streaming/`
-- `modules/lakehouse/`
-- `modules/query_layer/`
-- `modules/metadata/`
-- `modules/feature_store/`
-- `modules/advanced_serving/`
-
-## Local setup
-
-```bash
-uv sync
-cp .env.example .env
-```
-
-## Quality checks
-
-```bash
-make check
-```
-
-## Run tests
-
-```bash
-pytest -q
-```
-
-## Start Docker stacks manually
-
-### Core only
-
-```bash
-docker compose -f compose/compose.core.yaml up -d
-```
+## Runtime profiles
 
 ### Lite profile
 
-```bash
-docker compose   -f compose/compose.core.yaml   -f compose/compose.connectors.yaml   -f compose/compose.analytics.yaml up -d
-```
+Use Lite for connector onboarding, trusted data foundations, dashboards, and starter analytics.
 
 ### Standard profile
 
-```bash
-docker compose   -f compose/compose.core.yaml   -f compose/compose.connectors.yaml   -f compose/compose.analytics.yaml   -f compose/compose.ml.yaml   -f compose/compose.monitoring.yaml up -d
-```
+Use Standard when you also need operational intelligence, MLflow-oriented lifecycle surfaces, and monitoring.
 
 ### Pro profile
 
+Use Pro when you also need the optional data-platform extensions such as CDC, streaming, lakehouse, metadata, feature store, query layer, and advanced serving.
+
+## Selective connector installation
+
+Connector services are enabled one by one.
+
+Examples:
+
 ```bash
-docker compose   -f compose/compose.core.yaml   -f compose/compose.connectors.yaml   -f compose/compose.analytics.yaml   -f compose/compose.ml.yaml   -f compose/compose.monitoring.yaml   -f compose/compose.cdc.yaml   -f compose/compose.streaming.yaml   -f compose/compose.lakehouse.yaml   -f compose/compose.query.yaml   -f compose/compose.metadata.yaml   -f compose/compose.feature_store.yaml   -f compose/compose.advanced_serving.yaml up -d
+./scripts/install.sh --profile lite --connectors csv
+./scripts/install.sh --profile standard --connectors csv,database,shopify
+./scripts/install.sh --profile pro --connectors woocommerce
 ```
 
-## Useful phase 20 APIs
+You can inspect the available connector names before installation:
 
-- `GET /api/v1/pro/cdc/blueprint`
-- `GET /api/v1/pro/streaming/blueprint`
-- `GET /api/v1/pro/lakehouse/blueprint`
-- `GET /api/v1/pro/query-layer/blueprint`
-- `GET /api/v1/pro/metadata/blueprint`
-- `GET /api/v1/pro/feature-store/blueprint`
-- `GET /api/v1/pro/advanced-serving/blueprint`
-- `GET /api/v1/pro-platform/summary`
+```bash
+./scripts/install.sh --list-connectors
+```
 
-## Useful docs
+The installer writes `ENABLED_CONNECTORS` into `.env`, the runtime registry only registers those connectors, and Compose only adds the matching `compose.connector_*.yaml` overlays.
 
-- `docs/quickstart/lite.md`
-- `docs/quickstart/standard.md`
-- `docs/quickstart/pro.md`
-- `docs/pro_data_platform_phase20.md`
-- `docs/phase_1_to_20_gap_report.md`
-- `docs/phase_1_to_20_audit.md`
+## Optional dependency surfaces
+
+Some capabilities rely on optional Python extras instead of forcing every installation to carry every dependency.
+
+- `reporting` for PDF-oriented business review reporting helpers
+- `feature-store` for Feast-based feature-store assets
+- `advanced-serving` for BentoML-oriented serving assets
+
+The install and upgrade helpers choose profile-aligned extras automatically. You can also override them explicitly:
+
+```bash
+./scripts/install.sh --profile standard --connectors csv,database --extras reporting
+./scripts/install.sh --profile pro --connectors shopify --extras reporting,feature-store,advanced-serving
+./scripts/install.sh --profile lite --connectors csv --extras none
+```
+
+## Quick start
+
+1. Review `.env.example` and, if needed, the matching sample file under `config/samples/`.
+2. Run `./scripts/install.sh` with the desired profile and connectors.
+3. Run `bash scripts/health.sh`.
+4. Open the API health route or the setup wizard flows.
+5. Load demo data with `bash scripts/load_demo_data.sh` when you want a smoke-test run.
+
+## Validation and maintenance
+
+- `python scripts/validate_compose_profiles.py` validates compose overlays, referenced Dockerfiles, and profile samples.
+- `pytest -q` runs the automated regression suite.
+- `bash scripts/health.sh` checks runtime readiness.
+
+## Reading order
+
+- Start with `core/README.md` for shared platform layers.
+- Continue with `modules/README.md` for the module catalog.
+- Use `compose/README.md`, `config/README.md`, and `scripts/README.md` for deployment mechanics.
+- Use `docs/README.md` for long-form references.
+- Use `packages/README.md` when you want the selective distribution surface.
+
+## Documentation rules
+
+- Keep README claims aligned with actual routes, services, file paths, and environment keys.
+- Keep module names consistent across code, docs, and compose overlays.
+- Prefer module-oriented wording. Do not reintroduce staged-delivery wording.

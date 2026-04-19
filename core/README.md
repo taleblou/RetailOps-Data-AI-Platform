@@ -1,25 +1,63 @@
 # Core Platform
 
-The `core/` directory contains shared platform layers reused by multiple modules. These are the repository building blocks for API composition, source management, transformations, setup, serving, monitoring, and worker execution.
+The `core/` directory contains the reusable platform layers that multiple modules build on.
 
-## Main areas
+## Subsystems
 
-- `api/` FastAPI composition, route registration, and request or response contracts.
-- `ingestion/` connector contracts, registries, repositories, mapping, validation, and raw loading.
-- `transformations/` dbt project assets and service wrappers for curated marts.
-- `setup/` onboarding and setup-session workflows.
-- `serving/` model-serving orchestration and serving contracts.
-- `monitoring/` monitoring artifacts, dashboards, alerts, and override flows.
-- `worker/` background-runtime entry points.
-- `ai/` foundational AI contracts and dataset-builder helpers.
-- `db/` SQL migrations for shared schemas and module persistence.
+### `api/`
 
-## Design intent
+The public HTTP surface. This area composes the FastAPI application, registers routers, owns shared schemas, and exposes setup, source-management, monitoring, serving, and platform-summary endpoints.
 
-Core code should stay module-agnostic where possible. Business modules can depend on it, but `core/` should not accumulate module-specific reporting logic unless that logic is a shared platform concern.
+### `ingestion/`
+
+The source-ingestion foundation. This area owns connector contracts, registry composition, source records, raw loading, state tracking, and repository abstractions.
+
+### `transformations/`
+
+Trusted transformation assets and wrappers around the curated mart layer.
+
+### `setup/`
+
+The onboarding workflow engine used by the setup wizard and first-run bootstrap flows.
+
+### `serving/`
+
+Shared model-serving orchestration, artifact surfaces, and deployment metadata.
+
+### `monitoring/`
+
+Monitoring artifacts, alert summaries, governance controls, and override workflows.
+
+### `worker/`
+
+Background job orchestration for recurring analytics, bundle generation, and operational tasks.
+
+### `ai/`
+
+Dataset-builder helpers, feature contracts, and AI-facing shared assets.
+
+### `db/`
+
+Shared SQL schema and migration assets.
+
+## Design rules
+
+- Core code should stay reusable across modules.
+- Shared abstractions belong here only when more than one module benefits from them.
+- Connector enablement and setup source types should stay aligned with the runtime registry.
+- Optional dependency handling should fail gracefully when a capability is not installed.
+
+## Main integration points
+
+- `config/settings.py` for typed runtime settings
+- `core/api/main.py` for API composition
+- `core/ingestion/base/registry.py` for connector registration
+- `core/ingestion/base/repository.py` for persistence backends
+- `core/setup/service.py` for setup-session workflows
+- `core/worker/jobs.py` for background jobs
 
 ## Maintenance notes
 
-- Changes in `core/` often affect multiple modules and tests.
-- Keep route contracts, repository assumptions, and artifact paths backward compatible unless the related docs and tests are updated together.
-- Prefer adding shared abstractions here only when more than one module benefits from them.
+- Update tests whenever a route contract, registry contract, or artifact path changes.
+- Keep core file headers, README text, and docs terminology synchronized.
+- Preserve backwards compatibility for public routes unless docs and tests are updated in the same change.

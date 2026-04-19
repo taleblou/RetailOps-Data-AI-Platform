@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.analytics_kpi
+# File:         service.py
+# Path:         modules/analytics_kpi/service.py
+#
+# Summary:      Implements the analytics kpi service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for analytics kpi workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: DashboardCardArtifact, DashboardArtifact, SalesDailyItem, CategoryRevenueItem, InventoryHealthItem, ShipmentSummary, ...
+#   - Key APIs: build_sales_daily, build_revenue_by_category, build_inventory_health, build_shipment_summary, build_overview, build_dashboard_cards, ...
+#   - Dependencies: __future__, json, uuid, dataclasses, datetime, pathlib, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import json

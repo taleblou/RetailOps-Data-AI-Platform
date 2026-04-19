@@ -1,17 +1,32 @@
-# WooCommerce Connector
+# Woocommerce Connector
 
-This connector imports retail entities from the WooCommerce REST API into the shared RetailOps ingestion framework.
+Supports the connector woocommerce layer inside the modular repository architecture. Standardizes external-system interaction for the connector woocommerce workflow.
+It follows the repository module pattern of service logic, API surface, schemas, optional runtime entry points, and deployment assets when those concerns are applicable.
 
-## Supported inputs
+## Directory contents
 
-- `orders`
-- `products`
-- `customers`
-- `coupons`
+- `main.py` — Provides implementation support for the connector woocommerce workflow.
+- `connector.py` — Implements adapter logic for the connector woocommerce integration surface.
+- `schemas.py` — Defines schemas for the connector woocommerce data contracts.
+- `__init__.py` — Defines the modules.connector_woocommerce package surface and package-level exports.
+- `Dockerfile` — Container build definition for this component.
 
-## Required config
+## Interfaces and data contracts
 
-- `store_url`
-- `consumer_key`
-- `consumer_secret`
-- `resource`
+- Main types: WooCommerceConnector, WooCommerceConnectorConfig.
+- Key APIs and entry points: main.
+
+## Operational notes
+
+- Scope profile: internal (3), adapter (1).
+- Status profile: stable (3), internal (1).
+- Important dependencies: __future__, typing, core.ingestion.base.api_connector, core.ingestion.base.models, modules.connector_woocommerce.schemas, time, pydantic.
+- Constraints: Package exports should stay lightweight and avoid introducing import cycles. External-system assumptions must remain aligned with connector contracts and mapping rules. Internal interfaces should remain aligned with adjacent modules and repository conventions.
+- Compatibility: Python 3.11+ and repository-supported runtime dependencies. Python 3.11+ with repository configuration dependencies.
+- Maintenance guidance: keep routers, schemas, services, artifacts, and README examples synchronized when this module evolves.
+
+## Related areas
+
+- `tests/connector_woocommerce/` automated checks for this module when present
+- `modules/common/` shared parsing and upload utilities
+- `docs/` long-form capability and architecture references

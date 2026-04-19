@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.analytics_kpi
+# File:         queries.py
+# Path:         modules/analytics_kpi/queries.py
+#
+# Summary:      Provides implementation support for the analytics kpi workflow.
+# Purpose:      Supports the analytics kpi layer inside the modular repository architecture.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: get_first_scalar, get_first_sequence
+#   - Dependencies: __future__, collections.abc, typing
+#   - Constraints: Internal interfaces should remain aligned with adjacent modules and repository conventions.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence

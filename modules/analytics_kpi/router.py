@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.analytics_kpi
+# File:         router.py
+# Path:         modules/analytics_kpi/router.py
+#
+# Summary:      Defines API routes for the analytics kpi module.
+# Purpose:      Exposes HTTP endpoints for analytics kpi capabilities.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, get_overview_by_upload, get_sales_daily_by_upload, get_revenue_by_category_by_upload, get_inventory_health_by_upload, get_shipments_by_upload, ...
+#   - Dependencies: __future__, pathlib, typing, fastapi, export, schemas, ...
+#   - Constraints: Public request and response behavior should remain backward compatible with documented API flows.
+#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
 
 from pathlib import Path

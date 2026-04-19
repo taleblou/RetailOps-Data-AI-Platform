@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.monitoring
+# File:         service.py
+# Path:         core/monitoring/service.py
+#
+# Summary:      Implements the monitoring service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for monitoring workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: MonitoringArtifactNotFoundError, MonitoringCheckArtifact, MonitoringAlertArtifact, MonitoringDashboardMetricArtifact, MonitoringOverrideEntryArtifact, MonitoringOverrideSummaryArtifact, ...
+#   - Key APIs: log_manual_override, get_override_summary, run_monitoring, get_or_create_monitoring_artifact
+#   - Dependencies: __future__, csv, json, uuid, collections, dataclasses, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv
@@ -9,14 +34,14 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
-from core.serving.service import get_or_create_phase16_batch_artifact
-from modules.forecasting.service import get_or_create_phase10_batch_artifact
-from modules.ml_registry.service import run_phase15_model_registry
-from modules.shipment_risk.service import get_or_create_phase11_artifact
-from modules.stockout_intelligence.service import get_or_create_phase12_stockout_artifact
+from core.serving.service import get_or_create_batch_serving_artifact
+from modules.forecasting.service import get_or_create_batch_forecast_artifact
+from modules.ml_registry.service import run_model_registry
+from modules.shipment_risk.service import get_or_create_shipment_risk_artifact
+from modules.stockout_intelligence.service import get_or_create_stockout_artifact
 
-PHASE17_ARTIFACT_SUFFIX = "phase17_monitoring"
-OVERRIDE_FILE_SUFFIX = "phase17_overrides"
+MONITORING_ARTIFACT_SUFFIX = "monitoring_summary"
+OVERRIDE_FILE_SUFFIX = "monitoring_overrides"
 
 
 class MonitoringArtifactNotFoundError(FileNotFoundError):
@@ -177,7 +202,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def _latest_artifact_path(upload_id: str, artifact_dir: Path) -> Path | None:
-    pattern = f"{upload_id}_{PHASE17_ARTIFACT_SUFFIX}_*.json"
+    pattern = f"{upload_id}_{MONITORING_ARTIFACT_SUFFIX}_*.json"
     matches = sorted(
         artifact_dir.glob(pattern), key=lambda item: item.stat().st_mtime, reverse=True
     )
@@ -187,7 +212,7 @@ def _latest_artifact_path(upload_id: str, artifact_dir: Path) -> Path | None:
 
 
 def _previous_artifact_path(upload_id: str, artifact_dir: Path) -> Path | None:
-    pattern = f"{upload_id}_{PHASE17_ARTIFACT_SUFFIX}_*.json"
+    pattern = f"{upload_id}_{MONITORING_ARTIFACT_SUFFIX}_*.json"
     matches = sorted(
         artifact_dir.glob(pattern), key=lambda item: item.stat().st_mtime, reverse=True
     )
@@ -450,7 +475,7 @@ def _build_data_checks(
 
 
 def _load_registry_details(registry_artifact_dir: Path, refresh: bool) -> list[dict[str, Any]]:
-    registry_payload = run_phase15_model_registry(
+    registry_payload = run_model_registry(
         artifact_dir=registry_artifact_dir,
         refresh=refresh,
     ).to_dict()
@@ -522,8 +547,7 @@ def _build_ml_checks(
             metric_value=feature_drift,
             threshold_value=0.15,
             message=(
-                "Feature drift was estimated from the active "
-                "champion models in the phase 15 registry."
+                "Feature drift was estimated from the active champion models in the model registry."
             ),
             recommended_action=(
                 "Review feature freshness and retraining need when the average drift score rises."
@@ -571,7 +595,7 @@ def _build_ml_checks(
             threshold_value=0.08,
             message=(
                 "Calibration drift uses the highest active "
-                "champion calibration error recorded by phase 15."
+                "champion calibration error recorded by model registry."
             ),
             recommended_action=(
                 "Reduce confidence exposure or hold automated "
@@ -820,7 +844,7 @@ def _save_override_entries(
     path.write_text(json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def log_phase17_manual_override(
+def log_manual_override(
     *,
     upload_id: str,
     prediction_type: str,
@@ -861,7 +885,7 @@ def log_phase17_manual_override(
     return asdict(entry)
 
 
-def get_phase17_override_summary(
+def get_override_summary(
     *,
     upload_id: str,
     override_dir: Path = Path("data/artifacts/monitoring/overrides"),
@@ -881,7 +905,7 @@ def get_phase17_override_summary(
     return asdict(summary)
 
 
-def run_phase17_monitoring(
+def run_monitoring(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -901,25 +925,25 @@ def run_phase17_monitoring(
     if previous_path is not None:
         previous_payload = _load_json(previous_path)
 
-    forecast_artifact = get_or_create_phase10_batch_artifact(
+    forecast_artifact = get_or_create_batch_forecast_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=forecast_artifact_dir,
         refresh=refresh,
     )
-    shipment_artifact = get_or_create_phase11_artifact(
+    shipment_artifact = get_or_create_shipment_risk_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=shipment_artifact_dir,
         refresh=refresh,
     )
-    stockout_artifact = get_or_create_phase12_stockout_artifact(
+    stockout_artifact = get_or_create_stockout_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=stockout_artifact_dir,
         refresh=refresh,
     )
-    serving_artifact = get_or_create_phase16_batch_artifact(
+    serving_artifact = get_or_create_batch_serving_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         forecast_artifact_dir=forecast_artifact_dir,
@@ -954,7 +978,7 @@ def run_phase17_monitoring(
     critical_alerts = sum(1 for alert in alerts if alert.severity == "critical")
     retrain_recommended = any(alert.retrain_recommended for alert in alerts)
     disable_prediction_recommended = any(alert.disable_prediction_recommended for alert in alerts)
-    override_summary_payload = get_phase17_override_summary(
+    override_summary_payload = get_override_summary(
         upload_id=upload_id,
         override_dir=override_dir,
     )
@@ -976,11 +1000,11 @@ def run_phase17_monitoring(
     )
     generated_at = _utc_now_iso()
     artifact_path = artifact_dir / (
-        f"{upload_id}_{PHASE17_ARTIFACT_SUFFIX}_"
+        f"{upload_id}_{MONITORING_ARTIFACT_SUFFIX}_"
         f"{generated_at.replace(':', '').replace('+00:00', 'Z')}.json"
     )
     artifact = MonitoringArtifact(
-        monitoring_run_id=f"phase17-monitoring-{uuid.uuid4().hex[:12]}",
+        monitoring_run_id=f"monitoring-monitoring-{uuid.uuid4().hex[:12]}",
         upload_id=upload_id,
         generated_at=generated_at,
         summary=summary,
@@ -995,7 +1019,7 @@ def run_phase17_monitoring(
     return artifact
 
 
-def get_or_create_phase17_monitoring_artifact(
+def get_or_create_monitoring_artifact(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -1013,7 +1037,7 @@ def get_or_create_phase17_monitoring_artifact(
         existing = _latest_artifact_path(upload_id, artifact_dir)
         if existing is not None:
             return _load_json(existing)
-    artifact = run_phase17_monitoring(
+    artifact = run_monitoring(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         forecast_artifact_dir=forecast_artifact_dir,

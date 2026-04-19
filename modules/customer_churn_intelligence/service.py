@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.customer_churn_intelligence
+# File:         service.py
+# Path:         modules/customer_churn_intelligence/service.py
+#
+# Summary:      Implements the customer churn intelligence service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for customer churn intelligence workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: build_customer_churn_artifact, get_customer_churn_artifact, get_customer_churn_detail
+#   - Dependencies: __future__, collections, datetime, pathlib, typing, modules.common.upload_utils, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -17,7 +42,7 @@ from modules.common.upload_utils import (
     write_json,
 )
 
-PHASE24_CUSTOMER_CHURN_VERSION = "phase24-customer-churn-v1"
+CUSTOMER_CHURN_VERSION = "risk_retention-customer-churn-v1"
 REFERENCE_DATE = date(2026, 3, 29)
 
 
@@ -150,7 +175,7 @@ def build_customer_churn_artifact(
     payload = {
         "upload_id": upload_id,
         "generated_at": utc_now_iso(),
-        "model_version": PHASE24_CUSTOMER_CHURN_VERSION,
+        "model_version": CUSTOMER_CHURN_VERSION,
         "artifact_path": str(artifact_path.resolve()),
         "summary": summary,
         "customers": customers,

@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.analytics_kpi
+# File:         schemas.py
+# Path:         modules/analytics_kpi/schemas.py
+#
+# Summary:      Defines schemas for the analytics kpi data contracts.
+# Purpose:      Standardizes structured payloads used by the analytics kpi layer.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: DashboardCardResponse, DashboardArtifactResponse, DailySalesPoint, RevenueByCategoryPoint, InventoryHealthItem, ShipmentItem, ...
+#   - Key APIs: None; module-level constants and imports only.
+#   - Dependencies: __future__, pydantic
+#   - Constraints: Internal interfaces should remain aligned with adjacent modules and repository conventions.
+#   - Compatibility: Python 3.11+ with repository configuration dependencies.
+
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field

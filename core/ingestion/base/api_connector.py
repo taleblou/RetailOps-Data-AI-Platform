@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.ingestion.base
+# File:         api_connector.py
+# Path:         core/ingestion/base/api_connector.py
+#
+# Summary:      Implements adapter logic for the ingestion base integration surface.
+# Purpose:      Standardizes external-system interaction for the ingestion base workflow.
+# Scope:        adapter
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: BaseApiConnector
+#   - Key APIs: None; module-level constants and imports only.
+#   - Dependencies: __future__, json, abc, typing, urllib.error, urllib.parse, ...
+#   - Constraints: External-system assumptions must remain aligned with connector contracts and mapping rules.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import json

@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       tests.analytics
+# File:         test_kpi_router.py
+# Path:         tests/analytics/test_kpi_router.py
+#
+# Summary:      Contains automated tests for the analytics workflows and behaviors.
+# Purpose:      Validates analytics behavior and protects the repository against regressions.
+# Scope:        test
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: test_kpi_router_is_mounted_on_main_app, test_kpi_get_endpoints_support_json_and_csv
+#   - Dependencies: pathlib, fastapi.testclient, core.api.main, core.ingestion.base.repository
+#   - Constraints: Assumes repository fixtures, deterministic sample data, and isolated test execution.
+#   - Compatibility: Python 3.11+ with pytest and repository test dependencies.
+
 from pathlib import Path
 
 from fastapi.testclient import TestClient

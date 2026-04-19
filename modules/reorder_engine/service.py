@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.reorder_engine
+# File:         service.py
+# Path:         modules/reorder_engine/service.py
+#
+# Summary:      Implements the reorder engine service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for reorder engine workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: ReorderArtifactNotFoundError, ReorderRecommendationArtifact, ReorderSummaryArtifact, ReorderArtifact, _SupplyOverride
+#   - Key APIs: run_reorder_engine, load_reorder_artifact, get_or_create_reorder_artifact, get_reorder_recommendations, get_reorder_recommendation
+#   - Dependencies: __future__, csv, json, math, uuid, dataclasses, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv
@@ -9,18 +34,18 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from modules.forecasting.service import get_or_create_phase10_batch_artifact
-from modules.stockout_intelligence.service import get_or_create_phase12_stockout_artifact
+from modules.forecasting.service import get_or_create_batch_forecast_artifact
+from modules.stockout_intelligence.service import get_or_create_stockout_artifact
 
-PHASE13_MODEL_VERSION = "phase13-reorder-engine-v1"
-PHASE13_ARTIFACT_SUFFIX = "phase13"
+REORDER_MODEL_VERSION = "reorder-engine-v1"
+REORDER_ARTIFACT_SUFFIX = "reorder"
 DEFAULT_SUPPLIER_MOQ = 1.0
 DEFAULT_SERVICE_LEVEL_TARGET = 0.95
 DEFAULT_LEAD_TIME_DAYS = 7.0
 
 
 class ReorderArtifactNotFoundError(FileNotFoundError):
-    """Raised when a phase 13 reorder artifact or SKU row cannot be located."""
+    """Raised when a reorder engine reorder artifact or SKU row cannot be located."""
 
 
 @dataclass(slots=True)
@@ -185,7 +210,7 @@ def _load_supply_overrides(
 def _forecast_lookup(
     upload_id: str, uploads_dir: Path, artifact_dir: Path, refresh: bool
 ) -> dict[str, dict[str, Any]]:
-    artifact = get_or_create_phase10_batch_artifact(
+    artifact = get_or_create_batch_forecast_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -210,7 +235,7 @@ def _stockout_predictions(
     artifact_dir: Path,
     refresh: bool,
 ) -> list[dict[str, Any]]:
-    artifact = get_or_create_phase12_stockout_artifact(
+    artifact = get_or_create_stockout_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -218,7 +243,9 @@ def _stockout_predictions(
     )
     predictions = artifact.get("skus")
     if not isinstance(predictions, list):
-        raise ValueError("Phase 12 stockout artifact is missing the SKU predictions list.")
+        raise ValueError(
+            "Stockout intelligence stockout artifact is missing the SKU predictions list."
+        )
     return [item for item in predictions if isinstance(item, dict)]
 
 
@@ -429,7 +456,7 @@ def _build_recommendation(
         stockout_risk_band=risk_band,
         recommended_action=recommended_action,
         feature_timestamp=feature_timestamp,
-        model_version=PHASE13_MODEL_VERSION,
+        model_version=REORDER_MODEL_VERSION,
     )
 
 
@@ -459,7 +486,7 @@ def _build_summary(recommendations: list[ReorderRecommendationArtifact]) -> Reor
     )
 
 
-def run_phase13_reorder_engine(
+def run_reorder_engine(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -501,12 +528,12 @@ def run_phase13_reorder_engine(
     )
     generated_at = datetime.now(UTC).replace(microsecond=0).isoformat()
     reorder_run_id = f"reo13_{uuid.uuid4().hex[:12]}"
-    artifact_path = artifact_dir / f"{upload_id}_{PHASE13_ARTIFACT_SUFFIX}_{reorder_run_id}.json"
+    artifact_path = artifact_dir / f"{upload_id}_{REORDER_ARTIFACT_SUFFIX}_{reorder_run_id}.json"
     artifact = ReorderArtifact(
         reorder_run_id=reorder_run_id,
         upload_id=upload_id,
         generated_at=generated_at,
-        model_version=PHASE13_MODEL_VERSION,
+        model_version=REORDER_MODEL_VERSION,
         summary=_build_summary(recommendations),
         recommendations=recommendations,
         artifact_path=str(artifact_path),
@@ -524,19 +551,19 @@ def _load_json_artifact(path: Path) -> dict[str, Any]:
     return payload
 
 
-def load_phase13_reorder_artifact(*, upload_id: str, artifact_dir: Path) -> dict[str, Any]:
-    pattern = f"{upload_id}_{PHASE13_ARTIFACT_SUFFIX}_*.json"
+def load_reorder_artifact(*, upload_id: str, artifact_dir: Path) -> dict[str, Any]:
+    pattern = f"{upload_id}_{REORDER_ARTIFACT_SUFFIX}_*.json"
     matches = sorted(
         artifact_dir.glob(pattern), key=lambda item: item.stat().st_mtime, reverse=True
     )
     if not matches:
         raise ReorderArtifactNotFoundError(
-            f"No phase 13 reorder artifact exists for upload_id={upload_id}."
+            f"No reorder engine reorder artifact exists for upload_id={upload_id}."
         )
     return _load_json_artifact(matches[0])
 
 
-def get_or_create_phase13_reorder_artifact(
+def get_or_create_reorder_artifact(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -547,10 +574,10 @@ def get_or_create_phase13_reorder_artifact(
 ) -> dict[str, Any]:
     if not refresh:
         try:
-            return load_phase13_reorder_artifact(upload_id=upload_id, artifact_dir=artifact_dir)
+            return load_reorder_artifact(upload_id=upload_id, artifact_dir=artifact_dir)
         except ReorderArtifactNotFoundError:
             pass
-    artifact = run_phase13_reorder_engine(
+    artifact = run_reorder_engine(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         forecast_artifact_dir=forecast_artifact_dir,
@@ -574,7 +601,7 @@ def get_reorder_recommendations(
     store_code: str | None = None,
     urgency: str | None = None,
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase13_reorder_artifact(
+    artifact = get_or_create_reorder_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         forecast_artifact_dir=forecast_artifact_dir,

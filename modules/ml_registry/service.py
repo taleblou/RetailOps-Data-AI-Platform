@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.ml_registry
+# File:         service.py
+# Path:         modules/ml_registry/service.py
+#
+# Summary:      Implements the ml registry service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for ml registry workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: ModelRegistryNotFoundError, ModelRegistryVersionArtifact, ModelRegistryDetailsArtifact, ModelRegistrySummaryItemArtifact, ModelRegistryArtifact
+#   - Key APIs: run_model_registry, get_model_registry_summary, get_model_registry_details, promote_registry_model, rollback_registry_model
+#   - Dependencies: __future__, json, uuid, dataclasses, datetime, pathlib, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import json
@@ -7,14 +32,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from modules.forecasting.service import PHASE10_MODEL_VERSION
-from modules.returns_intelligence.service import PHASE14_MODEL_VERSION
-from modules.shipment_risk.service import PHASE11_MODEL_VERSION
-from modules.stockout_intelligence.service import PHASE12_MODEL_VERSION
+from modules.forecasting.service import FORECAST_MODEL_VERSION
+from modules.returns_intelligence.service import RETURNS_MODEL_VERSION
+from modules.shipment_risk.service import SHIPMENT_RISK_MODEL_VERSION
+from modules.stockout_intelligence.service import STOCKOUT_MODEL_VERSION
 
-PHASE15_ARTIFACT_NAME = "phase15_model_registry.json"
-PHASE15_MODEL_REGISTRY_VERSION = "phase15-model-registry-v1"
-PHASE15_ALIAS_POLICY = {
+MODEL_REGISTRY_ARTIFACT_NAME = "model_registry.json"
+MODEL_REGISTRY_VERSION = "model-registry-v1"
+MODEL_REGISTRY_ALIAS_POLICY = {
     "champion": "Current production alias. This version serves business decisions.",
     "challenger": (
         "Promotion candidate. It can replace champion only after beating "
@@ -24,7 +49,7 @@ PHASE15_ALIAS_POLICY = {
         "Parallel evaluation alias. It receives traffic or offline scoring for observation only."
     ),
 }
-PHASE15_ROLLBACK_FLOW = [
+MODEL_REGISTRY_ROLLBACK_FLOW = [
     "Every promotion stores the full previous alias map.",
     "Rollback restores the last stored alias map or an explicit target version.",
     "Rollback is required when calibration degrades or drift becomes high.",
@@ -86,7 +111,7 @@ class ModelRegistrySummaryItemArtifact:
 
 
 @dataclass(slots=True)
-class Phase15ModelRegistryArtifact:
+class ModelRegistryArtifact:
     registry_run_id: str
     generated_at: str
     experiment_tracking_enabled: bool
@@ -193,9 +218,9 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
             "experiment_name": "forecasting_model",
             "problem_type": "forecasting",
             "aliases": {
-                "champion": PHASE10_MODEL_VERSION,
-                "challenger": "phase15-forecasting-model-v2",
-                "shadow": "phase15-forecasting-model-v3-shadow",
+                "champion": FORECAST_MODEL_VERSION,
+                "challenger": "registry-forecasting-model-v2",
+                "shadow": "registry-forecasting-model-v3-shadow",
             },
             "evaluation_contract": {
                 "primary_metric": "mape",
@@ -209,8 +234,8 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
             },
             "versions": [
                 {
-                    "model_version": PHASE10_MODEL_VERSION,
-                    "run_id": "exp_forecast_phase10_001",
+                    "model_version": FORECAST_MODEL_VERSION,
+                    "run_id": "exp_forecast_forecasting_001",
                     "created_at": "2026-03-25T18:15:00+00:00",
                     "source_module": "modules.forecasting",
                     "source_artifact": forecasting_artifact,
@@ -222,11 +247,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                     "explanation_summary": (
                         "Stable production forecaster trained on canonical daily demand aggregates."
                     ),
-                    "tags": ["phase10", "production", "champion"],
+                    "tags": ["forecasting", "production", "champion"],
                 },
                 {
-                    "model_version": "phase15-forecasting-model-v2",
-                    "run_id": "exp_forecast_phase15_002",
+                    "model_version": "registry-forecasting-model-v2",
+                    "run_id": "exp_forecast_registry_002",
                     "created_at": "2026-03-26T06:15:00+00:00",
                     "source_module": "modules.forecasting",
                     "source_artifact": forecasting_artifact,
@@ -239,11 +264,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                         "Candidate forecaster improves error and bias while "
                         "keeping interval calibration below the gate."
                     ),
-                    "tags": ["phase15", "challenger", "promotable"],
+                    "tags": ["registry", "challenger", "promotable"],
                 },
                 {
-                    "model_version": "phase15-forecasting-model-v3-shadow",
-                    "run_id": "exp_forecast_phase15_003",
+                    "model_version": "registry-forecasting-model-v3-shadow",
+                    "run_id": "exp_forecast_registry_003",
                     "created_at": "2026-03-26T09:30:00+00:00",
                     "source_module": "modules.forecasting",
                     "source_artifact": forecasting_artifact,
@@ -256,7 +281,7 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                         "Shadow forecaster is more accurate but drift rose "
                         "above the approval limit."
                     ),
-                    "tags": ["phase15", "shadow", "drift-watch"],
+                    "tags": ["registry", "shadow", "drift-watch"],
                 },
             ],
             "promotion_history": [],
@@ -267,9 +292,9 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
             "experiment_name": "shipment_delay_model",
             "problem_type": "binary_classification",
             "aliases": {
-                "champion": PHASE11_MODEL_VERSION,
-                "challenger": "phase15-shipment-delay-model-v2",
-                "shadow": "phase15-shipment-delay-model-v3-shadow",
+                "champion": SHIPMENT_RISK_MODEL_VERSION,
+                "challenger": "registry-shipment-delay-model-v2",
+                "shadow": "registry-shipment-delay-model-v3-shadow",
             },
             "evaluation_contract": {
                 "primary_metric": "pr_auc",
@@ -283,8 +308,8 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
             },
             "versions": [
                 {
-                    "model_version": PHASE11_MODEL_VERSION,
-                    "run_id": "exp_shipment_phase11_001",
+                    "model_version": SHIPMENT_RISK_MODEL_VERSION,
+                    "run_id": "exp_shipment_shipment_risk_001",
                     "created_at": "2026-03-25T19:10:00+00:00",
                     "source_module": "modules.shipment_risk",
                     "source_artifact": shipment_artifact,
@@ -307,11 +332,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                         "Production shipment-risk scorer with calibrated "
                         "probabilities and manual-review triggers."
                     ),
-                    "tags": ["phase11", "production", "champion"],
+                    "tags": ["shipment_risk", "production", "champion"],
                 },
                 {
-                    "model_version": "phase15-shipment-delay-model-v2",
-                    "run_id": "exp_shipment_phase15_002",
+                    "model_version": "registry-shipment-delay-model-v2",
+                    "run_id": "exp_shipment_registry_002",
                     "created_at": "2026-03-26T07:05:00+00:00",
                     "source_module": "modules.shipment_risk",
                     "source_artifact": shipment_artifact,
@@ -334,11 +359,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                         "Challenger improves ranking quality and stays within "
                         "calibration and drift gates."
                     ),
-                    "tags": ["phase15", "challenger", "promotable"],
+                    "tags": ["registry", "challenger", "promotable"],
                 },
                 {
-                    "model_version": "phase15-shipment-delay-model-v3-shadow",
-                    "run_id": "exp_shipment_phase15_003",
+                    "model_version": "registry-shipment-delay-model-v3-shadow",
+                    "run_id": "exp_shipment_registry_003",
                     "created_at": "2026-03-26T10:15:00+00:00",
                     "source_module": "modules.shipment_risk",
                     "source_artifact": shipment_artifact,
@@ -360,7 +385,7 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                     "explanation_summary": (
                         "Shadow model ranks better but fails the calibration guardrail."
                     ),
-                    "tags": ["phase15", "shadow", "calibration-watch"],
+                    "tags": ["registry", "shadow", "calibration-watch"],
                 },
             ],
             "promotion_history": [],
@@ -371,9 +396,9 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
             "experiment_name": "stockout_model",
             "problem_type": "binary_classification",
             "aliases": {
-                "champion": PHASE12_MODEL_VERSION,
-                "challenger": "phase15-stockout-model-v2",
-                "shadow": "phase15-stockout-model-v3-shadow",
+                "champion": STOCKOUT_MODEL_VERSION,
+                "challenger": "registry-stockout-model-v2",
+                "shadow": "registry-stockout-model-v3-shadow",
             },
             "evaluation_contract": {
                 "primary_metric": "pr_auc",
@@ -387,8 +412,8 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
             },
             "versions": [
                 {
-                    "model_version": PHASE12_MODEL_VERSION,
-                    "run_id": "exp_stockout_phase12_001",
+                    "model_version": STOCKOUT_MODEL_VERSION,
+                    "run_id": "exp_stockout_stockout_001",
                     "created_at": "2026-03-25T20:10:00+00:00",
                     "source_module": "modules.stockout_intelligence",
                     "source_artifact": stockout_artifact,
@@ -411,11 +436,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                         "Operational stockout model connected to urgency "
                         "scoring and lost-sales estimates."
                     ),
-                    "tags": ["phase12", "production", "champion"],
+                    "tags": ["stockout", "production", "champion"],
                 },
                 {
-                    "model_version": "phase15-stockout-model-v2",
-                    "run_id": "exp_stockout_phase15_002",
+                    "model_version": "registry-stockout-model-v2",
+                    "run_id": "exp_stockout_registry_002",
                     "created_at": "2026-03-26T07:40:00+00:00",
                     "source_module": "modules.stockout_intelligence",
                     "source_artifact": stockout_artifact,
@@ -438,11 +463,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                         "Challenger improves recall for risky SKUs and "
                         "remains within threshold gates."
                     ),
-                    "tags": ["phase15", "challenger", "promotable"],
+                    "tags": ["registry", "challenger", "promotable"],
                 },
                 {
-                    "model_version": "phase15-stockout-model-v3-shadow",
-                    "run_id": "exp_stockout_phase15_003",
+                    "model_version": "registry-stockout-model-v3-shadow",
+                    "run_id": "exp_stockout_registry_003",
                     "created_at": "2026-03-26T10:35:00+00:00",
                     "source_module": "modules.stockout_intelligence",
                     "source_artifact": stockout_artifact,
@@ -464,7 +489,7 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                     "explanation_summary": (
                         "Shadow model is accurate but drift rose after a category-mix shift."
                     ),
-                    "tags": ["phase15", "shadow", "drift-watch"],
+                    "tags": ["registry", "shadow", "drift-watch"],
                 },
             ],
             "promotion_history": [],
@@ -475,9 +500,9 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
             "experiment_name": "return_risk_model",
             "problem_type": "binary_classification",
             "aliases": {
-                "champion": PHASE14_MODEL_VERSION,
-                "challenger": "phase15-return-risk-model-v2",
-                "shadow": "phase15-return-risk-model-v3-shadow",
+                "champion": RETURNS_MODEL_VERSION,
+                "challenger": "registry-return-risk-model-v2",
+                "shadow": "registry-return-risk-model-v3-shadow",
             },
             "evaluation_contract": {
                 "primary_metric": "pr_auc",
@@ -492,8 +517,8 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
             },
             "versions": [
                 {
-                    "model_version": PHASE14_MODEL_VERSION,
-                    "run_id": "exp_returns_phase14_001",
+                    "model_version": RETURNS_MODEL_VERSION,
+                    "run_id": "exp_returns_returns_001",
                     "created_at": "2026-03-26T05:55:00+00:00",
                     "source_module": "modules.returns_intelligence",
                     "source_artifact": returns_artifact,
@@ -516,11 +541,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                         "Production returns-risk model linked to expected "
                         "return cost and risky product views."
                     ),
-                    "tags": ["phase14", "production", "champion"],
+                    "tags": ["returns", "production", "champion"],
                 },
                 {
-                    "model_version": "phase15-return-risk-model-v2",
-                    "run_id": "exp_returns_phase15_002",
+                    "model_version": "registry-return-risk-model-v2",
+                    "run_id": "exp_returns_registry_002",
                     "created_at": "2026-03-26T08:20:00+00:00",
                     "source_module": "modules.returns_intelligence",
                     "source_artifact": returns_artifact,
@@ -543,11 +568,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                         "Challenger improves early precision on costly "
                         "return segments and passes all gates."
                     ),
-                    "tags": ["phase15", "challenger", "promotable"],
+                    "tags": ["registry", "challenger", "promotable"],
                 },
                 {
-                    "model_version": "phase15-return-risk-model-v3-shadow",
-                    "run_id": "exp_returns_phase15_003",
+                    "model_version": "registry-return-risk-model-v3-shadow",
+                    "run_id": "exp_returns_registry_003",
                     "created_at": "2026-03-26T11:05:00+00:00",
                     "source_module": "modules.returns_intelligence",
                     "source_artifact": returns_artifact,
@@ -569,7 +594,7 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
                     "explanation_summary": (
                         "Shadow model improves ranking but calibration drift would block promotion."
                     ),
-                    "tags": ["phase15", "shadow", "calibration-watch"],
+                    "tags": ["registry", "shadow", "calibration-watch"],
                 },
             ],
             "promotion_history": [],
@@ -578,11 +603,11 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
     }
 
     state: dict[str, Any] = {
-        "registry_run_id": _make_run_id("phase15_registry"),
+        "registry_run_id": _make_run_id("registry_registry"),
         "generated_at": _utc_now(),
         "experiment_tracking_enabled": True,
-        "alias_policy": PHASE15_ALIAS_POLICY,
-        "rollback_flow": PHASE15_ROLLBACK_FLOW,
+        "alias_policy": MODEL_REGISTRY_ALIAS_POLICY,
+        "rollback_flow": MODEL_REGISTRY_ROLLBACK_FLOW,
         "registries": registries,
     }
 
@@ -603,7 +628,7 @@ def _build_default_state(artifact_dir: Path) -> dict[str, Any]:
 
 
 def _artifact_path(artifact_dir: Path) -> Path:
-    return artifact_dir / PHASE15_ARTIFACT_NAME
+    return artifact_dir / MODEL_REGISTRY_ARTIFACT_NAME
 
 
 def _load_or_create_state(artifact_dir: Path, *, refresh: bool = False) -> dict[str, Any]:
@@ -732,11 +757,11 @@ def _summary_item_from_registry(
     )
 
 
-def run_phase15_model_registry(
+def run_model_registry(
     *,
     artifact_dir: Path = Path("data/artifacts/model_registry"),
     refresh: bool = False,
-) -> Phase15ModelRegistryArtifact:
+) -> ModelRegistryArtifact:
     state = _load_or_create_state(artifact_dir, refresh=refresh)
     registries = state.get("registries", {})
     summary_items = [
@@ -754,7 +779,7 @@ def run_phase15_model_registry(
         for name, registry in registries.items()
         if isinstance(registry, dict)
     ]
-    return Phase15ModelRegistryArtifact(
+    return ModelRegistryArtifact(
         registry_run_id=str(state["registry_run_id"]),
         generated_at=str(state["generated_at"]),
         experiment_tracking_enabled=bool(state.get("experiment_tracking_enabled", False)),
@@ -768,18 +793,18 @@ def run_phase15_model_registry(
     )
 
 
-def get_phase15_registry_summary(
+def get_model_registry_summary(
     *,
     artifact_dir: Path = Path("data/artifacts/model_registry"),
     refresh: bool = False,
 ) -> dict[str, Any]:
-    artifact = run_phase15_model_registry(artifact_dir=artifact_dir, refresh=refresh)
+    artifact = run_model_registry(artifact_dir=artifact_dir, refresh=refresh)
     payload = artifact.to_dict()
     payload.pop("registry_details", None)
     return payload
 
 
-def get_phase15_registry_details(
+def get_model_registry_details(
     *,
     registry_name: str,
     artifact_dir: Path = Path("data/artifacts/model_registry"),
@@ -798,7 +823,7 @@ def get_phase15_registry_details(
     return payload
 
 
-def promote_phase15_registry_model(
+def promote_registry_model(
     *,
     registry_name: str,
     candidate_alias: str = "challenger",
@@ -841,12 +866,12 @@ def promote_phase15_registry_model(
     }
     registry.setdefault("promotion_history", []).append(event)
     _save_state(artifact_dir, state)
-    return get_phase15_registry_details(
+    return get_model_registry_details(
         registry_name=registry_name, artifact_dir=artifact_dir, refresh=False
     )
 
 
-def rollback_phase15_registry_model(
+def rollback_registry_model(
     *,
     registry_name: str,
     artifact_dir: Path = Path("data/artifacts/model_registry"),
@@ -895,6 +920,6 @@ def rollback_phase15_registry_model(
     }
     registry.setdefault("rollback_history", []).append(rollback_event)
     _save_state(artifact_dir, state)
-    return get_phase15_registry_details(
+    return get_model_registry_details(
         registry_name=registry_name, artifact_dir=artifact_dir, refresh=False
     )

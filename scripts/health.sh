@@ -19,7 +19,7 @@ for required in \
   "$ROOT_DIR/docs/quickstart/lite.md" \
   "$ROOT_DIR/docs/quickstart/standard.md" \
   "$ROOT_DIR/docs/quickstart/pro.md" \
-  "$ROOT_DIR/docs/pro_data_platform_phase20.md" \
+  "$ROOT_DIR/docs/platform/pro_data_platform.md" \
   "$ROOT_DIR/compose/compose.streaming.yaml" \
   "$ROOT_DIR/compose/compose.query.yaml" \
   "$ROOT_DIR/compose/compose.feature_store.yaml" \

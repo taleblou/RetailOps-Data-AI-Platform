@@ -1,7 +1,7 @@
 [project]
 name = "retailops-core"
 version = "0.1.0"
-description = "Add your description here"
+description = "Core platform distribution workspace for RetailOps services and shared contracts."
 readme = "README.md"
 authors = [
     { name = "Morteza Taleblou", email = "morteza_taleblou@yahoo.com" }

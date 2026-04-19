@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.reorder_engine
+# File:         router.py
+# Path:         modules/reorder_engine/router.py
+#
+# Summary:      Defines API routes for the reorder engine module.
+# Purpose:      Exposes HTTP endpoints for reorder engine capabilities.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, list_reorder_recommendations, get_reorder_sku
+#   - Dependencies: __future__, pathlib, fastapi, schemas, service
+#   - Constraints: Public request and response behavior should remain backward compatible with documented API flows.
+#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
 
 from pathlib import Path

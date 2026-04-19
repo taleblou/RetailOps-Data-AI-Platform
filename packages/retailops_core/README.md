@@ -1,25 +1,19 @@
-# Retailops Core
+# RetailOps Core
 
-This directory contains supporting assets for the retailops core area of the repository.
-It keeps packaging metadata intentionally small so distribution boundaries remain clear and import cycles stay out of the export surface.
+This workspace defines the shared platform package surface for API composition, setup, ingestion, monitoring, serving, and worker orchestration.
 
-## Directory contents
+## What is here
 
-- `.python-version` — Local runtime version hint for development tooling.
-- `pyproject.toml` — Package build metadata and distribution settings.
-- `src/` — src implementation assets and supporting documentation.
-
-## Interfaces and data contracts
-
-- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
-- Key APIs and entry points: no file-level callable surface is documented here.
-
-## Operational notes
-
-- Packaging guidance: keep package metadata, typed exports, and README claims consistent with the corresponding monorepo implementation.
-
-## Related areas
-
-- `packages/README.md` packaging workspace overview
-- `pyproject.toml` build metadata for the package
+- `pyproject.toml` package metadata
 - `src/` typed package source files
+- local tool version markers where needed
+
+## Design intent
+
+The workspace keeps the published surface lightweight. It should describe the capability boundary without duplicating monorepo runtime logic.
+
+## Maintenance rules
+
+- Keep this README aligned with `packages/README.md` and the matching monorepo modules.
+- Keep package metadata and typed exports synchronized.
+- Avoid introducing heavy runtime-only dependencies in this workspace.

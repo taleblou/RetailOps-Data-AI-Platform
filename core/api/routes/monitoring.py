@@ -24,7 +24,7 @@
 #     core.monitoring.service
 #   - Constraints: Public request and response behavior should remain backward
 #     compatible with documented API flows.
-#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+#   - Compatibility: Python 3.12+ with FastAPI-compatible runtime dependencies.
 
 from __future__ import annotations
 
@@ -39,13 +39,9 @@ from core.monitoring.schemas import (
     MonitoringOverrideSummaryResponse,
 )
 from core.monitoring.service import (
-    get_or_create_phase17_monitoring_artifact as get_or_create_monitoring_artifact,
-)
-from core.monitoring.service import (
-    get_phase17_override_summary as fetch_override_summary,
-)
-from core.monitoring.service import (
-    log_phase17_manual_override as record_manual_override,
+    get_or_create_monitoring_artifact,
+    get_override_summary as fetch_override_summary,
+    log_manual_override as record_manual_override,
 )
 
 router = APIRouter(prefix="/api/v1/monitoring", tags=["monitoring"])

@@ -1,0 +1,9 @@
+consumer_groups:
+  - name: retailops-cdc-consumers
+    purpose: Move Debezium envelopes into normalized bronze events.
+  - name: retailops-lakehouse-writers
+    purpose: Persist streaming facts into Iceberg-compatible layer writers.
+  - name: retailops-feature-materialization
+    purpose: Keep online features in sync with fresh operational events.
+  - name: retailops-ops-alerts
+    purpose: Emit latency and anomaly alerts for operational monitoring.

@@ -19,18 +19,23 @@
 # Notes:
 #   - Main types: Settings
 #   - Key APIs: get_settings
-#   - Dependencies: functools, pydantic_settings
+#   - Dependencies: functools, pydantic_settings, core.ingestion.base.models
 #   - Constraints: Configuration values must remain consistent with repository
 #     environment and deployment defaults.
-#   - Compatibility: Python 3.11+ with repository configuration dependencies.
+#   - Compatibility: Python 3.12+ with repository configuration dependencies.
+
+from __future__ import annotations
 
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from core.ingestion.base.models import SourceType
+
 
 class Settings(BaseSettings):
     app_env: str = "dev"
+    app_profile: str = "lite"
     api_port: int = 8000
     database_url: str | None = None
     postgres_host: str = "localhost"
@@ -38,6 +43,8 @@ class Settings(BaseSettings):
     postgres_db: str = "retailops"
     postgres_user: str = "postgres"
     postgres_password: str = "postgres"
+    enabled_connectors: str = SourceType.CSV.value
+    enabled_optional_extras: str = "reporting"
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -53,6 +60,43 @@ class Settings(BaseSettings):
             f"postgresql://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
         )
+
+    @property
+    def enabled_connector_types(self) -> list[SourceType]:
+        seen: set[SourceType] = set()
+        resolved: list[SourceType] = []
+        for raw_value in self.enabled_connectors.split(","):
+            normalized = raw_value.strip().lower()
+            if not normalized:
+                continue
+            try:
+                source_type = SourceType(normalized)
+            except ValueError:
+                continue
+            if source_type in seen:
+                continue
+            seen.add(source_type)
+            resolved.append(source_type)
+        if not resolved:
+            return [SourceType.CSV]
+        return resolved
+
+    @property
+    def enabled_connector_values(self) -> list[str]:
+        return [item.value for item in self.enabled_connector_types]
+
+    @property
+    def enabled_optional_extra_values(self) -> list[str]:
+        allowed = {"reporting", "feature-store", "advanced-serving"}
+        seen: set[str] = set()
+        resolved: list[str] = []
+        for raw_value in self.enabled_optional_extras.split(","):
+            normalized = raw_value.strip().lower()
+            if not normalized or normalized not in allowed or normalized in seen:
+                continue
+            seen.add(normalized)
+            resolved.append(normalized)
+        return resolved
 
 
 @lru_cache(maxsize=1)

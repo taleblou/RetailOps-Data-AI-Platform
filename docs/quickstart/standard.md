@@ -1,7 +1,7 @@
 # Quickstart - Standard profile
 
 The Standard profile is the operational AI package.
-It extends Lite with forecasting, shipment risk, stockout intelligence, reorder recommendations, returns intelligence, MLflow, and monitoring.
+It extends Lite with forecasting, shipment risk, stockout intelligence, reorder recommendations, returns intelligence, MLflow-oriented lifecycle tooling, and monitoring.
 
 ## Included modules
 
@@ -11,13 +11,21 @@ It extends Lite with forecasting, shipment risk, stockout intelligence, reorder 
 - stockout intelligence
 - reorder engine
 - returns intelligence
-- MLflow registry
+- MLflow registry surfaces
 - monitoring
+- selected connector overlays only
+- reporting extra by default
 
 ## Installation
 
 ```bash
-./scripts/install.sh --profile standard
+./scripts/install.sh --profile standard --connectors csv,database,shopify
+```
+
+## Override optional extras
+
+```bash
+./scripts/install.sh --profile standard --connectors csv,database --extras reporting
 ```
 
 ## Upgrade an existing installation
@@ -25,8 +33,6 @@ It extends Lite with forecasting, shipment risk, stockout intelligence, reorder 
 ```bash
 ./scripts/upgrade.sh --profile standard
 ```
-
-The upgrade routine refreshes dependencies, applies SQL migrations when PostgreSQL access is available, and restarts the standard stack.
 
 ## Backup and restore
 
@@ -57,4 +63,4 @@ Then inspect:
 
 ## When to choose Standard
 
-Choose Standard when the customer wants real operational decision support without the extra complexity of CDC, streaming, lakehouse, and metadata services.
+Choose Standard when the customer wants real operational decision support without the added CDC, streaming, lakehouse, metadata, feature-store, and advanced-serving stack.

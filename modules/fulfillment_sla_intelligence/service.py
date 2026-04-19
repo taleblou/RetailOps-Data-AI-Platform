@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.fulfillment_sla_intelligence
+# File:         service.py
+# Path:         modules/fulfillment_sla_intelligence/service.py
+#
+# Summary:      Implements the fulfillment sla intelligence service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for fulfillment sla intelligence workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: build_fulfillment_sla_artifact, get_fulfillment_sla_artifact, get_fulfillment_sla_order
+#   - Dependencies: __future__, collections, datetime, pathlib, typing, modules.common.upload_utils, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -16,7 +41,7 @@ from modules.common.upload_utils import (
     write_json,
 )
 
-PHASE24_FULFILLMENT_SLA_VERSION = "phase24-fulfillment-sla-v1"
+FULFILLMENT_SLA_VERSION = "risk_retention-fulfillment-sla-v1"
 REFERENCE_DATE = date(2026, 3, 29)
 
 
@@ -151,7 +176,7 @@ def build_fulfillment_sla_artifact(
     payload = {
         "upload_id": upload_id,
         "generated_at": utc_now_iso(),
-        "model_version": PHASE24_FULFILLMENT_SLA_VERSION,
+        "model_version": FULFILLMENT_SLA_VERSION,
         "artifact_path": str(artifact_path.resolve()),
         "summary": summary,
         "orders": orders,

@@ -1,0 +1,28 @@
+# AI Tests
+
+Validates AI behavior and protects the repository against regressions.
+It should evolve alongside the implementation under test so fixtures, sample artifacts, and API expectations remain aligned.
+
+## Directory contents
+
+- `test_feature_platform.py` — Contains automated tests for the AI workflows and behaviors.
+
+## Interfaces and data contracts
+
+- Main types: this area is centered on functions, configuration, or documentation rather than exported classes.
+- Key APIs and entry points: test_load_feature_contracts_includes_feature_assets, test_dataset_builder_generates_point_in_time_sql, test_backtest_window_builder_returns_train_and_validation_ranges, test_freshness_checker_reports_stale_contracts.
+
+## Operational notes
+
+- Scope profile: test (1).
+- Status profile: stable (1).
+- Important dependencies: __future__, datetime, core.ai.dataset_builders.
+- Constraints: Assumes repository fixtures, deterministic sample data, and isolated test execution.
+- Compatibility: Python 3.11+ with pytest and repository test dependencies.
+- Test guidance: keep fixtures, sample artifacts, and endpoint expectations aligned with the production modules under test.
+
+## Related areas
+
+- `core/` shared runtime services under test
+- `modules/` business and platform modules exercised by these tests
+- `data/` sample inputs and generated artifacts used during test runs

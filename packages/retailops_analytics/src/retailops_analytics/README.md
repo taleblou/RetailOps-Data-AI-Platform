@@ -1,29 +1,14 @@
 # retailops_analytics Source Package
 
-Provides a minimal package entry point for analytics distribution metadata and typed imports.
-It keeps packaging metadata intentionally small so distribution boundaries remain clear and import cycles stay out of the export surface.
+This source package exposes lightweight typed metadata for analytics and reporting metadata for dashboard-oriented distribution.
 
-## Directory contents
+## Files
 
-- `__init__.py` — Exports analytics-oriented package metadata for dashboarding and business reporting capabilities.
-- `py.typed` — PEP 561 marker declaring inline typing support.
+- `__init__.py` package metadata exports
+- `py.typed` inline typing marker
 
-## Interfaces and data contracts
+## Export expectations
 
-- Main types: PackageMetadata.
-- Key APIs and entry points: PACKAGE_NAME, PACKAGE_ROLE, package_info.
-
-## Operational notes
-
-- Scope profile: internal (1).
-- Status profile: stable (1).
-- Important dependencies: Shared standard-library metadata only.
-- Constraints: Package exports should stay lightweight and avoid introducing import cycles or runtime-only dependencies.
-- Compatibility: Python 3.11+ and repository-supported packaging workflows.
-- Packaging guidance: keep package metadata, typed exports, and README claims consistent with the corresponding monorepo implementation.
-
-## Related areas
-
-- `packages/README.md` packaging workspace overview
-- `pyproject.toml` build metadata for the package
-- `src/` typed package source files
+- keep exports tiny and stable
+- avoid importing heavy runtime modules here
+- keep README and metadata wording aligned with the package workspace

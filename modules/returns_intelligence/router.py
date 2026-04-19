@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.returns_intelligence
+# File:         router.py
+# Path:         modules/returns_intelligence/router.py
+#
+# Summary:      Defines API routes for the returns intelligence module.
+# Purpose:      Exposes HTTP endpoints for returns intelligence capabilities.
+# Scope:        public API
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: router, list_return_risk_orders, get_return_risk_order_detail, list_return_risk_products
+#   - Dependencies: __future__, pathlib, fastapi, schemas, service
+#   - Constraints: Public request and response behavior should remain backward compatible with documented API flows.
+#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+
 from __future__ import annotations
 
 from pathlib import Path

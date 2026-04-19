@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       tests.ai
+# File:         test_feature_platform.py
+# Path:         tests/ai/test_feature_platform.py
+#
+# Summary:      Contains automated tests for the AI workflows and behaviors.
+# Purpose:      Validates AI behavior and protects the repository against regressions.
+# Scope:        test
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: test_load_feature_contracts_includes_feature_assets, test_dataset_builder_generates_point_in_time_sql, test_backtest_window_builder_returns_train_and_validation_ranges, test_freshness_checker_reports_stale_contracts
+#   - Dependencies: __future__, datetime, core.ai.dataset_builders
+#   - Constraints: Assumes repository fixtures, deterministic sample data, and isolated test execution.
+#   - Compatibility: Python 3.11+ with pytest and repository test dependencies.
+
 from __future__ import annotations
 
 from datetime import UTC, date, datetime
@@ -10,7 +35,7 @@ from core.ai.dataset_builders import (
 )
 
 
-def test_load_feature_contracts_includes_phase_9_assets() -> None:
+def test_load_feature_contracts_includes_feature_assets() -> None:
     contracts = load_feature_contracts()
     names = {contract.name for contract in contracts}
     assert {

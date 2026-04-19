@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.forecasting
+# File:         service.py
+# Path:         modules/forecasting/service.py
+#
+# Summary:      Implements the forecasting service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for forecasting workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: ForecastHorizonArtifact, ForecastDailyPointArtifact, ForecastArtifact, ForecastMetricArtifact, ForecastModelScoreArtifact, ForecastIntervalArtifact, ...
+#   - Key APIs: run_first_forecast, run_batch_forecast, load_batch_forecast_artifact, get_or_create_batch_forecast_artifact, get_product_forecast
+#   - Dependencies: __future__, csv, json, math, uuid, collections, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv
@@ -130,9 +155,9 @@ class ForecastBatchArtifact:
 
 
 MODEL_CANDIDATES: tuple[str, str] = ("seasonal_naive", "moving_average")
-PHASE10_MODEL_VERSION = "phase10-baseline-v1"
-PHASE10_BATCH_JOB = "nightly_active_sku_forecast"
-PHASE10_ARTIFACT_SUFFIX = "phase10"
+FORECAST_MODEL_VERSION = "forecasting-baseline-v1"
+FORECAST_BATCH_JOB = "nightly_active_sku_forecast"
+FORECAST_ARTIFACT_SUFFIX = "forecasting"
 
 
 class ForecastArtifactNotFoundError(FileNotFoundError):
@@ -680,7 +705,7 @@ def _build_product_artifact(series: _ProductSeries) -> ForecastProductArtifact:
         product_group=series.product_group,
         selected_model=selected_model,
         baseline_models=baseline_models,
-        model_version=PHASE10_MODEL_VERSION,
+        model_version=FORECAST_MODEL_VERSION,
         feature_timestamp=feature_timestamp,
         training_window_start=series.dates[0].isoformat(),
         training_window_end=series.dates[-1].isoformat(),
@@ -704,14 +729,14 @@ def _build_batch_summary(products: list[ForecastProductArtifact]) -> ForecastBat
         active_products=len(products),
         categories=sorted({product.category for product in products}),
         product_groups=sorted({product.product_group for product in products}),
-        nightly_batch_job=PHASE10_BATCH_JOB,
+        nightly_batch_job=FORECAST_BATCH_JOB,
         model_candidates=list(MODEL_CANDIDATES),
         champion_model_counts=champion_model_counts,
         average_metrics=average_metrics,
     )
 
 
-def run_phase10_batch_forecast(
+def run_batch_forecast(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -722,12 +747,12 @@ def run_phase10_batch_forecast(
     products = [_build_product_artifact(series) for series in product_series]
     generated_at = datetime.now(UTC).replace(microsecond=0).isoformat()
     forecast_run_id = f"fc10_{uuid.uuid4().hex[:12]}"
-    artifact_path = artifact_dir / f"{upload_id}_{PHASE10_ARTIFACT_SUFFIX}_{forecast_run_id}.json"
+    artifact_path = artifact_dir / f"{upload_id}_{FORECAST_ARTIFACT_SUFFIX}_{forecast_run_id}.json"
     artifact = ForecastBatchArtifact(
         forecast_run_id=forecast_run_id,
         upload_id=upload_id,
         generated_at=generated_at,
-        model_version=PHASE10_MODEL_VERSION,
+        model_version=FORECAST_MODEL_VERSION,
         summary=_build_batch_summary(products),
         category_metrics=_build_group_metrics(products, group_getter="category"),
         product_group_metrics=_build_group_metrics(products, group_getter="product_group"),
@@ -748,19 +773,19 @@ def _load_json_artifact(path: Path) -> dict[str, Any]:
     return payload
 
 
-def load_phase10_batch_artifact(*, upload_id: str, artifact_dir: Path) -> dict[str, Any]:
-    pattern = f"{upload_id}_{PHASE10_ARTIFACT_SUFFIX}_*.json"
+def load_batch_forecast_artifact(*, upload_id: str, artifact_dir: Path) -> dict[str, Any]:
+    pattern = f"{upload_id}_{FORECAST_ARTIFACT_SUFFIX}_*.json"
     matches = sorted(
         artifact_dir.glob(pattern), key=lambda item: item.stat().st_mtime, reverse=True
     )
     if not matches:
         raise ForecastArtifactNotFoundError(
-            f"No phase 10 forecast artifact exists for upload_id={upload_id}."
+            f"No forecasting forecast artifact exists for upload_id={upload_id}."
         )
     return _load_json_artifact(matches[0])
 
 
-def get_or_create_phase10_batch_artifact(
+def get_or_create_batch_forecast_artifact(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -769,10 +794,10 @@ def get_or_create_phase10_batch_artifact(
 ) -> dict[str, Any]:
     if not refresh:
         try:
-            return load_phase10_batch_artifact(upload_id=upload_id, artifact_dir=artifact_dir)
+            return load_batch_forecast_artifact(upload_id=upload_id, artifact_dir=artifact_dir)
         except ForecastArtifactNotFoundError:
             pass
-    artifact = run_phase10_batch_forecast(
+    artifact = run_batch_forecast(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -788,7 +813,7 @@ def get_product_forecast(
     artifact_dir: Path,
     refresh: bool = False,
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase10_batch_artifact(
+    artifact = get_or_create_batch_forecast_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,

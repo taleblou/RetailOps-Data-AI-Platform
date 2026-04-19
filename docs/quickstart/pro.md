@@ -5,7 +5,10 @@ Use this Pro profile when you need the core platform plus deployment-ready exten
 ## Includes
 
 - core platform services
-- connector overlays for CSV, database, Shopify, WooCommerce, Adobe Commerce, BigCommerce, and PrestaShop
+- only the connector overlays you select during installation
+- reporting extra by default
+- feature-store extra by default
+- advanced-serving extra by default
 - CDC and streaming bundles
 - lakehouse and query-layer bundles
 - metadata, feature-store, and advanced-serving bundles
@@ -19,26 +22,19 @@ Use this Pro profile when you need the core platform plus deployment-ready exten
 ## 2. Start the Pro stack
 
 ```bash
-docker compose \
-  -f compose/compose.core.yaml \
-  -f compose/compose.connectors.yaml \
-  -f compose/compose.analytics.yaml \
-  -f compose/compose.ml.yaml \
-  -f compose/compose.monitoring.yaml \
-  -f compose/compose.cdc.yaml \
-  -f compose/compose.streaming.yaml \
-  -f compose/compose.lakehouse.yaml \
-  -f compose/compose.query.yaml \
-  -f compose/compose.metadata.yaml \
-  -f compose/compose.feature_store.yaml \
-  -f compose/compose.advanced_serving.yaml \
-  up -d
+./scripts/install.sh --profile pro --connectors csv,database,shopify,woocommerce,adobe_commerce,bigcommerce,prestashop
 ```
 
-Or use the packaging helper:
+You can also choose a smaller connector set, for example:
 
 ```bash
-bash scripts/install.sh --profile pro
+./scripts/install.sh --profile pro --connectors woocommerce
+```
+
+Or override extras explicitly:
+
+```bash
+./scripts/install.sh --profile pro --connectors shopify --extras reporting,feature-store,advanced-serving
 ```
 
 ## 3. Generate extension bundles

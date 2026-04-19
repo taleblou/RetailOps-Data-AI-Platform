@@ -25,7 +25,7 @@
 #     core.ingestion.base.raw_loader, ...
 #   - Constraints: Public request and response behavior should remain
 #     backward compatible with documented API flows.
-#   - Compatibility: Python 3.11+ with FastAPI-compatible runtime dependencies.
+#   - Compatibility: Python 3.12+ with FastAPI-compatible runtime dependencies.
 
 from __future__ import annotations
 
@@ -44,7 +44,9 @@ from core.ingestion.base.models import (
     SourceStatusResponse,
     TestConnectionResult,
 )
+from core.ingestion.base.registry import get_connector_specs
 from core.ingestion.base.raw_loader import RawLoader
+from config.settings import get_settings
 from core.ingestion.base.registry import ConnectorRegistry
 from core.ingestion.base.repository import RepositoryProtocol
 from core.ingestion.base.state_store import StateStore
@@ -87,7 +89,27 @@ def _build_connector(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Source not found.",
         )
-    return source, registry.create(source, state_store, raw_loader)
+    try:
+        connector = registry.create(source, state_store, raw_loader)
+    except KeyError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+    return source, connector
+
+
+@router.get("/types")
+def list_source_types() -> list[dict[str, object]]:
+    settings = get_settings()
+    return [
+        {
+            "source_type": spec.source_value,
+            "label": spec.label,
+            "fields": [field.name for field in spec.wizard_fields],
+        }
+        for spec in get_connector_specs(settings.enabled_connector_values)
+    ]
 
 
 @router.post("", response_model=SourceRecord, status_code=status.HTTP_201_CREATED)

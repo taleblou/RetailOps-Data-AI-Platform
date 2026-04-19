@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       tests.forecasting
+# File:         test_first_forecast_service.py
+# Path:         tests/forecasting/test_first_forecast_service.py
+#
+# Summary:      Contains automated tests for the forecasting workflows and behaviors.
+# Purpose:      Validates forecasting behavior and protects the repository against regressions.
+# Scope:        test
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: None.
+#   - Key APIs: test_run_first_forecast_builds_expected_horizons
+#   - Dependencies: pathlib, modules.forecasting.service
+#   - Constraints: Assumes repository fixtures, deterministic sample data, and isolated test execution.
+#   - Compatibility: Python 3.11+ with pytest and repository test dependencies.
+
 from pathlib import Path
 
 from modules.forecasting.service import run_first_forecast

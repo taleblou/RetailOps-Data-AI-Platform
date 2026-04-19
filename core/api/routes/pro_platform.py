@@ -32,35 +32,19 @@ DeploymentPlanner = Callable[..., dict[str, Any]]
 
 
 _schema_module = cast(Any, import_module("core.api.schemas.pro_platform"))
-ProPlatformSummaryResponse = cast(
-    Any,
-    _schema_module.ProPlatformSummaryResponse,
-)
+ProPlatformSummaryResponse = cast(Any, _schema_module.ProPlatformSummaryResponse)
 ProPlatformModuleReadinessResponse = cast(
     Any,
-    getattr(
-        _schema_module,
-        "ProPlatformModuleReadinessResponse",
-        ProPlatformSummaryResponse,
-    ),
+    getattr(_schema_module, "ProPlatformModuleReadinessResponse", ProPlatformSummaryResponse),
 )
 ProPlatformReadinessResponse = cast(
     Any,
-    getattr(
-        _schema_module,
-        "ProPlatformReadinessResponse",
-        ProPlatformSummaryResponse,
-    ),
+    getattr(_schema_module, "ProPlatformReadinessResponse", ProPlatformSummaryResponse),
 )
 ProPlatformDeploymentPlanResponse = cast(
     Any,
-    getattr(
-        _schema_module,
-        "ProPlatformDeploymentPlanResponse",
-        ProPlatformSummaryResponse,
-    ),
+    getattr(_schema_module, "ProPlatformDeploymentPlanResponse", ProPlatformSummaryResponse),
 )
-
 
 build_platform_deployment_plan = cast(
     DeploymentPlanner,
@@ -68,55 +52,37 @@ build_platform_deployment_plan = cast(
 )
 
 
-def _resolve_artifact_builder(
-    module_path: str,
-    phase_name: str,
-    generic_name: str,
-) -> ArtifactBuilder:
+def _resolve_artifact_builder(module_path: str, builder_name: str) -> ArtifactBuilder:
     module = cast(Any, import_module(module_path))
-    candidate = getattr(module, phase_name, None)
-    if candidate is None:
-        candidate = getattr(module, generic_name, None)
+    candidate = getattr(module, builder_name, None)
     if not callable(candidate):
-        raise RuntimeError(
-            f"Expected callable '{phase_name}' or '{generic_name}' in module '{module_path}'."
-        )
+        raise RuntimeError(f"Expected callable '{builder_name}' in module '{module_path}'.")
     return cast(ArtifactBuilder, candidate)
 
 
-build_cdc_artifact = _resolve_artifact_builder(
-    "modules.cdc.service",
-    "build_phase20_cdc_artifact",
-    "build_cdc_artifact",
-)
+build_cdc_artifact = _resolve_artifact_builder("modules.cdc.service", "build_cdc_artifact")
 build_streaming_artifact = _resolve_artifact_builder(
     "modules.streaming.service",
-    "build_phase20_streaming_artifact",
     "build_streaming_artifact",
 )
 build_lakehouse_artifact = _resolve_artifact_builder(
     "modules.lakehouse.service",
-    "build_phase20_lakehouse_artifact",
     "build_lakehouse_artifact",
 )
 build_query_layer_artifact = _resolve_artifact_builder(
     "modules.query_layer.service",
-    "build_phase20_query_layer_artifact",
     "build_query_layer_artifact",
 )
 build_metadata_artifact = _resolve_artifact_builder(
     "modules.metadata.service",
-    "build_phase20_metadata_artifact",
     "build_metadata_artifact",
 )
 build_feature_store_artifact = _resolve_artifact_builder(
     "modules.feature_store.service",
-    "build_phase20_feature_store_artifact",
     "build_feature_store_artifact",
 )
 build_advanced_serving_artifact = _resolve_artifact_builder(
     "modules.advanced_serving.service",
-    "build_phase20_advanced_serving_artifact",
     "build_advanced_serving_artifact",
 )
 

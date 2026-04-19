@@ -5,15 +5,18 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BACKUP_ROOT="$ROOT_DIR/backups"
 
 log() {
-  printf '[INFO] %s\n' "$*"
+  printf '[INFO] %s
+' "$*"
 }
 
 warn() {
-  printf '[WARN] %s\n' "$*" >&2
+  printf '[WARN] %s
+' "$*" >&2
 }
 
 fail() {
-  printf '[ERROR] %s\n' "$*" >&2
+  printf '[ERROR] %s
+' "$*" >&2
   exit 1
 }
 
@@ -31,29 +34,228 @@ load_env() {
   set +a
 }
 
+all_connectors() {
+  printf '%s
+'     csv     database     shopify     woocommerce     adobe_commerce     bigcommerce     prestashop
+}
+
+all_optional_extras() {
+  printf '%s
+'     reporting     feature-store     advanced-serving
+}
+
+profile_default_connectors() {
+  local profile="$1"
+  case "$profile" in
+    lite)
+      printf '%s
+' 'csv'
+      ;;
+    standard)
+      printf '%s
+' 'csv,database,shopify'
+      ;;
+    pro)
+      printf '%s
+' 'csv,database,shopify,woocommerce,adobe_commerce,bigcommerce,prestashop'
+      ;;
+    *)
+      fail "Unsupported profile: $profile"
+      ;;
+  esac
+}
+
+profile_default_extras() {
+  local profile="$1"
+  case "$profile" in
+    lite)
+      printf '%s
+' 'reporting'
+      ;;
+    standard)
+      printf '%s
+' 'reporting'
+      ;;
+    pro)
+      printf '%s
+' 'reporting,feature-store,advanced-serving'
+      ;;
+    *)
+      fail "Unsupported profile: $profile"
+      ;;
+  esac
+}
+
+normalize_connector_list() {
+  local raw="$1"
+  local normalized=''
+  local seen=',' candidate item
+
+  raw="$(printf '%s' "$raw" | tr '[:upper:]' '[:lower:]' | tr ';:' ',,')"
+  IFS=',' read -r -a __connector_items <<< "$raw"
+  for item in "${__connector_items[@]}"; do
+    candidate="$(printf '%s' "$item" | xargs)"
+    case "$candidate" in
+      '')
+        continue
+        ;;
+      db)
+        candidate='database'
+        ;;
+      *)
+        ;;
+    esac
+    if ! all_connectors | grep -Fxq "$candidate"; then
+      fail "Unsupported connector: $candidate"
+    fi
+    case "$seen" in
+      *",${candidate},"*)
+        continue
+        ;;
+      *)
+        seen="${seen}${candidate},"
+        if [ -n "$normalized" ]; then
+          normalized="${normalized},${candidate}"
+        else
+          normalized="$candidate"
+        fi
+        ;;
+    esac
+  done
+
+  if [ -z "$normalized" ]; then
+    fail 'At least one connector must be enabled.'
+  fi
+  printf '%s
+' "$normalized"
+}
+
+normalize_optional_extra_list() {
+  local raw="$1"
+  local normalized=''
+  local seen=',' candidate item
+
+  raw="$(printf '%s' "$raw" | tr '[:upper:]' '[:lower:]' | tr ';:' ',,')"
+  raw="$(printf '%s' "$raw" | xargs)"
+  case "$raw" in
+    ''|none)
+      printf '%s
+' ''
+      return 0
+      ;;
+    *)
+      ;;
+  esac
+
+  IFS=',' read -r -a __extra_items <<< "$raw"
+  for item in "${__extra_items[@]}"; do
+    candidate="$(printf '%s' "$item" | xargs)"
+    case "$candidate" in
+      ''|none)
+        continue
+        ;;
+      feature_store)
+        candidate='feature-store'
+        ;;
+      advanced_serving)
+        candidate='advanced-serving'
+        ;;
+      *)
+        ;;
+    esac
+    if ! all_optional_extras | grep -Fxq "$candidate"; then
+      fail "Unsupported optional extra: $candidate"
+    fi
+    case "$seen" in
+      *",${candidate},"*)
+        continue
+        ;;
+      *)
+        seen="${seen}${candidate},"
+        if [ -n "$normalized" ]; then
+          normalized="${normalized},${candidate}"
+        else
+          normalized="$candidate"
+        fi
+        ;;
+    esac
+  done
+  printf '%s
+' "$normalized"
+}
+
+resolve_enabled_connectors() {
+  local profile="$1"
+  local raw=''
+  if [ -n "${PROFILE_CONNECTORS_OVERRIDE+x}" ]; then
+    raw="$PROFILE_CONNECTORS_OVERRIDE"
+  else
+    load_env
+    raw="${ENABLED_CONNECTORS:-}"
+  fi
+  if [ -z "$raw" ]; then
+    raw="$(profile_default_connectors "$profile")"
+  fi
+  normalize_connector_list "$raw"
+}
+
+resolve_enabled_extras() {
+  local profile="$1"
+  local raw=''
+  if [ -n "${PROFILE_OPTIONAL_EXTRAS_OVERRIDE+x}" ]; then
+    raw="$PROFILE_OPTIONAL_EXTRAS_OVERRIDE"
+  else
+    load_env
+    raw="${ENABLED_OPTIONAL_EXTRAS:-}"
+  fi
+  if [ -z "$raw" ] && [ -z "${PROFILE_OPTIONAL_EXTRAS_OVERRIDE+x}" ]; then
+    raw="$(profile_default_extras "$profile")"
+  fi
+  normalize_optional_extra_list "$raw"
+}
+
+extras_as_lines() {
+  local raw="$1"
+  local item
+  if [ -z "$raw" ]; then
+    return 0
+  fi
+  IFS=',' read -r -a __extras <<< "$raw"
+  for item in "${__extras[@]}"; do
+    if [ -n "$item" ]; then
+      printf '%s
+' "$item"
+    fi
+  done
+}
+
+update_env_value() {
+  local env_path="$1"
+  local key="$2"
+  local value="$3"
+  python3 - "$env_path" "$key" "$value" <<'PY2'
+from pathlib import Path
+import re
+import sys
+
+path = Path(sys.argv[1])
+key = sys.argv[2]
+value = sys.argv[3]
+text = path.read_text(encoding='utf-8') if path.exists() else ''
+pattern = rf'^{re.escape(key)}=.*$'
+line = f'{key}={value}'
+if re.search(pattern, text, flags=re.MULTILINE):
+    text = re.sub(pattern, line, text, flags=re.MULTILINE)
+else:
+    if text and not text.endswith('\n'):
+        text += '\n'
+    text += line + '\n'
+path.write_text(text, encoding='utf-8')
+PY2
+}
+
 ensure_runtime_dirs() {
-  mkdir -p \
-    "$ROOT_DIR/backups" \
-    "$ROOT_DIR/data/uploads" \
-    "$ROOT_DIR/data/artifacts/transforms" \
-    "$ROOT_DIR/data/artifacts/dashboards" \
-    "$ROOT_DIR/data/artifacts/forecasts" \
-    "$ROOT_DIR/data/artifacts/serving" \
-    "$ROOT_DIR/data/artifacts/shipment_risk" \
-    "$ROOT_DIR/data/artifacts/stockout_risk" \
-    "$ROOT_DIR/data/artifacts/reorder" \
-    "$ROOT_DIR/data/artifacts/model_registry" \
-    "$ROOT_DIR/data/artifacts/returns_risk" \
-    "$ROOT_DIR/data/artifacts/monitoring" \
-    "$ROOT_DIR/data/artifacts/monitoring/overrides" \
-    "$ROOT_DIR/data/artifacts/setup/sessions" \
-    "$ROOT_DIR/data/artifacts/pro_platform/cdc" \
-    "$ROOT_DIR/data/artifacts/pro_platform/streaming" \
-    "$ROOT_DIR/data/artifacts/pro_platform/lakehouse" \
-    "$ROOT_DIR/data/artifacts/pro_platform/query_layer" \
-    "$ROOT_DIR/data/artifacts/pro_platform/metadata" \
-    "$ROOT_DIR/data/artifacts/pro_platform/feature_store" \
-    "$ROOT_DIR/data/artifacts/pro_platform/advanced_serving"
+  mkdir -p     "$ROOT_DIR/backups"     "$ROOT_DIR/data/uploads"     "$ROOT_DIR/data/artifacts/transforms"     "$ROOT_DIR/data/artifacts/dashboards"     "$ROOT_DIR/data/artifacts/forecasts"     "$ROOT_DIR/data/artifacts/serving"     "$ROOT_DIR/data/artifacts/shipment_risk"     "$ROOT_DIR/data/artifacts/stockout_risk"     "$ROOT_DIR/data/artifacts/reorder"     "$ROOT_DIR/data/artifacts/model_registry"     "$ROOT_DIR/data/artifacts/returns_risk"     "$ROOT_DIR/data/artifacts/monitoring"     "$ROOT_DIR/data/artifacts/monitoring/overrides"     "$ROOT_DIR/data/artifacts/setup/sessions"     "$ROOT_DIR/data/artifacts/pro_platform/cdc"     "$ROOT_DIR/data/artifacts/pro_platform/streaming"     "$ROOT_DIR/data/artifacts/pro_platform/lakehouse"     "$ROOT_DIR/data/artifacts/pro_platform/query_layer"     "$ROOT_DIR/data/artifacts/pro_platform/metadata"     "$ROOT_DIR/data/artifacts/pro_platform/feature_store"     "$ROOT_DIR/data/artifacts/pro_platform/advanced_serving"
 }
 
 bootstrap_env_file() {
@@ -61,10 +263,10 @@ bootstrap_env_file() {
   local sample_file="$ROOT_DIR/config/samples/${profile}.env"
   if [ ! -f "$ROOT_DIR/.env" ]; then
     cp "$ROOT_DIR/.env.example" "$ROOT_DIR/.env"
-    log "Created .env from .env.example"
+    log 'Created .env from .env.example'
   fi
   if [ -f "$sample_file" ]; then
-    python3 - "$ROOT_DIR/.env" "$sample_file" <<'PY'
+    python3 - "$ROOT_DIR/.env" "$sample_file" <<'PY2'
 from pathlib import Path
 import sys
 
@@ -89,61 +291,105 @@ if missing:
         handle.write('\n# Added from profile sample\n')
         for key, value in missing.items():
             handle.write(f'{key}={value}\n')
-PY
+PY2
   fi
+}
+
+connector_file() {
+  local connector="$1"
+  case "$connector" in
+    csv)
+      printf '%s
+' 'compose/compose.connector_csv.yaml'
+      ;;
+    database)
+      printf '%s
+' 'compose/compose.connector_db.yaml'
+      ;;
+    shopify)
+      printf '%s
+' 'compose/compose.connector_shopify.yaml'
+      ;;
+    woocommerce)
+      printf '%s
+' 'compose/compose.connector_woocommerce.yaml'
+      ;;
+    adobe_commerce)
+      printf '%s
+' 'compose/compose.connector_adobe_commerce.yaml'
+      ;;
+    bigcommerce)
+      printf '%s
+' 'compose/compose.connector_bigcommerce.yaml'
+      ;;
+    prestashop)
+      printf '%s
+' 'compose/compose.connector_prestashop.yaml'
+      ;;
+    *)
+      fail "Unsupported connector: $connector"
+      ;;
+  esac
 }
 
 profile_files() {
   local profile="$1"
+  local connectors
+  local connector
+  connectors="$(resolve_enabled_connectors "$profile")"
   case "$profile" in
     lite)
-      printf '%s\n' \
-        "compose/compose.core.yaml" \
-        "compose/compose.connectors.yaml" \
-        "compose/compose.analytics.yaml"
+      printf '%s
+'         'compose/compose.core.yaml'         'compose/compose.analytics.yaml'
       ;;
     standard)
-      printf '%s\n' \
-        "compose/compose.core.yaml" \
-        "compose/compose.connectors.yaml" \
-        "compose/compose.analytics.yaml" \
-        "compose/compose.ml.yaml" \
-        "compose/compose.monitoring.yaml"
+      printf '%s
+'         'compose/compose.core.yaml'         'compose/compose.analytics.yaml'         'compose/compose.ml.yaml'         'compose/compose.monitoring.yaml'
       ;;
     pro)
-      printf '%s\n' \
-        "compose/compose.core.yaml" \
-        "compose/compose.connectors.yaml" \
-        "compose/compose.analytics.yaml" \
-        "compose/compose.ml.yaml" \
-        "compose/compose.monitoring.yaml" \
-        "compose/compose.cdc.yaml" \
-        "compose/compose.streaming.yaml" \
-        "compose/compose.lakehouse.yaml" \
-        "compose/compose.query.yaml" \
-        "compose/compose.metadata.yaml" \
-        "compose/compose.feature_store.yaml" \
-        "compose/compose.advanced_serving.yaml"
+      printf '%s
+'         'compose/compose.core.yaml'         'compose/compose.analytics.yaml'         'compose/compose.ml.yaml'         'compose/compose.monitoring.yaml'         'compose/compose.cdc.yaml'         'compose/compose.streaming.yaml'         'compose/compose.lakehouse.yaml'         'compose/compose.query.yaml'         'compose/compose.metadata.yaml'         'compose/compose.feature_store.yaml'         'compose/compose.advanced_serving.yaml'
       ;;
     *)
       fail "Unsupported profile: $profile"
       ;;
   esac
+  IFS=',' read -r -a __connectors <<< "$connectors"
+  for connector in "${__connectors[@]}"; do
+    connector_file "$connector"
+  done
+}
+
+profile_files_csv() {
+  local profile="$1"
+  local out=''
+  local file
+  while IFS= read -r file; do
+    if [ -n "$out" ]; then
+      out="${out}:$file"
+    else
+      out="$file"
+    fi
+  done < <(profile_files "$profile")
+  printf '%s
+' "$out"
 }
 
 compose_cmd() {
   local profile="$1"
+  local file
   local -a args=(compose)
   while IFS= read -r file; do
     args+=( -f "$ROOT_DIR/$file" )
   done < <(profile_files "$profile")
-  printf '%s\0' "${args[@]}"
+  printf '%s ' "${args[@]}"
 }
 
 run_compose() {
   local profile="$1"
   shift
   local -a args=()
+  local item
   while IFS= read -r -d '' item; do
     args+=("$item")
   done < <(compose_cmd "$profile")
@@ -174,11 +420,7 @@ postgres_dump() {
     return 0
   fi
   if command -v pg_dump >/dev/null 2>&1; then
-    PGPASSWORD="${POSTGRES_PASSWORD:-postgres}" pg_dump \
-      -h "${POSTGRES_HOST:-localhost}" \
-      -p "${POSTGRES_PORT:-5433}" \
-      -U "${POSTGRES_USER:-postgres}" \
-      -d "${POSTGRES_DB:-retailops}" > "$output_file"
+    PGPASSWORD="${POSTGRES_PASSWORD:-postgres}" pg_dump       -h "${POSTGRES_HOST:-localhost}"       -p "${POSTGRES_PORT:-5433}"       -U "${POSTGRES_USER:-postgres}"       -d "${POSTGRES_DB:-retailops}" > "$output_file"
     return 0
   fi
   return 1
@@ -193,11 +435,7 @@ postgres_restore() {
     return 0
   fi
   if command -v psql >/dev/null 2>&1; then
-    PGPASSWORD="${POSTGRES_PASSWORD:-postgres}" psql \
-      -h "${POSTGRES_HOST:-localhost}" \
-      -p "${POSTGRES_PORT:-5433}" \
-      -U "${POSTGRES_USER:-postgres}" \
-      -d "${POSTGRES_DB:-retailops}" < "$input_file"
+    PGPASSWORD="${POSTGRES_PASSWORD:-postgres}" psql       -h "${POSTGRES_HOST:-localhost}"       -p "${POSTGRES_PORT:-5433}"       -U "${POSTGRES_USER:-postgres}"       -d "${POSTGRES_DB:-retailops}" < "$input_file"
     return 0
   fi
   return 1
@@ -205,14 +443,16 @@ postgres_restore() {
 
 apply_sql_migrations() {
   local profile="$1"
-  load_env
   local -a migration_files=()
+  local file
+  load_env
+
   while IFS= read -r file; do
     migration_files+=("$file")
   done < <(find "$ROOT_DIR/core/db/migrations" -maxdepth 1 -type f -name '*.sql' | sort)
 
   if [ ${#migration_files[@]} -eq 0 ]; then
-    warn "No SQL migrations were found."
+    warn 'No SQL migrations were found.'
     return 0
   fi
 
@@ -227,15 +467,10 @@ apply_sql_migrations() {
   if command -v psql >/dev/null 2>&1; then
     for file in "${migration_files[@]}"; do
       log "Applying migration $(basename "$file") through local psql"
-      PGPASSWORD="${POSTGRES_PASSWORD:-postgres}" psql \
-        -v ON_ERROR_STOP=1 \
-        -h "${POSTGRES_HOST:-localhost}" \
-        -p "${POSTGRES_PORT:-5433}" \
-        -U "${POSTGRES_USER:-postgres}" \
-        -d "${POSTGRES_DB:-retailops}" < "$file"
+      PGPASSWORD="${POSTGRES_PASSWORD:-postgres}" psql         -v ON_ERROR_STOP=1         -h "${POSTGRES_HOST:-localhost}"         -p "${POSTGRES_PORT:-5433}"         -U "${POSTGRES_USER:-postgres}"         -d "${POSTGRES_DB:-retailops}" < "$file"
     done
     return 0
   fi
 
-  warn "Skipping SQL migration execution because neither Docker nor psql is available."
+  warn 'Skipping SQL migration execution because neither Docker nor psql is available.'
 }

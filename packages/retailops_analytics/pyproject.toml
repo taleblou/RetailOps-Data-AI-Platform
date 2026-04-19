@@ -1,7 +1,7 @@
 [project]
 name = "retailops-analytics"
 version = "0.1.0"
-description = "Add your description here"
+description = "Reusable analytics and KPI distribution workspace for RetailOps."
 readme = "README.md"
 authors = [
     { name = "Morteza Taleblou", email = "morteza_taleblou@yahoo.com" }

@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       core.transformations
+# File:         service.py
+# Path:         core/transformations/service.py
+#
+# Summary:      Implements the transformations service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for transformations workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: TransformDailyMetricArtifact, TransformArtifact
+#   - Key APIs: run_first_transform
+#   - Dependencies: __future__, csv, json, uuid, dataclasses, datetime, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv

@@ -1,16 +1,41 @@
-from __future__ import annotations
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.cdc
+# File:         schemas.py
+# Path:         modules/cdc/schemas.py
+#
+# Summary:      Defines schemas for CDC deployment bundles.
+# Purpose:      Standardizes structured CDC payloads exposed through the Pro platform API.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
 
-from typing import Any
+from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from modules.common.pro_schemas import PlatformExtensionDeploymentFields
 
-class Phase20CdcBlueprintResponse(BaseModel):
+
+class CdcRouteResponse(BaseModel):
+    source_table: str
+    destination_topic: str
+    storage_target: str
+
+
+class CdcBlueprintResponse(PlatformExtensionDeploymentFields):
     module_name: str
-    phase: int
+    platform_surface: str
     status: str
     generated_at: str
     artifact_path: str
+    module_version: str
     connector_name: str
     source_database: str
     kafka_compatible_runtime: str
@@ -18,7 +43,7 @@ class Phase20CdcBlueprintResponse(BaseModel):
     snapshot_mode: str
     replication_slot: str
     publication_name: str
-    management_actions: list[str] = Field(default_factory=list)
-    emitted_topics: list[str] = Field(default_factory=list)
+    tables: list[str] = Field(default_factory=list)
+    routes: list[CdcRouteResponse] = Field(default_factory=list)
+    connector_properties: dict[str, str | bool] = Field(default_factory=dict)
     config_templates: dict[str, str] = Field(default_factory=dict)
-    connector_properties: dict[str, Any] = Field(default_factory=dict)

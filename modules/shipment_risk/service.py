@@ -1,3 +1,28 @@
+# Project:      RetailOps Data & AI Platform
+# Module:       modules.shipment_risk
+# File:         service.py
+# Path:         modules/shipment_risk/service.py
+#
+# Summary:      Implements the shipment risk service layer and business logic.
+# Purpose:      Encapsulates core processing and artifact generation for shipment risk workflows.
+# Scope:        internal
+# Status:       stable
+#
+# Author(s):    Morteza Taleblou
+# Website:      https://taleblou.ir/
+# Repository:   https://github.com/taleblou/RetailOps-Data-AI-Platform
+#
+# License:      Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+# Copyright:    (c) 2025 Morteza Taleblou
+#
+# Notes:
+#   - Main types: ShipmentRiskArtifactNotFoundError, ShipmentRow, ShipmentContext, ShipmentRiskMetricsArtifact, ShipmentRiskPredictionArtifact, ShipmentRiskSummaryArtifact, ...
+#   - Key APIs: run_shipment_risk_analysis, get_or_create_shipment_risk_artifact, get_open_order_predictions, get_open_order_prediction, predict_shipment_delay, build_manual_review_decision, ...
+#   - Dependencies: __future__, csv, json, uuid, dataclasses, datetime, ...
+#   - Constraints: File-system paths and serialized artifact formats must remain stable for downstream consumers.
+#   - Compatibility: Python 3.11+ and repository-supported runtime dependencies.
+
 from __future__ import annotations
 
 import csv
@@ -8,11 +33,11 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-PHASE11_MODEL_VERSION = "phase11-shipment-risk-v1"
-PHASE11_THRESHOLD = 0.55
+SHIPMENT_RISK_MODEL_VERSION = "shipment-risk-v1"
+SHIPMENT_RISK_THRESHOLD = 0.55
 OPEN_STATUSES = {"processing", "pending", "queued", "in_transit", "ready_to_ship"}
 HIGH_SIGNAL_STATUSES = {"delayed", "exception"}
-PHASE11_ARTIFACT_SUFFIX = "phase11"
+SHIPMENT_RISK_ARTIFACT_SUFFIX = "shipment_risk"
 
 
 class ShipmentRiskArtifactNotFoundError(FileNotFoundError):
@@ -498,7 +523,7 @@ def _build_prediction(row: ShipmentRow, context: ShipmentContext) -> ShipmentRis
         manual_review_required=manual_review_required,
         manual_review_reason=manual_review_reason,
         feature_timestamp=context.feature_timestamp,
-        model_version=PHASE11_MODEL_VERSION,
+        model_version=SHIPMENT_RISK_MODEL_VERSION,
         overdue_days=context.overdue_days,
         explanation_summary=explanation_summary,
     )
@@ -597,7 +622,7 @@ def _evaluation_metrics(
         )
     scores = [item[0] for item in scored_items]
     labels = [item[1] for item in scored_items]
-    precision, recall = _precision_recall(scores, labels, PHASE11_THRESHOLD)
+    precision, recall = _precision_recall(scores, labels, SHIPMENT_RISK_THRESHOLD)
     return ShipmentRiskMetricsArtifact(
         roc_auc=_roc_auc(scores, labels),
         pr_auc=_pr_auc(scores, labels),
@@ -651,7 +676,7 @@ def _prepare_shipments(rows: list[ShipmentRow]) -> list[_PreparedShipment]:
     return prepared
 
 
-def run_phase11_shipment_risk(*args: Any, **kwargs: Any) -> ShipmentRiskArtifact:
+def run_shipment_risk_analysis(*args: Any, **kwargs: Any) -> ShipmentRiskArtifact:
     upload_id = _resolve_upload_id(args, kwargs)
     uploads_dir = _resolve_path(kwargs.get("uploads_dir"), default="data/uploads")
     artifact_dir = _resolve_path(kwargs.get("artifact_dir"), default="data/artifacts/shipment_risk")
@@ -679,7 +704,7 @@ def run_phase11_shipment_risk(*args: Any, **kwargs: Any) -> ShipmentRiskArtifact
     summary = ShipmentRiskSummaryArtifact(
         open_orders=len(open_order_predictions),
         high_risk_orders=sum(
-            1 for item in open_order_predictions if item.probability >= PHASE11_THRESHOLD
+            1 for item in open_order_predictions if item.probability >= SHIPMENT_RISK_THRESHOLD
         ),
         manual_review_orders=sum(
             1 for item in open_order_predictions if item.manual_review_required
@@ -691,13 +716,13 @@ def run_phase11_shipment_risk(*args: Any, **kwargs: Any) -> ShipmentRiskArtifact
 
     shipment_risk_run_id = f"sr_{uuid.uuid4().hex[:12]}"
     artifact_path = (
-        artifact_dir / f"{upload_id}_{shipment_risk_run_id}_{PHASE11_ARTIFACT_SUFFIX}.json"
+        artifact_dir / f"{upload_id}_{shipment_risk_run_id}_{SHIPMENT_RISK_ARTIFACT_SUFFIX}.json"
     )
     artifact = ShipmentRiskArtifact(
         shipment_risk_run_id=shipment_risk_run_id,
         upload_id=upload_id,
         generated_at=datetime.now(UTC).isoformat(),
-        model_version=PHASE11_MODEL_VERSION,
+        model_version=SHIPMENT_RISK_MODEL_VERSION,
         summary=summary,
         evaluation_metrics=evaluation_metrics,
         open_orders=open_order_predictions,
@@ -710,7 +735,7 @@ def run_phase11_shipment_risk(*args: Any, **kwargs: Any) -> ShipmentRiskArtifact
     return artifact
 
 
-def get_or_create_phase11_artifact(
+def get_or_create_shipment_risk_artifact(
     *,
     upload_id: str,
     uploads_dir: Path,
@@ -718,7 +743,7 @@ def get_or_create_phase11_artifact(
     refresh: bool = False,
 ) -> dict[str, Any]:
     artifact_dir.mkdir(parents=True, exist_ok=True)
-    pattern = f"{upload_id}_*_phase11.json"
+    pattern = f"{upload_id}_*_shipment_risk.json"
     if not refresh:
         existing = sorted(
             artifact_dir.glob(pattern),
@@ -727,7 +752,7 @@ def get_or_create_phase11_artifact(
         )
         if existing:
             return json.loads(existing[0].read_text(encoding="utf-8"))
-    artifact = run_phase11_shipment_risk(
+    artifact = run_shipment_risk_analysis(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -743,7 +768,7 @@ def get_open_order_predictions(
     refresh: bool = False,
     limit: int | None = None,
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase11_artifact(
+    artifact = get_or_create_shipment_risk_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,
@@ -776,7 +801,7 @@ def get_open_order_prediction(
     artifact_dir: Path,
     refresh: bool = False,
 ) -> dict[str, Any]:
-    artifact = get_or_create_phase11_artifact(
+    artifact = get_or_create_shipment_risk_artifact(
         upload_id=upload_id,
         uploads_dir=uploads_dir,
         artifact_dir=artifact_dir,

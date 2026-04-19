@@ -1,7 +1,7 @@
 [project]
 name = "retailops-monitoring"
 version = "0.1.0"
-description = "Add your description here"
+description = "Monitoring and governance distribution workspace for RetailOps model operations."
 readme = "README.md"
 authors = [
     { name = "Morteza Taleblou", email = "morteza_taleblou@yahoo.com" }
