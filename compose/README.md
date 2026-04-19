@@ -1,22 +1,64 @@
 # Compose Profiles
 
-The `compose/` directory contains Docker Compose overlays for assembling RetailOps environments from reusable capability slices instead of one monolithic deployment file.
+The `compose/` directory contains Docker Compose overlays split by capability slice.
 
-## What lives here
+## Core overlays
 
-- `compose.core.yaml` for shared base services.
-- `compose.connectors.yaml` for source integration services.
-- `compose.analytics.yaml` for dashboarding and reporting services.
-- `compose.ml.yaml` for model lifecycle and related runtime services.
-- `compose.monitoring.yaml` for observability and governance services.
-- `compose.cdc.yaml`, `compose.streaming.yaml`, `compose.lakehouse.yaml`, `compose.metadata.yaml`, `compose.feature_store.yaml`, `compose.query.yaml`, and `compose.advanced_serving.yaml` for optional platform extensions.
+- `compose.core.yaml` base services that every profile needs
+- `compose.analytics.yaml` dashboarding and reporting services
+- `compose.ml.yaml` MLflow-oriented lifecycle services
+- `compose.monitoring.yaml` observability and governance services
 
-## Usage model
+## Connector overlays
 
-Operators combine these overlays with environment settings from `config/` and helper scripts from `scripts/`. This keeps deployment profiles modular and lets teams enable only the components they need.
+Each connector has its own overlay file:
 
-## Maintenance notes
+- `compose.connector_csv.yaml`
+- `compose.connector_db.yaml`
+- `compose.connector_shopify.yaml`
+- `compose.connector_woocommerce.yaml`
+- `compose.connector_adobe_commerce.yaml`
+- `compose.connector_bigcommerce.yaml`
+- `compose.connector_prestashop.yaml`
 
-- Keep service names, ports, volumes, and environment variables aligned with `config/` and `docs/operations/`.
-- Add new overlays as focused capability slices instead of expanding unrelated compose files.
-- Keep extension overlays optional. The base stack should stay usable without them.
+`compose.connectors.yaml` still exists as an aggregate overlay for full-stack scenarios, but the normal install path now selects connector overlays one by one.
+
+## Platform-extension overlays
+
+- `compose.cdc.yaml`
+- `compose.streaming.yaml`
+- `compose.lakehouse.yaml`
+- `compose.query.yaml`
+- `compose.metadata.yaml`
+- `compose.feature_store.yaml`
+- `compose.advanced_serving.yaml`
+
+## How profiles are assembled
+
+- Lite uses the core and analytics overlays plus the selected connector overlays.
+- Standard adds ML and monitoring overlays.
+- Pro adds the optional data-platform overlays.
+
+The installer writes the resolved overlay list into `COMPOSE_FILES` and uses the same resolution logic for `docker compose` commands.
+
+## Commands
+
+```bash
+./scripts/install.sh --profile lite --connectors csv
+./scripts/install.sh --profile standard --connectors csv,database,shopify
+./scripts/install.sh --profile pro --connectors woocommerce
+python scripts/validate_compose_profiles.py
+```
+
+## Validation expectations
+
+- Every overlay must contain a valid `services` mapping.
+- Every referenced Dockerfile must exist.
+- Profile sample files must expose connector and optional-extra settings.
+- Optional service Dockerfiles should install the matching Python extras.
+
+## Maintenance rules
+
+- Keep services isolated by capability instead of expanding unrelated overlays.
+- Keep ports, volumes, env files, and service names aligned with `config/` and `scripts/`.
+- Add new connector services as separate `compose.connector_*.yaml` files.
