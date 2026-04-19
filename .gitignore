@@ -42,3 +42,4 @@ data/artifacts/**
 # Local dbt metadata
 core/transformations/.user.yml
 core/transformations/profiles/.user.yml
+*.zip
