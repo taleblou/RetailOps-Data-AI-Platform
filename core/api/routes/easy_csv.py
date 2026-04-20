@@ -39,6 +39,7 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile, status
 from fastapi.responses import HTMLResponse, RedirectResponse
+from core.api.error_logging import error_log_css, render_error_log_panel
 
 from core.api.schemas.easy_csv import (
     EasyCsvDashboardCard,
@@ -759,9 +760,9 @@ def _wizard_shell(title: str, body: str) -> HTMLResponse:
         "<head>"
         "<meta charset='utf-8'>"
         f"<title>{html.escape(title)}</title>"
-        f"<style>{WIZARD_CSS}</style>"
+        f"<style>{WIZARD_CSS}\n{error_log_css()}</style>"
         "</head>"
-        f"<body>{body}</body>"
+        f"<body>{body}{render_error_log_panel(title='Recent page and API errors')}</body>"
         "</html>"
     )
     return HTMLResponse(page)

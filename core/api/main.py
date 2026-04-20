@@ -30,9 +30,13 @@ from __future__ import annotations
 from importlib import import_module
 from typing import Any
 
-from fastapi import FastAPI
+import uuid
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import HTMLResponse, JSONResponse
 
 from config.settings import get_settings
+from core.api.error_logging import is_html_request, log_error, render_error_page
 from core.ingestion.base.raw_loader import RawLoader
 from core.ingestion.base.registry import build_default_registry
 from core.ingestion.base.repository import MemoryRepository, RepositoryProtocol, SqlRepository
@@ -48,6 +52,7 @@ OPTIONAL_ROUTER_DEPENDENCIES: dict[str, frozenset[str]] = {
 ROUTER_PATHS: tuple[str, ...] = (
     "core.api.routes.sources:router",
     "core.api.routes.easy_csv:router",
+    "core.api.routes.error_log:router",
     "modules.analytics_kpi.router:router",
     "modules.customer_cohort_intelligence.router:router",
     "modules.customer_churn_intelligence.router:router",
@@ -133,6 +138,13 @@ def create_app(repository: RepositoryProtocol | None = None) -> FastAPI:
     app.state.state_store = StateStore(repo)
     app.state.raw_loader = RawLoader(repo)
     app.state.registry = build_default_registry(settings.enabled_connector_values)
+    @app.middleware("http")
+    async def assign_request_id(request: Request, call_next):
+        request.state.request_id = str(uuid.uuid4())[:8]
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = request.state.request_id
+        return response
+
     skipped_optional_routers: list[str] = []
     for router_path in ROUTER_PATHS:
         router = _load_router(router_path)
@@ -141,6 +153,63 @@ def create_app(repository: RepositoryProtocol | None = None) -> FastAPI:
             continue
         app.include_router(router)
     app.state.skipped_optional_routers = skipped_optional_routers
+
+    @app.exception_handler(HTTPException)
+    async def app_http_exception_handler(request: Request, exc: HTTPException):
+        detail_text = str(exc.detail)
+        if exc.status_code >= 500:
+            entry = log_error(
+                request=request,
+                title="HTTP application error",
+                detail=detail_text,
+                status_code=exc.status_code,
+                context={"handler": "http_exception"},
+            )
+        else:
+            entry = None
+        if is_html_request(request):
+            page = render_error_page(
+                title="RetailOps page error",
+                detail=detail_text,
+                request=request,
+                status_code=exc.status_code,
+                entry=entry,
+            )
+            return HTMLResponse(page, status_code=exc.status_code)
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "detail": exc.detail,
+                "request_id": getattr(request.state, "request_id", "n/a"),
+            },
+        )
+
+    @app.exception_handler(Exception)
+    async def app_unhandled_exception_handler(request: Request, exc: Exception):
+        entry = log_error(
+            request=request,
+            title="Unhandled application exception",
+            detail=str(exc) or "Internal Server Error",
+            status_code=500,
+            exc=exc,
+            context={"handler": "exception"},
+        )
+        if is_html_request(request):
+            page = render_error_page(
+                title="RetailOps internal server error",
+                detail=str(exc) or "Internal Server Error",
+                request=request,
+                status_code=500,
+                entry=entry,
+            )
+            return HTMLResponse(page, status_code=500)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Internal Server Error",
+                "request_id": getattr(request.state, "request_id", "n/a"),
+            },
+        )
 
     @app.get("/health", tags=["health"])
     def health() -> dict[str, str]:

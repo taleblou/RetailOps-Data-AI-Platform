@@ -30,6 +30,7 @@ import yaml
 from fastapi.routing import APIRoute
 
 from config.settings import get_settings
+from core.api.error_logging import error_log_css, render_error_log_panel
 from modules.common.upload_utils import to_float, to_text
 
 PAGE_REGISTRY: list[tuple[str, str, str]] = [
@@ -1255,8 +1256,8 @@ def render_dashboard_html(
         "<!doctype html><html lang='en'><head><meta charset='utf-8'>"
         f"<title>{_escape(page_title)} · RetailOps Dashboard</title>"
         "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-        f"<style>{_layout_css()}</style></head><body>"
+        f"<style>{_layout_css()}\n{error_log_css()}</style></head><body>"
         f"<div class='shell'>{_sidebar(upload_id, active_page)}<main class='main'>"
-        f"{_topbar(page_title, page_desc, upload_id)}{content}</main></div>"
+        f"{_topbar(page_title, page_desc, upload_id)}{content}{render_error_log_panel(title='Recent page and API errors')}</main></div>"
         f"{_layout_script()}</body></html>"
     )
