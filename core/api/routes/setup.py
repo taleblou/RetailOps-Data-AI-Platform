@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import html
 import json
+import logging
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
@@ -77,6 +78,21 @@ RUN_SETUP_FIRST_TRANSFORM = run_setup_first_transform
 ENABLE_SETUP_MODULES = enable_setup_modules
 RUN_SETUP_FIRST_TRAINING = run_setup_first_training
 PUBLISH_SETUP_DASHBOARDS = publish_setup_dashboards
+
+logger = logging.getLogger(__name__)
+
+
+def _load_session_response_or_404(session_id: str) -> dict[str, Any]:
+    try:
+        return GET_SETUP_SESSION(session_id=session_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Failed to load setup session %s.", session_id)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Setup session was not found: {session_id}",
+        ) from exc
 
 
 def _repository(request: Request) -> RepositoryProtocol:
@@ -289,10 +305,7 @@ def create_session(request: SetupSessionCreateRequest) -> dict[str, Any]:
 
 @router.get("/api/v1/setup/sessions/{session_id}", response_model=SetupSessionResponse)
 def get_session(session_id: str) -> dict[str, Any]:
-    try:
-        return GET_SETUP_SESSION(session_id=session_id)
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    return _load_session_response_or_404(session_id)
 
 
 @router.post("/api/v1/setup/sessions/{session_id}/store", response_model=SetupSessionResponse)
@@ -449,10 +462,15 @@ def setup_wizard_start(
 
 @router.get("/setup/sessions/{session_id}/wizard", response_class=HTMLResponse)
 def setup_wizard_detail(session_id: str, message: str | None = None) -> HTMLResponse:
+    session_payload = _load_session_response_or_404(session_id)
     try:
-        session = SetupSessionResponse.model_validate(GET_SETUP_SESSION(session_id=session_id))
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        session = SetupSessionResponse.model_validate(session_payload)
+    except Exception as exc:
+        logger.exception("Failed to validate setup session %s for wizard rendering.", session_id)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Setup session was not found: {session_id}",
+        ) from exc
 
     flash = f"<div class='flash'>{html.escape(message)}</div>" if message else ""
     escaped_session_id = html.escape(session.session_id)

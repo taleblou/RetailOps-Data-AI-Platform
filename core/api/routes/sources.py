@@ -29,6 +29,7 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -74,6 +75,9 @@ RepositoryDep = Annotated[RepositoryProtocol, Depends(_repository)]
 StateStoreDep = Annotated[StateStore, Depends(_state_store)]
 RawLoaderDep = Annotated[RawLoader, Depends(_raw_loader)]
 RegistryDep = Annotated[ConnectorRegistry, Depends(_registry)]
+
+
+logger = logging.getLogger(__name__)
 
 
 def _build_connector(
@@ -214,13 +218,25 @@ def get_source_status(
     source_id: int,
     repository: RepositoryDep,
 ) -> SourceStatusResponse:
-    source = repository.get_source(source_id)
+    try:
+        source = repository.get_source(source_id)
+    except Exception as exc:
+        logger.exception("Failed to load source definition for source_id=%s.", source_id)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Source not found.",
+        ) from exc
     if source is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Source not found.",
         )
-    return SourceStatusResponse(source=source, state=repository.get_state(source_id))
+    try:
+        state = repository.get_state(source_id)
+    except Exception:
+        logger.exception("Failed to load connector state for source_id=%s.", source_id)
+        state = None
+    return SourceStatusResponse(source=source, state=state)
 
 
 @router.get("/{source_id}/errors", response_model=list[SourceErrorRecord])
@@ -228,10 +244,21 @@ def get_source_errors(
     source_id: int,
     repository: RepositoryDep,
 ) -> list[SourceErrorRecord]:
-    source = repository.get_source(source_id)
+    try:
+        source = repository.get_source(source_id)
+    except Exception as exc:
+        logger.exception("Failed to load source definition for source_id=%s.", source_id)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Source not found.",
+        ) from exc
     if source is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Source not found.",
         )
-    return repository.list_errors(source_id)
+    try:
+        return repository.list_errors(source_id)
+    except Exception:
+        logger.exception("Failed to load connector errors for source_id=%s.", source_id)
+        return []

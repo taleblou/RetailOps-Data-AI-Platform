@@ -148,8 +148,16 @@ def _parse_datetime(value: Any) -> datetime | None:
     if value is None or isinstance(value, datetime):
         return value
     if isinstance(value, str):
-        return datetime.fromisoformat(value)
-    raise TypeError(f"Unsupported datetime value: {value!r}")
+        text = value.strip()
+        if not text:
+            return None
+        for candidate in (text, text.replace("Z", "+00:00")):
+            try:
+                return datetime.fromisoformat(candidate)
+            except ValueError:
+                continue
+        return None
+    return None
 
 
 def _require_datetime(value: Any) -> datetime:
@@ -161,7 +169,14 @@ def _require_datetime(value: Any) -> datetime:
 
 def _normalize_json(value: Any) -> dict[str, Any]:
     if isinstance(value, str):
-        return json.loads(value)
+        text = value.strip()
+        if not text:
+            return {}
+        try:
+            loaded = json.loads(text)
+        except json.JSONDecodeError:
+            return {}
+        return loaded if isinstance(loaded, dict) else {}
     if isinstance(value, dict):
         return value
     return {}
@@ -427,14 +442,16 @@ class SqlRepository:
         if values is None:
             return None
 
+        created_at = _parse_datetime(values.get("created_at")) or now_utc()
+        updated_at = _parse_datetime(values.get("updated_at")) or created_at
         return SourceRecord(
             source_id=int(values["source_id"]),
             name=str(values["name"]),
             type=SourceType(values["type"]),
             status=SourceStatus(values["status"]),
             config=_normalize_json(values["config_json"]),
-            created_at=_require_datetime(values["created_at"]),
-            updated_at=_require_datetime(values["updated_at"]),
+            created_at=created_at,
+            updated_at=updated_at,
         )
 
     def update_source_status(self, source_id: int, status: SourceStatus) -> None:
@@ -521,12 +538,12 @@ class SqlRepository:
 
         return ConnectorState(
             source_id=int(values["source_id"]),
-            last_sync_at=_parse_datetime(values["last_sync_at"]),
-            cursor_value=values["cursor_value"],
-            error_count=int(values["error_count"] or 0),
-            retry_count=int(values["retry_count"] or 0),
-            last_error=values["last_error"],
-            last_run_status=values["last_run_status"],
+            last_sync_at=_parse_datetime(values.get("last_sync_at")),
+            cursor_value=values.get("cursor_value"),
+            error_count=int(values.get("error_count") or 0),
+            retry_count=int(values.get("retry_count") or 0),
+            last_error=values.get("last_error"),
+            last_run_status=values.get("last_run_status"),
         )
 
     def record_error(
@@ -585,8 +602,8 @@ class SqlRepository:
                     source_id=int(item["source_id"]),
                     error_type=str(item["error_type"]),
                     message=str(item["message"]),
-                    details=_normalize_json(item["details_json"]),
-                    created_at=_require_datetime(item["created_at"]),
+                    details=_normalize_json(item.get("details_json")),
+                    created_at=_parse_datetime(item.get("created_at")) or now_utc(),
                 )
             )
         return output
