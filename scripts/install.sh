@@ -10,6 +10,7 @@ START_STACK=1
 RUN_SYNC=1
 CONNECTORS_OVERRIDE=""
 OPTIONAL_EXTRAS_OVERRIDE=""
+PYTHON_SCOPE="all"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -32,6 +33,10 @@ while [ $# -gt 0 ]; do
     --list-extras)
       all_optional_extras
       exit 0
+      ;;
+    --profile-scoped-python)
+      PYTHON_SCOPE="profile"
+      shift
       ;;
     --no-docker)
       START_STACK=0
@@ -76,20 +81,42 @@ if [ -n "$PROFILE_OPTIONAL_EXTRAS_OVERRIDE" ]; then
 else
   log "Enabled optional extras: none"
 fi
+log "Python dependency scope: $PYTHON_SCOPE"
 
 if [ "$RUN_SYNC" -eq 1 ]; then
   if uv_ready; then
-    log "Installing Python dependencies with uv"
-    UV_EXTRA_ARGS=()
-    while IFS= read -r extra; do
-      if [ -n "$extra" ]; then
-        UV_EXTRA_ARGS+=(--extra "$extra")
-      fi
-    done < <(extras_as_lines "$PROFILE_OPTIONAL_EXTRAS_OVERRIDE")
-    (cd "$ROOT_DIR" && uv sync "${UV_EXTRA_ARGS[@]}")
+    if [ "$PYTHON_SCOPE" = "all" ]; then
+      log "Installing the full Python dependency set with uv (--all-extras --dev)"
+      (cd "$ROOT_DIR" && uv sync --all-extras --dev)
+    else
+      log "Installing profile-scoped Python dependencies with uv"
+      UV_EXTRA_ARGS=()
+      while IFS= read -r extra; do
+        if [ -n "$extra" ]; then
+          UV_EXTRA_ARGS+=(--extra "$extra")
+        fi
+      done < <(extras_as_lines "$PROFILE_OPTIONAL_EXTRAS_OVERRIDE")
+      (cd "$ROOT_DIR" && uv sync --dev "${UV_EXTRA_ARGS[@]}")
+    fi
   else
-    warn "uv is not installed. Skipping dependency installation."
+    python_cmd="$(find_python_cmd || true)"
+    if [ -z "$python_cmd" ]; then
+      fail "Neither uv nor Python 3.12+ is available. Install uv or Python 3.12+ and rerun the installer."
+    fi
+    assert_python_compatible "$python_cmd"
+    log "uv is not installed. Creating a local .venv and installing requirements-all.txt with pip"
+    if [ ! -x "$ROOT_DIR/.venv/bin/python" ]; then
+      "$python_cmd" -m venv "$ROOT_DIR/.venv"
+    fi
+    "$ROOT_DIR/.venv/bin/python" -m pip install --upgrade pip
+    "$ROOT_DIR/.venv/bin/python" -m pip install -r "$ROOT_DIR/requirements-all.txt"
   fi
+
+  log "Verifying imported third-party modules against requirements-all.txt"
+  run_repo_python "$ROOT_DIR/scripts/check_python_imports.py" \
+    --root "$ROOT_DIR" \
+    --requirements-file "$ROOT_DIR/requirements-all.txt" \
+    --strict
 fi
 
 if [ "$START_STACK" -eq 1 ]; then
@@ -97,7 +124,7 @@ if [ "$START_STACK" -eq 1 ]; then
     log "Starting Docker Compose profile: $PROFILE"
     run_compose "$PROFILE" up -d
   else
-    warn "Docker is not available. The files are ready, but containers were not started."
+    fail "Docker is required to start the stack. Install Docker and Docker Compose, or rerun with --no-docker."
   fi
 fi
 

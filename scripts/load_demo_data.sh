@@ -23,7 +23,7 @@ ensure_runtime_dirs
 bootstrap_env_file "standard"
 
 log "Generating demo artifacts for upload_id '$UPLOAD_ID'"
-python3 - "$ROOT_DIR" "$UPLOAD_ID" <<'PY'
+run_repo_python - "$ROOT_DIR" "$UPLOAD_ID" <<'PY'
 from __future__ import annotations
 
 import json

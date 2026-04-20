@@ -382,17 +382,17 @@ compose_cmd() {
   while IFS= read -r file; do
     args+=( -f "$ROOT_DIR/$file" )
   done < <(profile_files "$profile")
-  printf '%s ' "${args[@]}"
+  printf '%s\n' "${args[@]}"
 }
 
 run_compose() {
   local profile="$1"
   shift
-  local -a args=()
-  local item
-  while IFS= read -r -d '' item; do
-    args+=("$item")
-  done < <(compose_cmd "$profile")
+  local -a args=(compose)
+  local file
+  while IFS= read -r file; do
+    args+=( -f "$ROOT_DIR/$file" )
+  done < <(profile_files "$profile")
   docker "${args[@]}" "$@"
 }
 
@@ -402,6 +402,54 @@ docker_ready() {
 
 uv_ready() {
   command -v uv >/dev/null 2>&1
+}
+
+
+find_python_cmd() {
+  if command -v python3 >/dev/null 2>&1; then
+    printf '%s\n' 'python3'
+    return 0
+  fi
+  if command -v python >/dev/null 2>&1; then
+    printf '%s\n' 'python'
+    return 0
+  fi
+  return 1
+}
+
+assert_python_compatible() {
+  local python_cmd="$1"
+  "$python_cmd" - <<'PY2'
+import sys
+if sys.version_info < (3, 12):
+    raise SystemExit(
+        f"Python 3.12+ is required, but {sys.version.split()[0]} was found."
+    )
+PY2
+}
+
+run_repo_python() {
+  if [ -n "${VIRTUAL_ENV:-}" ] && [ -x "$VIRTUAL_ENV/bin/python" ]; then
+    "$VIRTUAL_ENV/bin/python" "$@"
+    return 0
+  fi
+  if [ -x "$ROOT_DIR/.venv/bin/python" ]; then
+    "$ROOT_DIR/.venv/bin/python" "$@"
+    return 0
+  fi
+  if uv_ready; then
+    (cd "$ROOT_DIR" && uv run python "$@")
+    return 0
+  fi
+  if command -v python3 >/dev/null 2>&1; then
+    python3 "$@"
+    return 0
+  fi
+  if command -v python >/dev/null 2>&1; then
+    python "$@"
+    return 0
+  fi
+  fail 'No usable Python interpreter was found. Install Python 3.12+ and rerun the command.'
 }
 
 latest_backup_dir() {

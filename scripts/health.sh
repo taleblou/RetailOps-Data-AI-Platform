@@ -5,8 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/common.sh"
 
-PROFILE="standard"
 load_env
+PROFILE="${APP_PROFILE:-lite}"
 
 api_port="${API_PORT:-8000}"
 health_url="http://127.0.0.1:${api_port}/health"
@@ -30,10 +30,15 @@ for required in \
   fi
 done
 
-if python3 - <<PY >/dev/null 2>&1
+if run_repo_python - <<PY2 >/dev/null 2>&1
+import json
 import urllib.request
-urllib.request.urlopen('$health_url', timeout=2)
-PY
+
+with urllib.request.urlopen('$health_url', timeout=2) as response:
+    payload = json.loads(response.read().decode('utf-8'))
+    if payload.get('status') != 'ok':
+        raise SystemExit('unexpected health payload')
+PY2
 then
   log "API health endpoint is reachable at $health_url"
 else
