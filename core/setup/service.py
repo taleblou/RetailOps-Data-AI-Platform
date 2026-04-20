@@ -122,6 +122,58 @@ def _initial_steps() -> dict[str, dict[str, Any]]:
     return {key: _step_template(key, label) for key, label in STEP_DEFINITIONS}
 
 
+def _normalize_steps(steps: Any) -> dict[str, dict[str, Any]]:
+    normalized = _initial_steps()
+    if isinstance(steps, list):
+        iterable = []
+        for item in steps:
+            if isinstance(item, dict):
+                key = str(item.get("key") or "").strip()
+                if key:
+                    iterable.append((key, item))
+    elif isinstance(steps, dict):
+        iterable = [(str(key).strip(), value) for key, value in steps.items() if isinstance(value, dict)]
+    else:
+        iterable = []
+
+    aliases = {
+        "configure_source": "choose_source",
+        "select_source": "choose_source",
+        "map_columns": "map_fields",
+        "run_import": "first_import",
+        "run_dbt": "first_dbt_run",
+        "train_model": "first_model_training",
+        "publish_dashboard": "publish_dashboards",
+    }
+
+    for raw_key, item in iterable:
+        key = aliases.get(raw_key, raw_key)
+        if key not in normalized:
+            continue
+        entry = normalized[key]
+        entry["status"] = str(item.get("status") or entry["status"])
+        entry["attempts"] = int(item.get("attempts") or entry["attempts"] or 0)
+        entry["message"] = item.get("message")
+        entry["artifact_path"] = item.get("artifact_path")
+        entry["last_updated_at"] = item.get("last_updated_at")
+        custom_label = str(item.get("label") or "").strip()
+        if custom_label:
+            entry["label"] = custom_label
+    return normalized
+
+
+def _ensure_session_shape(session: dict[str, Any]) -> dict[str, Any]:
+    session.setdefault("steps", _initial_steps())
+    session["steps"] = _normalize_steps(session.get("steps"))
+    session.setdefault("logs", [])
+    session.setdefault("store", {})
+    session.setdefault("source", {})
+    session.setdefault("mapping", {})
+    session.setdefault("enabled_modules", [])
+    session.setdefault("artifacts", {})
+    return session
+
+
 def _ensure_dirs(
     *,
     setup_dir: Path = SETUP_ARTIFACT_DIR,
@@ -178,6 +230,7 @@ def _mark_step(
     message: str,
     artifact_path: str | None = None,
 ) -> None:
+    session = _ensure_session_shape(session)
     step = session["steps"][step_key]
     step["attempts"] = int(step.get("attempts", 0)) + 1
     step["status"] = status
@@ -194,12 +247,14 @@ def _mark_step(
 
 
 def _progress_percent(session: dict[str, Any]) -> int:
+    session = _ensure_session_shape(session)
     total = len(STEP_DEFINITIONS)
     completed = sum(1 for step in session["steps"].values() if step["status"] == "done")
     return int(round((completed / total) * 100)) if total else 0
 
 
 def _next_step(session: dict[str, Any]) -> str | None:
+    session = _ensure_session_shape(session)
     for key, _label in STEP_DEFINITIONS:
         if session["steps"][key]["status"] != "done":
             return key
@@ -207,6 +262,7 @@ def _next_step(session: dict[str, Any]) -> str | None:
 
 
 def _session_response(session: dict[str, Any]) -> dict[str, Any]:
+    session = _ensure_session_shape(session)
     payload = json.loads(json.dumps(session))
     payload["progress_percent"] = _progress_percent(session)
     payload["next_step"] = _next_step(session)
@@ -218,7 +274,7 @@ def _load_session(session_id: str, setup_dir: Path = SETUP_ARTIFACT_DIR) -> dict
     path = _session_path(session_id, setup_dir)
     if not path.exists():
         raise FileNotFoundError(f"Setup session was not found: {session_id}")
-    return _read_json(path)
+    return _ensure_session_shape(_read_json(path))
 
 
 def _save_session(session: dict[str, Any], setup_dir: Path = SETUP_ARTIFACT_DIR) -> dict[str, Any]:

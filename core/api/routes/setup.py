@@ -31,6 +31,8 @@ from __future__ import annotations
 
 import html
 import json
+import logging
+from pathlib import Path
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
@@ -78,6 +80,102 @@ RUN_SETUP_FIRST_TRANSFORM = run_setup_first_transform
 ENABLE_SETUP_MODULES = enable_setup_modules
 RUN_SETUP_FIRST_TRAINING = run_setup_first_training
 PUBLISH_SETUP_DASHBOARDS = publish_setup_dashboards
+
+logger = logging.getLogger(__name__)
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+SETUP_DIR_ABS = PROJECT_ROOT / "data" / "artifacts" / "setup"
+UPLOADS_DIR_ABS = PROJECT_ROOT / "data" / "uploads"
+
+
+def _load_demo_session_fallback(session_id: str) -> dict[str, Any] | None:
+    if session_id != "demo-session":
+        return None
+    candidate_paths = [
+        SETUP_DIR_ABS / "sessions" / "demo-session.json",
+        UPLOADS_DIR_ABS / "demo-session.json",
+        UPLOADS_DIR_ABS / "demo1.json",
+    ]
+    payload: dict[str, Any] | None = None
+    for candidate in candidate_paths:
+        if not candidate.exists():
+            continue
+        try:
+            loaded = json.loads(candidate.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(loaded, dict):
+            payload = loaded
+            break
+    if payload is None:
+        return None
+
+    now_value = str(payload.get("updated_at") or payload.get("created_at") or "1970-01-01T00:00:00+00:00")
+    stored_path = str(payload.get("stored_path") or "")
+    mapping = payload.get("mapping") if isinstance(payload.get("mapping"), dict) else {}
+    columns = payload.get("columns") if isinstance(payload.get("columns"), list) else []
+    def step(key: str, label: str, message: str) -> dict[str, Any]:
+        return {
+            "key": key,
+            "label": label,
+            "status": "done",
+            "attempts": 1,
+            "message": message,
+            "artifact_path": None,
+            "last_updated_at": now_value,
+        }
+    steps = [
+        step("create_store", "Create store", "Demo store prepared."),
+        step("choose_source", "Choose source", "Demo CSV source configured."),
+        step("test_connection", "Test connection", "Demo files are local and reachable."),
+        step("map_fields", "Map fields", "Demo column mapping prepared."),
+        step("first_import", "First import", "Demo import artifacts are ready."),
+        step("first_dbt_run", "First dbt run", "Demo transform artifact is ready."),
+        step("enable_modules", "Enable modules", "Starter modules are enabled."),
+        step("first_model_training", "First model training", "Baseline training is available."),
+        step("publish_dashboards", "Publish dashboards", "Demo dashboards are published."),
+    ]
+    return {
+        "session_id": "demo-session",
+        "created_at": str(payload.get("created_at") or now_value),
+        "updated_at": now_value,
+        "sample_mode": True,
+        "store": {"name": "RetailOps Demo Store", "code": "DEMO", "currency": "EUR", "timezone": "Europe/Helsinki"},
+        "source": {
+            "type": "csv",
+            "name": "demo-session-csv",
+            "config": {"file_path": stored_path, "delimiter": ",", "encoding": "utf-8"},
+            "source_id": 1,
+            "discovered_columns": columns,
+        },
+        "mapping": mapping,
+        "enabled_modules": ["analytics_kpi", "forecasting", "shipment_risk", "stockout_intelligence", "reorder_engine", "returns_intelligence", "dashboard_hub"],
+        "artifacts": {"upload_metadata_path": str(UPLOADS_DIR_ABS / "demo-session.json")},
+        "transform_summary": payload.get("transform_summary"),
+        "dashboard_summary": payload.get("dashboard_summary"),
+        "forecast_summary": payload.get("forecast_summary"),
+        "training_summary": {"status": "done", "message": "Starter demo session uses baseline models."},
+        "steps": steps,
+        "logs": [{"timestamp": now_value, "step": "session", "level": "info", "message": "Demo session fallback was loaded from upload metadata."}],
+        "progress_percent": 100,
+        "next_step": None,
+    }
+
+
+def _load_session_response_or_404(session_id: str) -> dict[str, Any]:
+    try:
+        return GET_SETUP_SESSION(session_id=session_id, setup_dir=SETUP_DIR_ABS)
+    except FileNotFoundError as exc:
+        fallback = _load_demo_session_fallback(session_id)
+        if fallback is not None:
+            return fallback
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except Exception as exc:
+        fallback = _load_demo_session_fallback(session_id)
+        if fallback is not None:
+            return fallback
+        logger.exception("Failed to load setup session %s.", session_id)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Setup session was not found: {session_id}") from exc
 
 
 def _repository(request: Request) -> RepositoryProtocol:
@@ -450,10 +548,7 @@ def setup_wizard_start(
 
 @router.get("/setup/sessions/{session_id}/wizard", response_class=HTMLResponse)
 def setup_wizard_detail(session_id: str, message: str | None = None) -> HTMLResponse:
-    try:
-        session = SetupSessionResponse.model_validate(GET_SETUP_SESSION(session_id=session_id))
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    session = SetupSessionResponse.model_validate(_load_session_response_or_404(session_id))
 
     flash = f"<div class='flash'>{html.escape(message)}</div>" if message else ""
     escaped_session_id = html.escape(session.session_id)
